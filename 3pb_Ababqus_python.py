@@ -13,12 +13,13 @@ from visualization import *
 from connectorBehavior import *
 
 mdb.ModelFromInputFile(inputFileName=
-    '3_point_bending_notched1.inp', name=
+    'C:/Users/ben00/Downloads/3_point_bending_notched1.inp', name=
     '3_point_bending_notched1')
 
 model_name = '3_point_bending_notched1'
 impactor = 'Impactor'
 support = 'Support'
+
 sheet_size = 200.0
 
 model = mdb.models[model_name]
@@ -70,8 +71,8 @@ model.parts[support].ReferencePoint(point=
     model.parts[support].InterestingPoint(
     model.parts[support].edges[1], CENTER))
 
-model.parts[impactor].Set(name='Imp_rp', referencePoints=(model.parts[impactor].referencePoints[2]))
-model.parts[support].Set(name='Support_rp', referencePoints=(model.parts[support].referencePoints[2]))
+model.parts[impactor].Set(name='Imp_rp', referencePoints=(model.parts[impactor].referencePoints[2], ))
+model.parts[support].Set(name='Support_rp', referencePoints=(model.parts[support].referencePoints[2], ))
 
 model.parts[impactor].Surface(name=
     impactor, side2Faces=
