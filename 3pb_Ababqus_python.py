@@ -13,7 +13,7 @@ from visualization import *
 from connectorBehavior import *
 
 mdb.ModelFromInputFile(inputFileName=
-    'C:/Users/ben00/Downloads/3_point_bending_notched1.inp', name=
+    '3_point_bending_notched1.inp', name=
     '3_point_bending_notched1')
 
 model_name = '3_point_bending_notched1'
