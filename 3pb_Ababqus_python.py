@@ -14,7 +14,11 @@ from connectorBehavior import *
 
 mdb.ModelFromInputFile(inputFileName=
 <<<<<<< HEAD
+<<<<<<< HEAD
     '3_point_bending_notched1.inp', name=
+=======
+    '/home/magnufoy/Simulering_1/3_point_bending_notched1.inp', name=
+>>>>>>> b98b37e482a16e805b25086887984e7825378ee9
 =======
     '/home/magnufoy/Simulering_1/3_point_bending_notched1.inp', name=
 >>>>>>> b98b37e482a16e805b25086887984e7825378ee9
