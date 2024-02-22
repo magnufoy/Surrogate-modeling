@@ -12,17 +12,9 @@ from sketch import *
 from visualization import *
 from connectorBehavior import *
 
-mdb.ModelFromInputFile(inputFileName=
-<<<<<<< HEAD
-<<<<<<< HEAD
-    '3_point_bending_notched1.inp', name=
-=======
-    '/home/magnufoy/Simulering_1/3_point_bending_notched1.inp', name=
->>>>>>> b98b37e482a16e805b25086887984e7825378ee9
-=======
-    '/home/magnufoy/Simulering_1/3_point_bending_notched1.inp', name=
->>>>>>> b98b37e482a16e805b25086887984e7825378ee9
-    '3_point_bending_notched1')
+mdb.ModelFromInputFile(
+    inputFileName='3_point_bending_notched1.inp',
+    name='/home/magnufoy/Simulering_1/3_point_bending_notched1.inp')
 
 model_name = '3_point_bending_notched1'
 impactor = 'Impactor'
