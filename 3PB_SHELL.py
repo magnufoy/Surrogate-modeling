@@ -175,24 +175,24 @@ model.parts['Profile_shell'].Set(faces=model.parts['Profile_shell'].faces.getSeq
 #--------------------------------------------------------------------------------------------------------
 # CREATE SKETCH FOR IMPACTOR
 #--------------------------------------------------------------------------------------------------------
-SUPPORT_PROFILE = model.ConstrainedSketch(name='SUPPORT_PROFILE', sheetSize=200.0)
-SUPPORT_PROFILE.ConstructionLine(point1=(0.0,  -100.0), point2=(0.0, 100.0))
-SUPPORT_PROFILE.FixedConstraint(entity=SUPPORT_PROFILE.geometry[2])
-SUPPORT_PROFILE.Line(point1=(30.0, -100.0), point2=(30.0, 100.0))
-SUPPORT_PROFILE.VerticalConstraint(addUndoState=False, entity=SUPPORT_PROFILE.geometry[3])
-#--------------------------------------------------------------------------------------------------------
-# CREATE PART FOR IMPACTOR
-#--------------------------------------------------------------------------------------------------------
-impactor_part = model.Part(dimensionality=THREE_D, name='Impactor', type=ANALYTIC_RIGID_SURFACE)
-model.parts['Impactor'].AnalyticRigidSurfRevolve(sketch=model.sketches['__profile__'])
-#--------------------------------------------------------------------------------------------------------
-# CREATE SKETCH FOR SUPPORT
-#--------------------------------------------------------------------------------------------------------
 IMPACTOR_PROFILE = model.ConstrainedSketch(name='IMPACTOR_PROFILE', sheetSize=200.0)
 IMPACTOR_PROFILE.ConstructionLine(point1=(0.0, -100.0), point2=(0.0, 100.0))
 IMPACTOR_PROFILE.FixedConstraint(entity=IMPACTOR_PROFILE.geometry[2])
 IMPACTOR_PROFILE.Line(point1=(30.0, -100.0), point2=(30.0, 100.0))
 IMPACTOR_PROFILE.VerticalConstraint(addUndoState=False, entity=IMPACTOR_PROFILE.geometry[3])
+#--------------------------------------------------------------------------------------------------------
+# CREATE PART FOR IMPACTOR
+#--------------------------------------------------------------------------------------------------------
+impactor_part = model.Part(dimensionality=THREE_D, name='Impactor', type=ANALYTIC_RIGID_SURFACE)
+model.parts['Impactor'].AnalyticRigidSurfRevolve(sketch=IMPACTOR_PROFILE)
+#--------------------------------------------------------------------------------------------------------
+# CREATE SKETCH FOR SUPPORT
+#--------------------------------------------------------------------------------------------------------
+SUPPORT_PROFILE = model.ConstrainedSketch(name='SUPPORT_PROFILE', sheetSize=200.0)
+SUPPORT_PROFILE.ConstructionLine(point1=(0.0,  -100.0), point2=(0.0, 100.0))
+SUPPORT_PROFILE.FixedConstraint(entity=SUPPORT_PROFILE.geometry[2])
+SUPPORT_PROFILE.Line(point1=(30.0, -100.0), point2=(30.0, 100.0))
+SUPPORT_PROFILE.VerticalConstraint(addUndoState=False, entity=SUPPORT_PROFILE.geometry[3])
 #--------------------------------------------------------------------------------------------------------
 # CREATE PART FOR SUPPORT
 #--------------------------------------------------------------------------------------------------------
