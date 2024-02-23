@@ -170,7 +170,6 @@ model.parts['Profile_shell'].SectionAssignment(offset=0.0, offsetField='', offse
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE SETS
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#TODO Husk å bytte ut getSequenceFromMask med findAt)
 model.parts['Profile_shell'].Set(faces=model.parts['Profile_shell'].faces.getSequenceFromMask(('[#3fa67 ]', ), ), name='Thick_wall')
 model.parts['Profile_shell'].Set(faces=model.parts['Profile_shell'].faces.getSequenceFromMask(('[#3fe67 ]', ), ), name='Thick_wall')
 #--------------------------------------------------------------------------------------------------------
