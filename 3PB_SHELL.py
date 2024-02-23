@@ -211,8 +211,8 @@ model.parts['Support'].Set(name='Support_RP', referencePoints=(model.parts['Supp
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE SURFACES
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-model.parts['Impactor'].Surface(name='Impactor', side2Faces=model.parts['Impactor'].faces.findAt((30.0, 0.0, 0.0),))
-model.parts['Support'].Surface(name='Support', side2Faces=model.parts['Support'].faces.findAt((30.0, 0.0, 0.0), ))
+model.parts['Impactor'].Surface(name='Impactor', side2Faces=model.parts['Impactor'].faces.getSequenceFromMask(('[#1 ]', ), ))
+model.parts['Support'].Surface(name='Support', side2Faces=model.parts['Support'].faces.getSequenceFromMask(('[#1 ]', ), ))
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE ASSEMBLY
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
