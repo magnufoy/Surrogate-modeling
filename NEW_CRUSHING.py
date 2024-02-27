@@ -33,8 +33,8 @@ del CROSS_SECTION
 mdb.models['Model-1'].parts['Cross-section'].DatumPlaneByPrincipalPlane(offset=0.0, principalPlane=XZPLANE)
 mdb.models['Model-1'].parts['Cross-section'].DatumPlaneByPrincipalPlane(offset=0.0, principalPlane=YZPLANE)
 
+mdb.models['Model-1'].parts['Cross-section'].Mirror(keepOriginal=ON, mirrorPlane=mdb.models['Model-1'].parts['Cross-section'].datums[2])
 mdb.models['Model-1'].parts['Cross-section'].Mirror(keepOriginal=ON, mirrorPlane=mdb.models['Model-1'].parts['Cross-section'].datums[3])
-mdb.models['Model-1'].parts['Cross-section'].Mirror(keepOriginal=ON, mirrorPlane=mdb.models['Model-1'].parts['Cross-section'].datums[4])
 
 # CREATE LINE TO DEVIDE INNER-MIDDLE AND INNER-SIDE
 mdb.models['Model-1'].ConstrainedSketch(gridSpacing=21.83, name='__profile__', sheetSize=873.29, transform=mdb.models['Model-1'].parts['Cross-section'].MakeSketchTransform(sketchPlane=mdb.models['Model-1'].parts['Cross-section'].faces[10], sketchPlaneSide=SIDE1, sketchUpEdge=mdb.models['Model-1'].parts['Cross-section'].edges[38], sketchOrientation=RIGHT, origin=(0.0, 0.0, 215.0)))

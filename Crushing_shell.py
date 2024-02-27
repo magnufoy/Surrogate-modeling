@@ -40,6 +40,7 @@ except:
 # DEFINE VARIABLES
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 HEIGHT_MIDDLE_INNER = 43.6
+L = 430.0
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # DEFINE MESH SIZE
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -136,16 +137,18 @@ CROSS_SECTION.TangentConstraint(addUndoState=False, entity1=CROSS_SECTION.geomet
 # CREATE PART FOR CROSS-SECTION
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 model.Part(dimensionality=THREE_D, name='Profile_shell', type=DEFORMABLE_BODY)
-model.parts['Profile_shell'].BaseShellExtrude(depth=430.0, sketch=CROSS_SECTION)
+model.parts['Profile_shell'].BaseShellExtrude(depth=L, sketch=CROSS_SECTION)
 del CROSS_SECTION
-
-model.ConstrainedSketch(gridSpacing=21.75, name='__profile__', sheetSize=870.05, transform=model.parts['Profile_shell'].MakeSketchTransform(sketchPlane=model.parts['Profile_shell'].faces[1], sketchPlaneSide=SIDE1, sketchUpEdge=model.parts['Profile_shell'].edges[11], sketchOrientation=RIGHT, origin=(-26.975, 37.95, 215.0)))
-model.parts['Profile_shell'].projectReferencesOntoSketch(filter=COPLANAR_EDGES, sketch=CROSS_SECTION)
-model.sketches['__profile__'].Line(point1=(-26.975, 215.0), point2=(-80.93, 205.085))
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# CREATE PART FOR CUT 1
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+model.ConstrainedSketch(gridSpacing=20.0, name='__profile__', sheetSize=870.0, transform=model.parts['Profile_shell'].MakeSketchTransform(sketchPlane=model.parts['Profile_shell'].faces[1], sketchPlaneSide=SIDE1, sketchUpEdge=model.parts['Profile_shell'].edges[11], sketchOrientation=RIGHT, origin=(0.0, 0.0, 0.0)))
+model.parts['Profile_shell'].projectReferencesOntoSketch(filter=COPLANAR_EDGES, sketch=model.sketches['__profile__'])
+model.sketches['__profile__'].Line(point1=(0.0, 0.0), point2=(-80.93, 205.085))
 model.sketches['__profile__'].Line(point1=(-26.975, 215.0), point2=(26.98, 205.09))
 del model.sketches['__profile__']
 
-model.ConstrainedSketch(gridSpacing=21.75, name='__profile__', sheetSize=870.05, transform=model.parts['Profile_shell'].MakeSketchTransform(sketchPlane=model.parts['Profile_shell'].faces[1], sketchPlaneSide=SIDE1, sketchUpEdge=model.parts['Profile_shell'].edges[12], sketchOrientation=RIGHT, origin=(-26.975, 37.95, 215.0)))
+model.ConstrainedSketch(gridSpacing=20.0, name='__profile__', sheetSize=870.0, transform=model.parts['Profile_shell'].MakeSketchTransform(sketchPlane=model.parts['Profile_shell'].faces[1], sketchPlaneSide=SIDE1, sketchUpEdge=model.parts['Profile_shell'].edges[12], sketchOrientation=RIGHT, origin=(-26.975, 37.95, 215.0)))
 model.parts['Profile_shell'].projectReferencesOntoSketch(filter=COPLANAR_EDGES, sketch=model.sketches['__profile__'])
 model.sketches['__profile__'].Spot(point=(-205.085, 80.93))
 model.sketches['__profile__'].Line(point1=(-215.0, 26.975), point2=(-205.085, 80.93))
@@ -157,8 +160,10 @@ model.sketches['__profile__'].PerpendicularConstraint(addUndoState=False, entity
 model.sketches['__profile__'].Line(point1=(-215.0, 100.27607879648), point2=(-201.297025135253, 101.543230844662))
 model.parts['Profile_shell'].CutExtrude(flipExtrudeDirection=ON, sketch=model.sketches['__profile__'], sketchOrientation=RIGHT, sketchPlane=model.parts['Profile_shell'].faces[1], sketchPlaneSide=SIDE1, sketchUpEdge=model.parts['Profile_shell'].edges[12])
 del model.sketches['__profile__']
-
-model.ConstrainedSketch(gridSpacing=21.66, name='__profile__', sheetSize=866.74, transform=model.parts['Profile_shell'].MakeSketchTransform(sketchPlane=model.parts['Profile_shell'].faces[2], sketchPlaneSide=SIDE1, sketchUpEdge=model.parts['Profile_shell'].edges[14], sketchOrientation=RIGHT, origin=(-26.975, 37.95, 215.0)))
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# CREATE PART FOR CUT 2
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+model.ConstrainedSketch(gridSpacing=20.0, name='__profile__', sheetSize=870.0, transform=model.parts['Profile_shell'].MakeSketchTransform(sketchPlane=model.parts['Profile_shell'].faces[2], sketchPlaneSide=SIDE1, sketchUpEdge=model.parts['Profile_shell'].edges[14], sketchOrientation=RIGHT, origin=(-26.975, 37.95, 215.0)))
 model.parts['Profile_shell'].projectReferencesOntoSketch(filter=COPLANAR_EDGES, sketch=model.sketches['__profile__'])
 model.sketches['__profile__'].Line(point1=(-26.975, -215.0), point2=(26.98, -205.085))
 model.sketches['__profile__'].Line(point1=(26.98, -205.085), point2=(92.0550000007823, -193.126541562275))
@@ -185,7 +190,12 @@ del model.sketches['__profile__']
 
 
 
-
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# ASSIGN SECTION CARD
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+model.parts['Profile_shell'].SectionAssignment(offset=0.0, offsetField='', offsetType=MIDDLE_SURFACE, region=model.parts['Profile_shell'].sets['Inner_middle'], sectionName='Inner_middle_wall', thicknessAssignment=FROM_SECTION)
+model.parts['Profile_shell'].SectionAssignment(offset=0.0, offsetField='', offsetType=MIDDLE_SURFACE, region=model.parts['Profile_shell'].sets['Side_inner'], sectionName='Side_inner_wall', thicknessAssignment=FROM_SECTION)
+model.parts['Profile_shell'].SectionAssignment(offset=0.0, offsetField='', offsetType=MIDDLE_SURFACE, region=model.parts['Profile_shell'].sets['Outer'], sectionName='Outer_wall', thicknessAssignment=FROM_SECTION)
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE SETS
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -194,16 +204,10 @@ model.parts['Profile_shell'].Set(faces=model.parts['Profile_shell'].faces.getSeq
 model.parts['Profile_shell'].Set(faces=model.parts['Profile_shell'].faces.getSequenceFromMask(('[#80 ]', ), ), name='Inner_middle')
 model.parts['Profile_shell'].Set(faces=model.parts['Profile_shell'].faces.getSequenceFromMask(('[#3 ]', ), ), name='Side_inner')
 model.parts['Profile_shell'].Set(faces=model.parts['Profile_shell'].faces.getSequenceFromMask(('[#1f7c ]', ), ), name='Outer')
-#--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-# ASSIGN SECTION CARD
-#--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-model.parts['Profile_shell'].SectionAssignment(offset=0.0, offsetField='', offsetType=MIDDLE_SURFACE, region=model.parts['Profile_shell'].sets['Inner_middle'], sectionName='Inner_middle_wall', thicknessAssignment=FROM_SECTION)
-model.parts['Profile_shell'].SectionAssignment(offset=0.0, offsetField='', offsetType=MIDDLE_SURFACE, region=model.parts['Profile_shell'].sets['Side_inner'], sectionName='Side_inner_wall', thicknessAssignment=FROM_SECTION)
-model.parts['Profile_shell'].SectionAssignment(offset=0.0, offsetField='', offsetType=MIDDLE_SURFACE, region=model.parts['Profile_shell'].sets['Outer'], sectionName='Outer_wall', thicknessAssignment=FROM_SECTION)
 
 
 
-
+#TODO Antar dette er for impactor?
 model.ConstrainedSketch(name='__profile__', sheetSize=200.0)
 model.sketches['__profile__'].Line(point1=(-100.0, 0.0), point2=(100.0, 0.0))
 model.sketches['__profile__'].HorizontalConstraint(addUndoState=False, entity=model.sketches['__profile__'].geometry[2])
@@ -221,6 +225,10 @@ model.parts['Plate_impactor'].features['3D Analytic rigid shell-1'].setValues(de
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 model.parts['Plate_impactor'].ReferencePoint(point=model.parts['Plate_impactor'].InterestingPoint(model.parts['Plate_impactor'].edges[1], MIDDLE))
 model.parts['Plate_impactor'].Set(name='Impactor_rp', referencePoints=(model.parts['Plate_impactor'].referencePoints[2], ))
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# CREATE SURFACES
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+model.parts['Plate_impactor'].Surface(name='Surf-1', side1Faces=model.parts['Plate_impactor'].faces.getSequenceFromMask(('[#1 ]', ), ))
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE ASSEMBLY
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -244,13 +252,13 @@ model.ExplicitDynamicsStep(improvedDtMethod=ON, name='Load', previous='Initial',
 # CREATE SMOOTH AMPLITUDE CURVE
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 model.SmoothStepAmplitude(data=((0.0, 0.0), (TIME_RAMP, 1.0)), name='Load_amp', timeSpan=STEP)
-
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #TODO Hva er dette?
 model.steps['Load'].setValues(improvedDtMethod=ON, timePeriod=0.05)
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE INITIAL BOUNDARY CONDITIONS
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-model.DisplacementBC(amplitude=UNSET, createStepName='Initial', distributionType=UNIFORM, fieldName='', localCsys=None, name='Profile_clamped', region=model.assembly.instances['Profile_shell-1'].sets['CLAMPED'], u1=SET, u2=SET, u3=SET, ur1=SET, ur2=SET, ur3=SET)
+model.DisplacementBC(amplitude=UNSET, createStepName='Initial', distributionType=UNIFORM, fieldName='', localCsys=None, name='Clamp_profile', region=model.assembly.instances['Profile_shell-1'].sets['CLAMPED'], u1=SET, u2=SET, u3=SET, ur1=SET, ur2=SET, ur3=SET)
 model.DisplacementBC(amplitude=UNSET, createStepName='Initial', distributionType=UNIFORM, fieldName='', localCsys=None, name='Clamp_impactor', region=model.assembly.instances['Plate_impactor-1'].sets['Impactor_rp'], u1=SET, u2=SET, u3=UNSET, ur1=SET, ur2=SET, ur3=UNSET)
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE LOADING CONDITIONS
@@ -260,16 +268,14 @@ model.VelocityBC(amplitude='Load_amp', createStepName='Load', distributionType=U
 # CREATE CONTACT PROPERTIES
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 contact_properties = model.ContactProperty('Interaction')
-contact_properties.NormalBehavior(allowSeparation=ON, constraintEnforcementMethod=DEFAULT, pressureOverclosure=HARD)
 contact_properties.TangentialBehavior(dependencies=0, directionality=ISOTROPIC, elasticSlipStiffness=None, formulation=PENALTY, fraction=0.005, maximumElasticSlip=FRACTION, pressureDependency=OFF, shearStressLimit=None, slipRateDependency=OFF, table=((FRICTION_COEFFICIENT, ), ), temperatureDependency=OFF)
+contact_properties.NormalBehavior(allowSeparation=ON, constraintEnforcementMethod=DEFAULT, pressureOverclosure=HARD)
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE GENERAL CONTACT
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 contact = model.ContactExp(createStepName='Load', name='Interaction')
 contact.includedPairs.setValuesInStep(stepName='Load', useAllstar=ON)
 contact.contactPropertyAssignments.appendInStep(assignments=((GLOBAL, SELF, 'Interaction'), ), stepName='Load')
-#--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-model.parts['Plate_impactor'].Surface(name='Surf-1', side1Faces=model.parts['Plate_impactor'].faces.getSequenceFromMask(('[#1 ]', ), ))
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE FIELD AND HISTORY OUTPUTS
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -278,7 +284,8 @@ model.HistoryOutputRequest(createStepName='Load', name='F-D', numIntervals=100, 
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE MESH
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#TODO Hvorfor blir den ikke meshet?
+model.parts['Profile_shell'].seedPart(deviationFactor=0.1, minSizeFactor=0.1, size=ELEMENT_SIZE)
+model.parts['Profile_shell'].generateMesh()
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE INPUT FILE
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
