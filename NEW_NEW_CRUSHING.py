@@ -111,14 +111,14 @@ model.parts['Cross-section'].Mirror(keepOriginal=ON, mirrorPlane=model.parts['Cr
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE LINE TO DEVIDE INNER-MIDDLE AND INNER-SIDE
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-model.ConstrainedSketch(gridSpacing=21.83, name='__profile__', sheetSize=873.29, transform=model.parts['Cross-section'].MakeSketchTransform(sketchPlane=model.parts['Cross-section'].faces[10], sketchPlaneSide=SIDE1, sketchUpEdge=model.parts['Cross-section'].edges[5], sketchOrientation=RIGHT, origin=(0.0, 0.0, LENGTH/2)))
-model.parts['Cross-section'].projectReferencesOntoSketch(filter=COPLANAR_EDGES, sketch=CROSS_SECTION)
-CROSS_SECTION.Line(point1=(-HEIGHT_INSIDE_WALL_MIDDLE/2, LENGTH/2), point2=(-HEIGHT_INSIDE_WALL_MIDDLE/2, -LENGTH/2))
-CROSS_SECTION.VerticalConstraint(addUndoState=False, entity=CROSS_SECTION.geometry[16])
-CROSS_SECTION.PerpendicularConstraint(addUndoState=False, entity1=CROSS_SECTION.geometry[12], entity2=CROSS_SECTION.geometry[16])
-CROSS_SECTION.Line(point1=(HEIGHT_INSIDE_WALL_MIDDLE/2, LENGTH/2), point2=(HEIGHT_INSIDE_WALL_MIDDLE/2, -LENGTH/2))
-CROSS_SECTION.VerticalConstraint(addUndoState=False, entity=CROSS_SECTION.geometry[17])
-CROSS_SECTION.PerpendicularConstraint(addUndoState=False, entity1=CROSS_SECTION.geometry[10], entity2=CROSS_SECTION.geometry[17])
+LINE = model.ConstrainedSketch(gridSpacing=21.83, name='__profile__', sheetSize=873.29, transform=model.parts['Cross-section'].MakeSketchTransform(sketchPlane=model.parts['Cross-section'].faces[10], sketchPlaneSide=SIDE1, sketchUpEdge=model.parts['Cross-section'].edges[5], sketchOrientation=RIGHT, origin=(0.0, 0.0, LENGTH/2)))
+model.parts['Cross-section'].projectReferencesOntoSketch(filter=COPLANAR_EDGES, sketch=LINE)
+LINE.Line(point1=(-HEIGHT_INSIDE_WALL_MIDDLE/2, LENGTH/2), point2=(-HEIGHT_INSIDE_WALL_MIDDLE/2, -LENGTH/2))
+LINE.VerticalConstraint(addUndoState=False, entity=LINE.geometry[16])
+LINE.PerpendicularConstraint(addUndoState=False, entity1=LINE.geometry[12], entity2=LINE.geometry[16])
+LINE.Line(point1=(HEIGHT_INSIDE_WALL_MIDDLE/2, LENGTH/2), point2=(HEIGHT_INSIDE_WALL_MIDDLE/2, -LENGTH/2))
+LINE.VerticalConstraint(addUndoState=False, entity=LINE.geometry[17])
+LINE.PerpendicularConstraint(addUndoState=False, entity1=LINE.geometry[10], entity2=LINE.geometry[17])
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE PART FOR LINE TO DEVIDE INNER-MIDDLE AND INNER-SIDE
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -129,14 +129,14 @@ del CROSS_SECTION
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 CUT_1 = model.ConstrainedSketch(gridSpacing=25.02, name='CUT_1', sheetSize=1000.98, transform=model.parts['Cross-section'].MakeSketchTransform(sketchPlane=model.parts['Cross-section'].datums[3], sketchPlaneSide=SIDE1, sketchUpEdge=model.parts['Cross-section'].edges[28], sketchOrientation=RIGHT, origin=(0.0, 0.0, LENGTH/2)))
 model.parts['Cross-section'].projectReferencesOntoSketch(filter=COPLANAR_EDGES, sketch=CUT_1)
-CUT_1.Line(point1=(-LENGTH/2, 0.0), point2=(-LENGTH/2-CUT_DEPTH, -HALF_WIDTH_INNER))
-CUT_1.Line(point1=(-LENGTH/2-CUT_DEPTH, -HALF_WIDTH_INNER), point2=(-LENGTH/2, -HALF_WIDTH_INNER))
+CUT_1.Line(point1=(-LENGTH/2, 0.0), point2=(-LENGTH/2+CUT_DEPTH, -HALF_WIDTH_INNER))
+CUT_1.Line(point1=(-LENGTH/2+CUT_DEPTH, -HALF_WIDTH_INNER), point2=(-LENGTH/2, -HALF_WIDTH_INNER))
 CUT_1.HorizontalConstraint(addUndoState=False, entity=CUT_1.geometry[3])
-CUT_1.Line(point1=(-LENGTH/2, -HALF_WIDTH_INNER), point2=(-LENGTH/2+CUT_DEPTH, 0.0))
-CUT_1.Line(point1=(-LENGTH/2+CUT_DEPTH, 0.0), point2=(-LENGTH/2, HALF_WIDTH_INNER))
-CUT_1.Line(point1=(-LENGTH/2, HALF_WIDTH_INNER), point2=(-LENGTH/2-CUT_DEPTH, HALF_WIDTH_INNER))
+CUT_1.Line(point1=(-LENGTH/2, -HALF_WIDTH_INNER), point2=(-LENGTH/2-CUT_DEPTH, 0.0))
+CUT_1.Line(point1=(-LENGTH/2-CUT_DEPTH, 0.0), point2=(-LENGTH/2, HALF_WIDTH_INNER))
+CUT_1.Line(point1=(-LENGTH/2, HALF_WIDTH_INNER), point2=(-LENGTH/2+CUT_DEPTH, HALF_WIDTH_INNER))
 CUT_1.HorizontalConstraint(addUndoState=False, entity=CUT_1.geometry[6])
-CUT_1.Line(point1=(-LENGTH/2-CUT_DEPTH, HALF_WIDTH_INNER), point2=(-LENGTH/2, 0.0))
+CUT_1.Line(point1=(-LENGTH/2+CUT_DEPTH, HALF_WIDTH_INNER), point2=(-LENGTH/2, 0.0))
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # EXECUTE CUT 1
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
