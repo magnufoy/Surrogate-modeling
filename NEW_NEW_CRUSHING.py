@@ -122,8 +122,8 @@ LINE.PerpendicularConstraint(addUndoState=False, entity1=LINE.geometry[10], enti
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE PART FOR LINE TO DEVIDE INNER-MIDDLE AND INNER-SIDE
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-model.parts['Cross-section'].PartitionFaceBySketch(faces=model.parts['Cross-section'].faces.getSequenceFromMask(('[#400 ]', ), ), sketch=CROSS_SECTION, sketchUpEdge=model.parts['Cross-section'].edges[5])
-del CROSS_SECTION
+model.parts['Cross-section'].PartitionFaceBySketch(faces=model.parts['Cross-section'].faces.getSequenceFromMask(('[#400 ]', ), ), sketch=LINE, sketchUpEdge=model.parts['Cross-section'].edges[5])
+del LINE
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE CUT 1
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
