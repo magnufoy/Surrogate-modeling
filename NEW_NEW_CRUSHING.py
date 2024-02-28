@@ -36,8 +36,16 @@ from connectorBehavior import *
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # DEFINE VARIABLES
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-HEIGHT_MIDDLE_INNER = 43.6
-L = 430.0
+HEIGHT_INSIDE_WALL_SIDE = 13.45 # BRUKES IKKE
+HEIGHT_INSIDE_WALL_MIDDLE = 43.6
+HEIGHT = 75.9
+WIDTH = 127.9
+OUTER_WALL_TICKNESS = 2.7
+HALF_HEIGHT_INNER = HEIGHT/2-OUTER_WALL_TICKNESS
+HALF_WIDTH_INNER = WIDTH/2-OUTER_WALL_TICKNESS
+LENGTH = 430.0
+R = 10.0
+CUT_DEPTH = 9.915
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # DEFINE MESH SIZE
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -69,106 +77,117 @@ model.Material(name='C28_INNER_MIDDLE')
 model.HomogeneousShellSection(idealization=NO_IDEALIZATION, integrationRule=SIMPSON, material='C28_OUTER', name='Outer_wall', nodalThicknessField='', numIntPts=5, poissonDefinition=DEFAULT, preIntegrate=OFF, temperature=GRADIENT, thickness=2.7, thicknessField='', thicknessModulus=None, thicknessType=UNIFORM, useDensity=OFF)
 model.HomogeneousShellSection(idealization=NO_IDEALIZATION, integrationRule=SIMPSON, material='C28_INNER_SIDE', name='Side_inner_wall', nodalThicknessField='', numIntPts=5, poissonDefinition=DEFAULT, preIntegrate=OFF, temperature=GRADIENT, thickness=2.0, thicknessField='', thicknessModulus=None, thicknessType=UNIFORM, useDensity=OFF)
 model.HomogeneousShellSection(idealization=NO_IDEALIZATION, integrationRule=SIMPSON, material='C28_INNER_MIDDLE', name='Inner_middle_wall', nodalThicknessField='', numIntPts=5, poissonDefinition=DEFAULT, preIntegrate=OFF, temperature=GRADIENT, thickness=1.5, thicknessField='', thicknessModulus=None, thicknessType=UNIFORM, useDensity=OFF)
-
-
-
-CROSS_SECTION = mdb.models['CRUSHING'].ConstrainedSketch(name='__profile__', sheetSize=200.0)
-CROSS_SECTION.Line(point1=(0.0, 0.0), point2=(0.0, 21.8))
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# CREATE SKETCH FOR CROSS-SECTION
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+CROSS_SECTION = model.ConstrainedSketch(name='__profile__', sheetSize=200.0)
+CROSS_SECTION.Line(point1=(0.0, 0.0), point2=(0.0, HEIGHT_INSIDE_WALL_MIDDLE/2))
 CROSS_SECTION.VerticalConstraint(addUndoState=False, entity=CROSS_SECTION.geometry[2])
-CROSS_SECTION.Line(point1=(0.0, 21.8), point2=(0.0, 37.95))
+CROSS_SECTION.Line(point1=(0.0, HEIGHT_INSIDE_WALL_MIDDLE/2), point2=(0.0, HALF_HEIGHT_INNER))
 CROSS_SECTION.VerticalConstraint(addUndoState=False, entity=CROSS_SECTION.geometry[3])
 CROSS_SECTION.ParallelConstraint(addUndoState=False, entity1=CROSS_SECTION.geometry[2], entity2=CROSS_SECTION.geometry[3])
-CROSS_SECTION.Line(point1=(0.0, 37.95), point2=(53.95, 37.95))
+CROSS_SECTION.Line(point1=(0.0, HALF_HEIGHT_INNER), point2=(HALF_WIDTH_INNER-R, HALF_HEIGHT_INNER))
 CROSS_SECTION.HorizontalConstraint(addUndoState=False, entity=CROSS_SECTION.geometry[4])
 CROSS_SECTION.PerpendicularConstraint(addUndoState=False, entity1=CROSS_SECTION.geometry[3], entity2=CROSS_SECTION.geometry[4])
-CROSS_SECTION.Line(point1=(63.95, 0.0), point2=(63.95, 27.95))
+CROSS_SECTION.Line(point1=(HALF_WIDTH_INNER, 0.0), point2=(HALF_WIDTH_INNER, HALF_HEIGHT_INNER-R))
 CROSS_SECTION.VerticalConstraint(addUndoState=False, entity=CROSS_SECTION.geometry[5])
 CROSS_SECTION.FilletByRadius(curve1=CROSS_SECTION.geometry[4], curve2=CROSS_SECTION.geometry[5], nearPoint1=(45.4165077209473, 37.7963790893555), nearPoint2=(64.2001495361328, 18.3933868408203), radius=10.0)
-mdb.models['CRUSHING'].Part(dimensionality=THREE_D, name='Cross-section', type=DEFORMABLE_BODY)
-mdb.models['CRUSHING'].parts['Cross-section'].BaseShellExtrude(depth=430.0, sketch=CROSS_SECTION)
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# CREATE PART FOR CROSS-SECTION
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+model.Part(dimensionality=THREE_D, name='Cross-section', type=DEFORMABLE_BODY)
+model.parts['Cross-section'].BaseShellExtrude(depth=LENGTH, sketch=CROSS_SECTION)
 del CROSS_SECTION
-
-
-mdb.models['CRUSHING'].parts['Cross-section'].DatumPlaneByPrincipalPlane(offset=0.0, principalPlane=YZPLANE)
-mdb.models['CRUSHING'].parts['Cross-section'].DatumPlaneByPrincipalPlane(offset=0.0, principalPlane=XZPLANE)
-
-
-mdb.models['CRUSHING'].parts['Cross-section'].Mirror(keepOriginal=ON, mirrorPlane=mdb.models['CRUSHING'].parts['Cross-section'].datums[2])
-mdb.models['CRUSHING'].parts['Cross-section'].Mirror(keepOriginal=ON, mirrorPlane=mdb.models['CRUSHING'].parts['Cross-section'].datums[3])
-
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# CREATE PLANES FOR MIRRORING
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+model.parts['Cross-section'].DatumPlaneByPrincipalPlane(offset=0.0, principalPlane=YZPLANE)
+model.parts['Cross-section'].DatumPlaneByPrincipalPlane(offset=0.0, principalPlane=XZPLANE)
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# MIRROR CROSS-SECTION
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+model.parts['Cross-section'].Mirror(keepOriginal=ON, mirrorPlane=model.parts['Cross-section'].datums[2])
+model.parts['Cross-section'].Mirror(keepOriginal=ON, mirrorPlane=model.parts['Cross-section'].datums[3])
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE LINE TO DEVIDE INNER-MIDDLE AND INNER-SIDE
-mdb.models['CRUSHING'].ConstrainedSketch(gridSpacing=21.83, name='__profile__', sheetSize=873.29, transform=mdb.models['CRUSHING'].parts['Cross-section'].MakeSketchTransform(sketchPlane=mdb.models['CRUSHING'].parts['Cross-section'].faces[10], sketchPlaneSide=SIDE1, sketchUpEdge=mdb.models['CRUSHING'].parts['Cross-section'].edges[5], sketchOrientation=RIGHT, origin=(0.0, 0.0, 215.0)))
-mdb.models['CRUSHING'].parts['Cross-section'].projectReferencesOntoSketch(filter=COPLANAR_EDGES, sketch=mdb.models['CRUSHING'].sketches['__profile__'])
-mdb.models['CRUSHING'].sketches['__profile__'].Line(point1=(-21.8, 215.0), point2=(-21.8, -215.0))
-mdb.models['CRUSHING'].sketches['__profile__'].VerticalConstraint(addUndoState=False, entity=mdb.models['CRUSHING'].sketches['__profile__'].geometry[16])
-mdb.models['CRUSHING'].sketches['__profile__'].PerpendicularConstraint(addUndoState=False, entity1=mdb.models['CRUSHING'].sketches['__profile__'].geometry[12], entity2=mdb.models['CRUSHING'].sketches['__profile__'].geometry[16])
-mdb.models['CRUSHING'].sketches['__profile__'].Line(point1=(21.8, 215.0), point2=(21.8, -215.0))
-mdb.models['CRUSHING'].sketches['__profile__'].VerticalConstraint(addUndoState=False, entity=mdb.models['CRUSHING'].sketches['__profile__'].geometry[17])
-mdb.models['CRUSHING'].sketches['__profile__'].PerpendicularConstraint(addUndoState=False, entity1=mdb.models['CRUSHING'].sketches['__profile__'].geometry[10], entity2=mdb.models['CRUSHING'].sketches['__profile__'].geometry[17])
-mdb.models['CRUSHING'].parts['Cross-section'].PartitionFaceBySketch(faces=mdb.models['CRUSHING'].parts['Cross-section'].faces.getSequenceFromMask(('[#400 ]', ), ), sketch=mdb.models['CRUSHING'].sketches['__profile__'], sketchUpEdge=mdb.models['CRUSHING'].parts['Cross-section'].edges[5])
-del mdb.models['CRUSHING'].sketches['__profile__']
-
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+model.ConstrainedSketch(gridSpacing=21.83, name='__profile__', sheetSize=873.29, transform=model.parts['Cross-section'].MakeSketchTransform(sketchPlane=model.parts['Cross-section'].faces[10], sketchPlaneSide=SIDE1, sketchUpEdge=model.parts['Cross-section'].edges[5], sketchOrientation=RIGHT, origin=(0.0, 0.0, LENGTH/2)))
+model.parts['Cross-section'].projectReferencesOntoSketch(filter=COPLANAR_EDGES, sketch=CROSS_SECTION)
+CROSS_SECTION.Line(point1=(-HEIGHT_INSIDE_WALL_MIDDLE/2, LENGTH/2), point2=(-HEIGHT_INSIDE_WALL_MIDDLE/2, -LENGTH/2))
+CROSS_SECTION.VerticalConstraint(addUndoState=False, entity=CROSS_SECTION.geometry[16])
+CROSS_SECTION.PerpendicularConstraint(addUndoState=False, entity1=CROSS_SECTION.geometry[12], entity2=CROSS_SECTION.geometry[16])
+CROSS_SECTION.Line(point1=(HEIGHT_INSIDE_WALL_MIDDLE/2, LENGTH/2), point2=(HEIGHT_INSIDE_WALL_MIDDLE/2, -LENGTH/2))
+CROSS_SECTION.VerticalConstraint(addUndoState=False, entity=CROSS_SECTION.geometry[17])
+CROSS_SECTION.PerpendicularConstraint(addUndoState=False, entity1=CROSS_SECTION.geometry[10], entity2=CROSS_SECTION.geometry[17])
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# CREATE PART FOR LINE TO DEVIDE INNER-MIDDLE AND INNER-SIDE
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+model.parts['Cross-section'].PartitionFaceBySketch(faces=model.parts['Cross-section'].faces.getSequenceFromMask(('[#400 ]', ), ), sketch=CROSS_SECTION, sketchUpEdge=model.parts['Cross-section'].edges[5])
+del CROSS_SECTION
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE CUT 1
-mdb.models['CRUSHING'].ConstrainedSketch(gridSpacing=25.02, name='__profile__', sheetSize=1000.98, transform=mdb.models['CRUSHING'].parts['Cross-section'].MakeSketchTransform(sketchPlane=mdb.models['CRUSHING'].parts['Cross-section'].datums[3], sketchPlaneSide=SIDE1, sketchUpEdge=mdb.models['CRUSHING'].parts['Cross-section'].edges[28], sketchOrientation=RIGHT, origin=(0.0, 0.0, 215.0)))
-mdb.models['CRUSHING'].parts['Cross-section'].projectReferencesOntoSketch(filter=COPLANAR_EDGES, sketch=mdb.models['CRUSHING'].sketches['__profile__'])
-mdb.models['CRUSHING'].sketches['__profile__'].Line(point1=(-215.0, 0.0), point2=(-205.085, -63.95))
-mdb.models['CRUSHING'].sketches['__profile__'].Line(point1=(-205.085, -63.95), point2=(-215.0, -63.95))
-mdb.models['CRUSHING'].sketches['__profile__'].HorizontalConstraint(addUndoState=False, entity=mdb.models['CRUSHING'].sketches['__profile__'].geometry[3])
-mdb.models['CRUSHING'].sketches['__profile__'].Line(point1=(-215.0, -63.95), point2=(-224.915, 0.0))
-mdb.models['CRUSHING'].sketches['__profile__'].Line(point1=(-224.915, 0.0), point2=(-215.0, 63.95))
-mdb.models['CRUSHING'].sketches['__profile__'].Line(point1=(-215.0, 63.95), point2=(-205.085, 63.95))
-mdb.models['CRUSHING'].sketches['__profile__'].HorizontalConstraint(addUndoState=False, entity=mdb.models['CRUSHING'].sketches['__profile__'].geometry[6])
-mdb.models['CRUSHING'].sketches['__profile__'].Line(point1=(-205.085, 63.95), point2=(-215.0, 0.0))
-mdb.models['CRUSHING'].parts['Cross-section'].CutExtrude(flipExtrudeDirection=OFF, sketch=mdb.models['CRUSHING'].sketches['__profile__'], sketchOrientation=RIGHT, sketchPlane=mdb.models['CRUSHING'].parts['Cross-section'].datums[3], sketchPlaneSide=SIDE1, sketchUpEdge=mdb.models['CRUSHING'].parts['Cross-section'].edges[28])
-del mdb.models['CRUSHING'].sketches['__profile__']
-
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+CUT_1 = model.ConstrainedSketch(gridSpacing=25.02, name='CUT_1', sheetSize=1000.98, transform=model.parts['Cross-section'].MakeSketchTransform(sketchPlane=model.parts['Cross-section'].datums[3], sketchPlaneSide=SIDE1, sketchUpEdge=model.parts['Cross-section'].edges[28], sketchOrientation=RIGHT, origin=(0.0, 0.0, LENGTH/2)))
+model.parts['Cross-section'].projectReferencesOntoSketch(filter=COPLANAR_EDGES, sketch=CUT_1)
+CUT_1.Line(point1=(-LENGTH/2, 0.0), point2=(-LENGTH/2-CUT_DEPTH, -HALF_WIDTH_INNER))
+CUT_1.Line(point1=(-LENGTH/2-CUT_DEPTH, -HALF_WIDTH_INNER), point2=(-LENGTH/2, -HALF_WIDTH_INNER))
+CUT_1.HorizontalConstraint(addUndoState=False, entity=CUT_1.geometry[3])
+CUT_1.Line(point1=(-LENGTH/2, -HALF_WIDTH_INNER), point2=(-LENGTH/2+CUT_DEPTH, 0.0))
+CUT_1.Line(point1=(-LENGTH/2+CUT_DEPTH, 0.0), point2=(-LENGTH/2, HALF_WIDTH_INNER))
+CUT_1.Line(point1=(-LENGTH/2, HALF_WIDTH_INNER), point2=(-LENGTH/2-CUT_DEPTH, HALF_WIDTH_INNER))
+CUT_1.HorizontalConstraint(addUndoState=False, entity=CUT_1.geometry[6])
+CUT_1.Line(point1=(-LENGTH/2-CUT_DEPTH, HALF_WIDTH_INNER), point2=(-LENGTH/2, 0.0))
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# EXECUTE CUT 1
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+model.parts['Cross-section'].CutExtrude(flipExtrudeDirection=OFF, sketch=CUT_1, sketchOrientation=RIGHT, sketchPlane=model.parts['Cross-section'].datums[3], sketchPlaneSide=SIDE1, sketchUpEdge=model.parts['Cross-section'].edges[28])
+del CUT_1
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE CUT 2
-mdb.models['CRUSHING'].ConstrainedSketch(gridSpacing=25.02, name='__profile__', sheetSize=1000.98, transform=mdb.models['CRUSHING'].parts['Cross-section'].MakeSketchTransform(sketchPlane=mdb.models['CRUSHING'].parts['Cross-section'].datums[3], sketchPlaneSide=SIDE1, sketchUpEdge=mdb.models['CRUSHING'].parts['Cross-section'].edges[41], sketchOrientation=RIGHT, origin=(0.0, 0.0, 215.0)))
-mdb.models['CRUSHING'].parts['Cross-section'].projectReferencesOntoSketch(filter=COPLANAR_EDGES, sketch=mdb.models['CRUSHING'].sketches['__profile__'])
-mdb.models['CRUSHING'].sketches['__profile__'].Line(point1=(205.085, -63.95), point2=(215.0, 0.0))
-mdb.models['CRUSHING'].sketches['__profile__'].Line(point1=(215.0, 0.0), point2=(205.085, 63.95))
-mdb.models['CRUSHING'].sketches['__profile__'].Line(point1=(205.085, 63.95), point2=(215.0, 63.95))
-mdb.models['CRUSHING'].sketches['__profile__'].HorizontalConstraint(addUndoState=False, entity=mdb.models['CRUSHING'].sketches['__profile__'].geometry[6])
-mdb.models['CRUSHING'].sketches['__profile__'].Line(point1=(215.0, 63.95), point2=(224.915, 0.0))
-mdb.models['CRUSHING'].sketches['__profile__'].Line(point1=(224.915, 0.0), point2=(215.0, -63.95))
-mdb.models['CRUSHING'].sketches['__profile__'].Line(point1=(215.0, -63.95), point2=(205.085, -63.95))
-mdb.models['CRUSHING'].sketches['__profile__'].HorizontalConstraint(addUndoState=False, entity=mdb.models['CRUSHING'].sketches['__profile__'].geometry[9])
-mdb.models['CRUSHING'].parts['Cross-section'].CutExtrude(flipExtrudeDirection=ON, sketch=mdb.models['CRUSHING'].sketches['__profile__'], sketchOrientation=RIGHT, sketchPlane=mdb.models['CRUSHING'].parts['Cross-section'].datums[3], sketchPlaneSide=SIDE1, sketchUpEdge=mdb.models['CRUSHING'].parts['Cross-section'].edges[41])
-del mdb.models['CRUSHING'].sketches['__profile__']
-
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+CUT_2 = model.ConstrainedSketch(gridSpacing=25.02, name='CUT_2', sheetSize=1000.98, transform=model.parts['Cross-section'].MakeSketchTransform(sketchPlane=model.parts['Cross-section'].datums[3], sketchPlaneSide=SIDE1, sketchUpEdge=model.parts['Cross-section'].edges[41], sketchOrientation=RIGHT, origin=(0.0, 0.0, LENGTH/2)))
+model.parts['Cross-section'].projectReferencesOntoSketch(filter=COPLANAR_EDGES, sketch=CUT_2)
+CUT_2.Line(point1=(LENGTH/2-CUT_DEPTH, -HALF_WIDTH_INNER), point2=(LENGTH/2, 0.0))
+CUT_2.Line(point1=(LENGTH/2, 0.0), point2=(LENGTH/2-CUT_DEPTH, HALF_WIDTH_INNER))
+CUT_2.Line(point1=(LENGTH/2-CUT_DEPTH, HALF_WIDTH_INNER), point2=(LENGTH/2, HALF_WIDTH_INNER))
+CUT_2.HorizontalConstraint(addUndoState=False, entity=CUT_2.geometry[6])
+CUT_2.Line(point1=(LENGTH/2, HALF_WIDTH_INNER), point2=(LENGTH/2+CUT_DEPTH, 0.0))
+CUT_2.Line(point1=(LENGTH/2+CUT_DEPTH, 0.0), point2=(LENGTH/2, -HALF_WIDTH_INNER))
+CUT_2.Line(point1=(LENGTH/2, -HALF_WIDTH_INNER), point2=(LENGTH/2-CUT_DEPTH, -HALF_WIDTH_INNER))
+CUT_2.HorizontalConstraint(addUndoState=False, entity=CUT_2.geometry[9])
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# EXECUTE CUT 2
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+model.parts['Cross-section'].CutExtrude(flipExtrudeDirection=ON, sketch=CUT_2, sketchOrientation=RIGHT, sketchPlane=model.parts['Cross-section'].datums[3], sketchPlaneSide=SIDE1, sketchUpEdge=model.parts['Cross-section'].edges[41])
+del CUT_2
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# CREATE SKETCH FOR IMPACTOR
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#TODO Antar dette er for impactor?
+IMPACTOR = model.ConstrainedSketch(name='IMPACTOR', sheetSize=200.0)
+IMPACTOR.Line(point1=(-100.0, 0.0), point2=(100.0, 0.0))
+IMPACTOR.HorizontalConstraint(addUndoState=False, entity=IMPACTOR.geometry[2])
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# CREATE PART FOR IMPACTOR
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+model.Part(dimensionality=THREE_D, name='Plate_impactor', type=ANALYTIC_RIGID_SURFACE)
+model.parts['Plate_impactor'].AnalyticRigidSurfExtrude(depth=1.0, sketch=IMPACTOR)
+del IMPACTOR
+model.parts['Plate_impactor'].features['3D Analytic rigid shell-1'].setValues(depth=200.0)
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE SETS
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-mdb.models['CRUSHING'].parts['Cross-section'].Set(edges= mdb.models['CRUSHING'].parts['Cross-section'].edges.getSequenceFromMask(( '[#a291890c #394 ]', ), ), name='CLAMPED')
-mdb.models['CRUSHING'].parts['Cross-section'].Set(faces=mdb.models['CRUSHING'].parts['Cross-section'].faces.getSequenceFromMask(( '[#1000 ]', ), ), name='Inner_middle')
-mdb.models['CRUSHING'].parts['Cross-section'].Set(faces= mdb.models['CRUSHING'].parts['Cross-section'].faces.getSequenceFromMask(( '[#f3f ]', ), ), name='Outer')
-mdb.models['CRUSHING'].parts['Cross-section'].Set(faces= mdb.models['CRUSHING'].parts['Cross-section'].faces.getSequenceFromMask(( '[#1fff ]', ), ), name='Whole')
-mdb.models['CRUSHING'].parts['Cross-section'].Set(faces= mdb.models['CRUSHING'].parts['Cross-section'].faces.getSequenceFromMask(('[#c0 ]', ), ), name='Side_inner')
-
-
-#TODO Antar dette er for impactor?
-model.ConstrainedSketch(name='__profile__', sheetSize=200.0)
-model.sketches['__profile__'].Line(point1=(-100.0, 0.0), point2=(100.0, 0.0))
-model.sketches['__profile__'].HorizontalConstraint(addUndoState=False, entity=model.sketches['__profile__'].geometry[2])
-model.Part(dimensionality=THREE_D, name='Plate_impactor', type=ANALYTIC_RIGID_SURFACE)
-model.parts['Plate_impactor'].AnalyticRigidSurfExtrude(depth=1.0, sketch=model.sketches['__profile__'])
-del model.sketches['__profile__']
-
-model.parts['Plate_impactor'].features['3D Analytic rigid shell-1'].setValues(depth=200.0)
-
-
-
+model.parts['Cross-section'].Set(edges= model.parts['Cross-section'].edges.getSequenceFromMask(( '[#a291890c #394 ]', ), ), name='CLAMPED')
+model.parts['Cross-section'].Set(faces=model.parts['Cross-section'].faces.getSequenceFromMask(( '[#1000 ]', ), ), name='Inner_middle')
+model.parts['Cross-section'].Set(faces= model.parts['Cross-section'].faces.getSequenceFromMask(( '[#f3f ]', ), ), name='Outer')
+model.parts['Cross-section'].Set(faces= model.parts['Cross-section'].faces.getSequenceFromMask(( '[#1fff ]', ), ), name='Whole')
+model.parts['Cross-section'].Set(faces= model.parts['Cross-section'].faces.getSequenceFromMask(('[#c0 ]', ), ), name='Side_inner')
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # ASSIGN SECTION CARD
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 model.parts['Cross-section'].SectionAssignment(offset=0.0, offsetField='', offsetType=MIDDLE_SURFACE, region=model.parts['Cross-section'].sets['Inner_middle'], sectionName='Inner_middle_wall', thicknessAssignment=FROM_SECTION)
 model.parts['Cross-section'].SectionAssignment(offset=0.0, offsetField='', offsetType=MIDDLE_SURFACE, region=model.parts['Cross-section'].sets['Side_inner'], sectionName='Side_inner_wall', thicknessAssignment=FROM_SECTION)
 model.parts['Cross-section'].SectionAssignment(offset=0.0, offsetField='', offsetType=MIDDLE_SURFACE, region=model.parts['Cross-section'].sets['Outer'], sectionName='Outer_wall', thicknessAssignment=FROM_SECTION)
-
-
-
-
-
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE REFERENCE POINT - IMPACTOR
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
