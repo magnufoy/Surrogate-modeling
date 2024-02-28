@@ -139,12 +139,11 @@ del mdb.models['CRUSHING'].sketches['__profile__']
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE SETS
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-model.parts['Cross-section'].Set(edges=model.parts['Cross-section'].edges.getSequenceFromMask(('[#40a24400 #512 ]', ), ), name='CLAMPED')
-model.parts['Cross-section'].Set(faces=model.parts['Cross-section'].faces.getSequenceFromMask(('[#1fff ]', ), ), name='Whole')
-model.parts['Cross-section'].Set(faces=model.parts['Cross-section'].faces.getSequenceFromMask(('[#80 ]', ), ), name='Inner_middle')
-model.parts['Cross-section'].Set(faces=model.parts['Cross-section'].faces.getSequenceFromMask(('[#3 ]', ), ), name='Side_inner')
-model.parts['Cross-section'].Set(faces=model.parts['Cross-section'].faces.getSequenceFromMask(('[#1f7c ]', ), ), name='Outer')
-
+mdb.models['CRUSHING'].parts['Cross-section'].Set(edges= mdb.models['CRUSHING'].parts['Cross-section'].edges.getSequenceFromMask(( '[#a291890c #394 ]', ), ), name='CLAMPED')
+mdb.models['CRUSHING'].parts['Cross-section'].Set(faces=mdb.models['CRUSHING'].parts['Cross-section'].faces.getSequenceFromMask(( '[#1000 ]', ), ), name='Inner_middle')
+mdb.models['CRUSHING'].parts['Cross-section'].Set(faces= mdb.models['CRUSHING'].parts['Cross-section'].faces.getSequenceFromMask(( '[#f3f ]', ), ), name='Outer')
+mdb.models['CRUSHING'].parts['Cross-section'].Set(faces= mdb.models['CRUSHING'].parts['Cross-section'].faces.getSequenceFromMask(( '[#1fff ]', ), ), name='Whole')
+mdb.models['CRUSHING'].parts['Cross-section'].Set(faces= mdb.models['CRUSHING'].parts['Cross-section'].faces.getSequenceFromMask(('[#c0 ]', ), ), name='Side_inner')
 
 
 #TODO Antar dette er for impactor?
