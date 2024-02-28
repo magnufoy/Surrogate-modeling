@@ -23,11 +23,15 @@ mat_card_file = 'C28.inp'
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # DEFINE VARIABLES
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-WIDTH = 127.9
+HEIGHT_INSIDE_WALL_SIDE = 13.45 # BRUKES IKKE
+HEIGHT_INSIDE_WALL_MIDDLE = 43.6
 HEIGHT = 75.9
-HEIGHT_SIDE_INNER = 13.45
-HEIGHT_MIDDLE_INNER = 43.6
-L = 480.0
+WIDTH = 127.9
+OUTER_WALL_TICKNESS = 2.7
+HALF_HEIGHT_INNER = HEIGHT/2-OUTER_WALL_TICKNESS
+HALF_WIDTH_INNER = WIDTH/2-OUTER_WALL_TICKNESS
+LENGTH = 480.0
+R = 10.0
 T_OUTER = 2.7
 T_SIDE_INNER = 2.0
 T_MIDDLE_INNER = 1.5
@@ -63,61 +67,70 @@ model.HomogeneousShellSection(idealization=NO_IDEALIZATION, integrationRule=SIMP
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE SKETCH FOR CROSS-SECTION
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-CROSS_SECTION = mdb.models['3PB'].ConstrainedSketch(name='__profile__', sheetSize=200.0)
-CROSS_SECTION.Line(point1=(0.0, 0.0), point2=(0.0, 21.8))
+CROSS_SECTION = model.ConstrainedSketch(name='__profile__', sheetSize=200.0)
+CROSS_SECTION.Line(point1=(0.0, 0.0), point2=(0.0, HEIGHT_INSIDE_WALL_MIDDLE/2))
 CROSS_SECTION.VerticalConstraint(addUndoState=False, entity=CROSS_SECTION.geometry[2])
-CROSS_SECTION.Line(point1=(0.0, 21.8), point2=(0.0, 37.95))
+CROSS_SECTION.Line(point1=(0.0, HEIGHT_INSIDE_WALL_MIDDLE/2), point2=(0.0, HALF_HEIGHT_INNER))
 CROSS_SECTION.VerticalConstraint(addUndoState=False, entity=CROSS_SECTION.geometry[3])
 CROSS_SECTION.ParallelConstraint(addUndoState=False, entity1=CROSS_SECTION.geometry[2], entity2=CROSS_SECTION.geometry[3])
-CROSS_SECTION.Line(point1=(0.0, 37.95), point2=(53.95, 37.95))
+CROSS_SECTION.Line(point1=(0.0, HALF_HEIGHT_INNER), point2=(HALF_WIDTH_INNER-R, HALF_HEIGHT_INNER))
 CROSS_SECTION.HorizontalConstraint(addUndoState=False, entity=CROSS_SECTION.geometry[4])
 CROSS_SECTION.PerpendicularConstraint(addUndoState=False, entity1=CROSS_SECTION.geometry[3], entity2=CROSS_SECTION.geometry[4])
-CROSS_SECTION.Line(point1=(63.95, 0.0), point2=(63.95, 27.95))
+CROSS_SECTION.Line(point1=(HALF_WIDTH_INNER, 0.0), point2=(HALF_WIDTH_INNER, HALF_HEIGHT_INNER-R))
 CROSS_SECTION.VerticalConstraint(addUndoState=False, entity=CROSS_SECTION.geometry[5])
 CROSS_SECTION.FilletByRadius(curve1=CROSS_SECTION.geometry[4], curve2=CROSS_SECTION.geometry[5], nearPoint1=(45.4165077209473, 37.7963790893555), nearPoint2=(64.2001495361328, 18.3933868408203), radius=10.0)
-mdb.models['3PB'].Part(dimensionality=THREE_D, name='Profile_shell', type=DEFORMABLE_BODY)
-mdb.models['3PB'].parts['Profile_shell'].BaseShellExtrude(depth=480.0, sketch=CROSS_SECTION)
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# CREATE PART FOR CROSS-SECTION
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+model.Part(dimensionality=THREE_D, name='Cross-section', type=DEFORMABLE_BODY)
+model.parts['Cross-section'].BaseShellExtrude(depth=LENGTH, sketch=CROSS_SECTION)
 del CROSS_SECTION
-
-
-mdb.models['3PB'].parts['Profile_shell'].DatumPlaneByPrincipalPlane(offset=0.0, principalPlane=YZPLANE)
-mdb.models['3PB'].parts['Profile_shell'].DatumPlaneByPrincipalPlane(offset=0.0, principalPlane=XZPLANE)
-
-
-mdb.models['3PB'].parts['Profile_shell'].Mirror(keepOriginal=ON, mirrorPlane=mdb.models['3PB'].parts['Profile_shell'].datums[2])
-mdb.models['3PB'].parts['Profile_shell'].Mirror(keepOriginal=ON, mirrorPlane=mdb.models['3PB'].parts['Profile_shell'].datums[3])
-
-# CREATE LINE TO DEVIDE INNER-MIDDLE AND INNER-SIDE
-mdb.models['3PB'].ConstrainedSketch(gridSpacing=21.83, name='__profile__', sheetSize=873.29, transform=mdb.models['3PB'].parts['Profile_shell'].MakeSketchTransform(sketchPlane=mdb.models['3PB'].parts['Profile_shell'].faces[10], sketchPlaneSide=SIDE1, sketchUpEdge=mdb.models['3PB'].parts['Profile_shell'].edges[5], sketchOrientation=RIGHT, origin=(0.0, 0.0, 215.0)))
-mdb.models['3PB'].parts['Profile_shell'].projectReferencesOntoSketch(filter=COPLANAR_EDGES, sketch=mdb.models['3PB'].sketches['__profile__'])
-mdb.models['3PB'].sketches['__profile__'].Line(point1=(-21.8, 215.0), point2=(-21.8, -265.0))
-mdb.models['3PB'].sketches['__profile__'].VerticalConstraint(addUndoState=False, entity=mdb.models['3PB'].sketches['__profile__'].geometry[16])
-mdb.models['3PB'].sketches['__profile__'].PerpendicularConstraint(addUndoState=False, entity1=mdb.models['3PB'].sketches['__profile__'].geometry[12], entity2=mdb.models['3PB'].sketches['__profile__'].geometry[16])
-mdb.models['3PB'].sketches['__profile__'].Line(point1=(21.8, 215.0), point2=(21.8, -265.0))
-mdb.models['3PB'].sketches['__profile__'].VerticalConstraint(addUndoState=False, entity=mdb.models['3PB'].sketches['__profile__'].geometry[17])
-mdb.models['3PB'].sketches['__profile__'].PerpendicularConstraint(addUndoState=False, entity1=mdb.models['3PB'].sketches['__profile__'].geometry[10], entity2=mdb.models['3PB'].sketches['__profile__'].geometry[17])
-mdb.models['3PB'].parts['Profile_shell'].PartitionFaceBySketch(faces=mdb.models['3PB'].parts['Profile_shell'].faces.getSequenceFromMask(('[#400 ]', ), ), sketch=mdb.models['3PB'].sketches['__profile__'], sketchUpEdge=mdb.models['3PB'].parts['Profile_shell'].edges[5])
-del mdb.models['3PB'].sketches['__profile__']
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# CREATE PLANES FOR MIRRORING
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+model.parts['Cross-section'].DatumPlaneByPrincipalPlane(offset=0.0, principalPlane=YZPLANE)
+model.parts['Cross-section'].DatumPlaneByPrincipalPlane(offset=0.0, principalPlane=XZPLANE)
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# MIRROR CROSS-SECTION
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+model.parts['Cross-section'].Mirror(keepOriginal=ON, mirrorPlane=model.parts['Cross-section'].datums[2])
+model.parts['Cross-section'].Mirror(keepOriginal=ON, mirrorPlane=model.parts['Cross-section'].datums[3])
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# CREATE LINE TO DEVIDE INSIDE-WALL-MIDDLE AND INSIDE-WALL-SIDE
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+LINE = model.ConstrainedSketch(gridSpacing=21.83, name='__profile__', sheetSize=873.29, transform=model.parts['Cross-section'].MakeSketchTransform(sketchPlane=model.parts['Cross-section'].faces[10], sketchPlaneSide=SIDE1, sketchUpEdge=model.parts['Cross-section'].edges[5], sketchOrientation=RIGHT, origin=(0.0, 0.0, LENGTH/2)))
+model.parts['Cross-section'].projectReferencesOntoSketch(filter=COPLANAR_EDGES, sketch=LINE)
+LINE.Line(point1=(-HEIGHT_INSIDE_WALL_MIDDLE/2, LENGTH/2), point2=(-HEIGHT_INSIDE_WALL_MIDDLE/2, -LENGTH/2))
+LINE.VerticalConstraint(addUndoState=False, entity=LINE.geometry[16])
+LINE.PerpendicularConstraint(addUndoState=False, entity1=LINE.geometry[12], entity2=LINE.geometry[16])
+LINE.Line(point1=(HEIGHT_INSIDE_WALL_MIDDLE/2, LENGTH/2), point2=(HEIGHT_INSIDE_WALL_MIDDLE/2, -LENGTH/2))
+LINE.VerticalConstraint(addUndoState=False, entity=LINE.geometry[17])
+LINE.PerpendicularConstraint(addUndoState=False, entity1=LINE.geometry[10], entity2=LINE.geometry[17])
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# CREATE PART FOR LINE TO DEVIDE INSIDE-WALL-MIDDLE AND INSIDE-WALL-SIDE
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+model.parts['Cross-section'].PartitionFaceBySketch(faces=model.parts['Cross-section'].faces.getSequenceFromMask(('[#400 ]', ), ), sketch=LINE, sketchUpEdge=model.parts['Cross-section'].edges[5])
+del LINE
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE SETS
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-mdb.models['3PB'].parts['Profile_shell'].Set(faces= mdb.models['3PB'].parts['Profile_shell'].faces.getSequenceFromMask(('[#1000 ]', ), ), name='Middle_inner_wall')
-mdb.models['3PB'].parts['Profile_shell'].Set(faces= mdb.models['3PB'].parts['Profile_shell'].faces.getSequenceFromMask(( '[#3 ]', ), ), name='Side_inner_wall')
-mdb.models['3PB'].parts['Profile_shell'].Set(faces= mdb.models['3PB'].parts['Profile_shell'].faces.getSequenceFromMask(( '[#ffc ]', ), ), name='Thick_wall')
+mdb.models['3PB'].parts['Cross-section'].Set(faces= mdb.models['3PB'].parts['Cross-section'].faces.getSequenceFromMask(('[#1000 ]', ), ), name='Middle_inner_wall')
+mdb.models['3PB'].parts['Cross-section'].Set(faces= mdb.models['3PB'].parts['Cross-section'].faces.getSequenceFromMask(( '[#3 ]', ), ), name='Side_inner_wall')
+mdb.models['3PB'].parts['Cross-section'].Set(faces= mdb.models['3PB'].parts['Cross-section'].faces.getSequenceFromMask(( '[#ffc ]', ), ), name='Thick_wall')
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE SKETCH FOR CUT
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-mdb.models['3PB'].ConstrainedSketch(gridSpacing=24.37, name='__profile__', sheetSize=974.91, transform= mdb.models['3PB'].parts['Profile_shell'].MakeSketchTransform( sketchPlane=mdb.models['3PB'].parts['Profile_shell'].faces[6], sketchPlaneSide=SIDE1,  sketchUpEdge=mdb.models['3PB'].parts['Profile_shell'].edges[24], sketchOrientation=RIGHT, origin=(-63.95, 0.0, 240.0)))
-mdb.models['3PB'].parts['Profile_shell'].projectReferencesOntoSketch(filter= COPLANAR_EDGES, sketch=mdb.models['3PB'].sketches['__profile__'])
+mdb.models['3PB'].ConstrainedSketch(gridSpacing=24.37, name='__profile__', sheetSize=974.91, transform= mdb.models['3PB'].parts['Cross-section'].MakeSketchTransform( sketchPlane=mdb.models['3PB'].parts['Cross-section'].faces[6], sketchPlaneSide=SIDE1,  sketchUpEdge=mdb.models['3PB'].parts['Cross-section'].edges[24], sketchOrientation=RIGHT, origin=(-63.95, 0.0, 240.0)))
+mdb.models['3PB'].parts['Cross-section'].projectReferencesOntoSketch(filter= COPLANAR_EDGES, sketch=mdb.models['3PB'].sketches['__profile__'])
 mdb.models['3PB'].sketches['__profile__'].CircleByCenterPerimeter(center=( 37.95, -40.0), point1=(19.95, -40.0))
-mdb.models['3PB'].parts['Profile_shell'].CutExtrude(flipExtrudeDirection=ON,  sketch=mdb.models['3PB'].sketches['__profile__'], sketchOrientation=RIGHT,  sketchPlane=mdb.models['3PB'].parts['Profile_shell'].faces[6],   sketchPlaneSide=SIDE1, sketchUpEdge= mdb.models['3PB'].parts['Profile_shell'].edges[24])
+mdb.models['3PB'].parts['Cross-section'].CutExtrude(flipExtrudeDirection=ON,  sketch=mdb.models['3PB'].sketches['__profile__'], sketchOrientation=RIGHT,  sketchPlane=mdb.models['3PB'].parts['Cross-section'].faces[6],   sketchPlaneSide=SIDE1, sketchUpEdge= mdb.models['3PB'].parts['Cross-section'].edges[24])
 del mdb.models['3PB'].sketches['__profile__']
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # ASSIGN SECTION CARD
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-model.parts['Profile_shell'].SectionAssignment(offset=0.0, offsetField='', offsetType=MIDDLE_SURFACE, region=model.parts['Profile_shell'].sets['Middle_inner_wall'], sectionName='Middle_inner', thicknessAssignment=FROM_SECTION)
-model.parts['Profile_shell'].SectionAssignment(offset=0.0, offsetField='', offsetType=MIDDLE_SURFACE, region=model.parts['Profile_shell'].sets['Side_inner_wall'], sectionName='Side_inner', thicknessAssignment=FROM_SECTION)
-model.parts['Profile_shell'].SectionAssignment(offset=0.0, offsetField='', offsetType=MIDDLE_SURFACE, region=model.parts['Profile_shell'].sets['Thick_wall'], sectionName='Outer', thicknessAssignment=FROM_SECTION)
+model.parts['Cross-section'].SectionAssignment(offset=0.0, offsetField='', offsetType=MIDDLE_SURFACE, region=model.parts['Cross-section'].sets['Middle_inner_wall'], sectionName='Middle_inner', thicknessAssignment=FROM_SECTION)
+model.parts['Cross-section'].SectionAssignment(offset=0.0, offsetField='', offsetType=MIDDLE_SURFACE, region=model.parts['Cross-section'].sets['Side_inner_wall'], sectionName='Side_inner', thicknessAssignment=FROM_SECTION)
+model.parts['Cross-section'].SectionAssignment(offset=0.0, offsetField='', offsetType=MIDDLE_SURFACE, region=model.parts['Cross-section'].sets['Thick_wall'], sectionName='Outer', thicknessAssignment=FROM_SECTION)
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #--------------------------------------------------------------------------------------------------------
 # CREATE SKETCH FOR IMPACTOR
@@ -168,7 +181,7 @@ assembly = model.rootAssembly
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE INSTANCE FOR PROFILE
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-assembly.Instance(dependent=ON, name='Profile_shell-1', part=model.parts['Profile_shell'])
+assembly.Instance(dependent=ON, name='Cross-section-1', part=model.parts['Cross-section'])
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE INSTANCE FOR SUPPORT 1
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -225,8 +238,8 @@ model.fieldOutputRequests['F-Output-1'].setValues(numIntervals=100, variables=('
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE MESH
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-model.parts['Profile_shell'].seedPart(deviationFactor=0.1, minSizeFactor=0.1, size=ELEMENT_SIZE)
-model.parts['Profile_shell'].generateMesh()
+model.parts['Cross-section'].seedPart(deviationFactor=0.1, minSizeFactor=0.1, size=ELEMENT_SIZE)
+model.parts['Cross-section'].generateMesh()
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE INPUT FILE
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
