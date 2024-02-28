@@ -12,8 +12,8 @@ filename = 'parameters_v1.txt'
 # Distribute thicknesses
 #--------------------------------------------------------------------------------------------------------------------
 outer_wall_thicknesses        = np.random.uniform( 2.5, 2.9, nsamples)
-side_inner_wall_thicknesses   = np.random.uniform( 1.7, 2.3, nsamples)
-middle_inner_wall_thicknesses = np.random.uniform( 1.2, 1.8, nsamples)
+inside_wall_side_thicknesses   = np.random.uniform( 1.7, 2.3, nsamples)
+inside_wall_middle_thicknesses = np.random.uniform( 1.2, 1.8, nsamples)
 #--------------------------------------------------------------------------------------------------------------------
 # Distribute geometries
 #--------------------------------------------------------------------------------------------------------------------
@@ -27,11 +27,11 @@ youngs  = np.random.uniform( 63000.0, 77000.0, nsamples)
 #--------------------------------------------------------------------------------------------------------------------
 # Plot thickness distribution
 #--------------------------------------------------------------------------------------------------------------------
-axis_label = ['Outer wall thickness (mm)', 'Inner wall "side" thickness (mm)', 'Inner wall "middle" thickness (mm)']
+axis_label = ['Outer wall thickness (mm)', 'Inside wall "side" thickness (mm)', 'Inside wall "middle" thickness (mm)']
 fig, axs = plt.subplots(1,3,figsize=(12,4))
 axs[0].hist(outer_wall_thicknesses,20, density=False)
-axs[1].hist(side_inner_wall_thicknesses,20, density=False)
-axs[2].hist(middle_inner_wall_thicknesses,20, density=False)
+axs[1].hist(inside_wall_side_thicknesses,20, density=False)
+axs[2].hist(inside_wall_middle_thicknesses,20, density=False)
 for i in range(0,3):
     axs[i].grid()
     axs[i].set_title(axis_label[i])
@@ -68,11 +68,11 @@ plt.show()
 # Export parameters
 #--------------------------------------------------------------------------------------------------------------------
 fp = open(filename,'w')
-fp.write('sample,t_outer,t_inner_side,t_inner_middle,height,width,sigma0,youngs\n')
+fp.write('sample,outer_wall_tickness,inside_wall_side_tickness,inside_wall_middle_tickness,height,width,sigma0,youngs\n')
 format_string = '{0:3d},{1:3.2f},{2:3.2f},{3:3.2f},{4:4.2f},{5:5.2f},{6:5.2f},{7:6.1f}\n'
 for i in range(0,nsamples):
     data2write = [i+1,
-                  outer_wall_thicknesses[i],side_inner_wall_thicknesses[i],middle_inner_wall_thicknesses[i],
+                  outer_wall_thicknesses[i],inside_wall_side_thicknesses[i],inside_wall_middle_thicknesses[i],
                   heigths[i],widths[i],
                   sigmays[i],youngs[i]]
     fp.write(format_string.format(*data2write))

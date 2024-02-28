@@ -33,8 +33,8 @@ except:
 #-------------------------------------------------------------------------------
 # Define model name
 #-------------------------------------------------------------------------------   
-model_name  = '3PB_BENDING_NOTCHED_{}'
-MAKE_PYTHON = 'MAKE_3PB_SHELL.py'
+model_name  = 'BENDING_{}'
+MAKE_PYTHON = 'MAKE_BENDING_2024.py'
 POST_PYTHON = 'POST_BENDING.py'
 #-------------------------------------------------------------------------------
 # Read parameters for simulations

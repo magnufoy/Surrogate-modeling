@@ -1,5 +1,5 @@
 *****************************************************************************
-****                              OUTER                                  ****
+****                              OUTER WALL                             ****
 *****************************************************************************
 *material,name=C28_OUTER
 *density
@@ -19,9 +19,9 @@
 6,FAIL,"Failure status"
 *User Defined Field, properties=8
 ** dcrit,     WcB,    WcS,   WcL,      c, phi, gamma,  THICK
-     1.0,  390.47,  83.46,  33.0,  0.950, 1.0,   1.0, <THICK_OUTER>
+     1.0,  390.47,  83.46,  33.0,  0.950, 1.0,   1.0, <OUTER_WALL_TICKNESS>
 *****************************************************************************
-****                           INNER SIDE                                ****
+****                           INSIDE WALL SIDE                          ****
 *****************************************************************************
 *material,name=C28_INNER_SIDE
 *density
@@ -41,9 +41,9 @@
 6,FAIL,"Failure status"
 *User Defined Field, properties=8
 ** dcrit,     WcB,    WcS,   WcL,      c, phi, gamma,  THICK
-     1.0,  390.47,  83.46,  33.0,  0.950, 1.0,   1.0, <THICK_INNER_SIDE>
+     1.0,  390.47,  83.46,  33.0,  0.950, 1.0,   1.0, <INSIDE_WALL_SIDE_TICKNESS>
 *****************************************************************************
-****                           INNER MIDDLE                              ****
+****                          INSIDE WALL MIDDLE                         ****
 *****************************************************************************
 *material,name=C28_INNER_MIDDLE
 *density
@@ -63,4 +63,4 @@
 6,FAIL,"Failure status"
 *User Defined Field, properties=8
 ** dcrit,     WcB,    WcS,   WcL,      c, phi, gamma,  THICK
-     1.0,  390.47,  83.46,  33.0,  0.950, 1.0,   1.0, <THICK_INNER_MIDDLE>
+     1.0,  390.47,  83.46,  33.0,  0.950, 1.0,   1.0, <INSIDE_WALL_MIDDLE_TICKNESS>
