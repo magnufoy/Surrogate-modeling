@@ -74,9 +74,9 @@ except:
 model.Material(name='C28_OUTER')
 model.Material(name='C28_INNER_SIDE')
 model.Material(name='C28_INNER_MIDDLE')
-model.HomogeneousShellSection(idealization=NO_IDEALIZATION, integrationRule=SIMPSON, material='C28_OUTER', name='Outer_wall', nodalThicknessField='', numIntPts=5, poissonDefinition=DEFAULT, preIntegrate=OFF, temperature=GRADIENT, thickness=2.7, thicknessField='', thicknessModulus=None, thicknessType=UNIFORM, useDensity=OFF)
-model.HomogeneousShellSection(idealization=NO_IDEALIZATION, integrationRule=SIMPSON, material='C28_INNER_SIDE', name='Side_inner_wall', nodalThicknessField='', numIntPts=5, poissonDefinition=DEFAULT, preIntegrate=OFF, temperature=GRADIENT, thickness=2.0, thicknessField='', thicknessModulus=None, thicknessType=UNIFORM, useDensity=OFF)
-model.HomogeneousShellSection(idealization=NO_IDEALIZATION, integrationRule=SIMPSON, material='C28_INNER_MIDDLE', name='Inner_middle_wall', nodalThicknessField='', numIntPts=5, poissonDefinition=DEFAULT, preIntegrate=OFF, temperature=GRADIENT, thickness=1.5, thicknessField='', thicknessModulus=None, thicknessType=UNIFORM, useDensity=OFF)
+model.HomogeneousShellSection(idealization=NO_IDEALIZATION, integrationRule=SIMPSON, material='C28_OUTER', name='OUTER_WALL', nodalThicknessField='', numIntPts=5, poissonDefinition=DEFAULT, preIntegrate=OFF, temperature=GRADIENT, thickness=2.7, thicknessField='', thicknessModulus=None, thicknessType=UNIFORM, useDensity=OFF)
+model.HomogeneousShellSection(idealization=NO_IDEALIZATION, integrationRule=SIMPSON, material='C28_INNER_SIDE', name='INSIDE_WALL_SIDE', nodalThicknessField='', numIntPts=5, poissonDefinition=DEFAULT, preIntegrate=OFF, temperature=GRADIENT, thickness=2.0, thicknessField='', thicknessModulus=None, thicknessType=UNIFORM, useDensity=OFF)
+model.HomogeneousShellSection(idealization=NO_IDEALIZATION, integrationRule=SIMPSON, material='C28_INNER_MIDDLE', name='INSIDE_WALL_MIDDLE', nodalThicknessField='', numIntPts=5, poissonDefinition=DEFAULT, preIntegrate=OFF, temperature=GRADIENT, thickness=1.5, thicknessField='', thicknessModulus=None, thicknessType=UNIFORM, useDensity=OFF)
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE SKETCH FOR CROSS-SECTION
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -109,7 +109,7 @@ model.parts['Cross-section'].DatumPlaneByPrincipalPlane(offset=0.0, principalPla
 model.parts['Cross-section'].Mirror(keepOriginal=ON, mirrorPlane=model.parts['Cross-section'].datums[2])
 model.parts['Cross-section'].Mirror(keepOriginal=ON, mirrorPlane=model.parts['Cross-section'].datums[3])
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-# CREATE LINE TO DEVIDE INNER-MIDDLE AND INNER-SIDE
+# CREATE LINE TO DEVIDE INSIDE-WALL-MIDDLE AND INSIDE-WALL-SIDE
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 LINE = model.ConstrainedSketch(gridSpacing=21.83, name='__profile__', sheetSize=873.29, transform=model.parts['Cross-section'].MakeSketchTransform(sketchPlane=model.parts['Cross-section'].faces[10], sketchPlaneSide=SIDE1, sketchUpEdge=model.parts['Cross-section'].edges[5], sketchOrientation=RIGHT, origin=(0.0, 0.0, LENGTH/2)))
 model.parts['Cross-section'].projectReferencesOntoSketch(filter=COPLANAR_EDGES, sketch=LINE)
@@ -120,7 +120,7 @@ LINE.Line(point1=(HEIGHT_INSIDE_WALL_MIDDLE/2, LENGTH/2), point2=(HEIGHT_INSIDE_
 LINE.VerticalConstraint(addUndoState=False, entity=LINE.geometry[17])
 LINE.PerpendicularConstraint(addUndoState=False, entity1=LINE.geometry[10], entity2=LINE.geometry[17])
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-# CREATE PART FOR LINE TO DEVIDE INNER-MIDDLE AND INNER-SIDE
+# CREATE PART FOR LINE TO DEVIDE INSIDE-WALL-MIDDLE AND INSIDE-WALL-SIDE
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 model.parts['Cross-section'].PartitionFaceBySketch(faces=model.parts['Cross-section'].faces.getSequenceFromMask(('[#400 ]', ), ), sketch=LINE, sketchUpEdge=model.parts['Cross-section'].edges[5])
 del LINE
@@ -177,17 +177,17 @@ model.parts['Plate_impactor'].features['3D Analytic rigid shell-1'].setValues(de
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE SETS
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-model.parts['Cross-section'].Set(edges= model.parts['Cross-section'].edges.getSequenceFromMask(( '[#a291890c #394 ]', ), ), name='CLAMPED')
-model.parts['Cross-section'].Set(faces=model.parts['Cross-section'].faces.getSequenceFromMask(( '[#1000 ]', ), ), name='Inner_middle')
-model.parts['Cross-section'].Set(faces= model.parts['Cross-section'].faces.getSequenceFromMask(( '[#f3f ]', ), ), name='Outer')
-model.parts['Cross-section'].Set(faces= model.parts['Cross-section'].faces.getSequenceFromMask(( '[#1fff ]', ), ), name='Whole')
-model.parts['Cross-section'].Set(faces= model.parts['Cross-section'].faces.getSequenceFromMask(('[#c0 ]', ), ), name='Side_inner')
+model.parts['Cross-section'].Set(edges=model.parts['Cross-section'].edges.getSequenceFromMask(( '[#a291890c #394 ]', ), ), name='CLAMPED')
+model.parts['Cross-section'].Set(faces=model.parts['Cross-section'].faces.getSequenceFromMask(( '[#1000 ]', ), ), name='INSIDE_WALL_MIDDLE')
+model.parts['Cross-section'].Set(faces=model.parts['Cross-section'].faces.getSequenceFromMask(( '[#f3f ]', ), ), name='OUTER_WALL')
+model.parts['Cross-section'].Set(faces=model.parts['Cross-section'].faces.getSequenceFromMask(( '[#1fff ]', ), ), name='WHOLE_MODEL')
+model.parts['Cross-section'].Set(faces=model.parts['Cross-section'].faces.getSequenceFromMask(('[#c0 ]', ), ), name='INSIDE_WALL_SIDE')
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # ASSIGN SECTION CARD
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-model.parts['Cross-section'].SectionAssignment(offset=0.0, offsetField='', offsetType=MIDDLE_SURFACE, region=model.parts['Cross-section'].sets['Inner_middle'], sectionName='Inner_middle_wall', thicknessAssignment=FROM_SECTION)
-model.parts['Cross-section'].SectionAssignment(offset=0.0, offsetField='', offsetType=MIDDLE_SURFACE, region=model.parts['Cross-section'].sets['Side_inner'], sectionName='Side_inner_wall', thicknessAssignment=FROM_SECTION)
-model.parts['Cross-section'].SectionAssignment(offset=0.0, offsetField='', offsetType=MIDDLE_SURFACE, region=model.parts['Cross-section'].sets['Outer'], sectionName='Outer_wall', thicknessAssignment=FROM_SECTION)
+model.parts['Cross-section'].SectionAssignment(offset=0.0, offsetField='', offsetType=MIDDLE_SURFACE, region=model.parts['Cross-section'].sets['INSIDE_WALL_MIDDLE'], sectionName='INSIDE_WALL_MIDDLE', thicknessAssignment=FROM_SECTION)
+model.parts['Cross-section'].SectionAssignment(offset=0.0, offsetField='', offsetType=MIDDLE_SURFACE, region=model.parts['Cross-section'].sets['INSIDE_WALL_SIDE'], sectionName='INSIDE_WALL_SIDE', thicknessAssignment=FROM_SECTION)
+model.parts['Cross-section'].SectionAssignment(offset=0.0, offsetField='', offsetType=MIDDLE_SURFACE, region=model.parts['Cross-section'].sets['OUTER_WALL'], sectionName='OUTER_WALL', thicknessAssignment=FROM_SECTION)
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE REFERENCE POINT - IMPACTOR
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
