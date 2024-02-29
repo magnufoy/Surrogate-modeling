@@ -108,7 +108,7 @@ del CROSS_SECTION
 model.parts['Cross-section'].DatumPlaneByPrincipalPlane(offset=0.0, principalPlane=YZPLANE)
 model.parts['Cross-section'].DatumPlaneByPrincipalPlane(offset=0.0, principalPlane=XZPLANE)
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-# MIRROR CROSS-SECTIONl
+# MIRROR CROSS-SECTION
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 model.parts['Cross-section'].Mirror(keepOriginal=ON, mirrorPlane=model.parts['Cross-section'].datums[2])
 model.parts['Cross-section'].Mirror(keepOriginal=ON, mirrorPlane=model.parts['Cross-section'].datums[3])
