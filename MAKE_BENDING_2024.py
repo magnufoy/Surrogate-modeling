@@ -39,13 +39,14 @@ except:
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # DEFINE VARIABLES
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-HEIGHT_INSIDE_WALL_SIDE = 13.45 # BRUKES IKKE
-HEIGHT_INSIDE_WALL_MIDDLE = 43.6
 HEIGHT_DIFFERENCE = 0.5
 LENGTH = 480.0
 
-HALF_HEIGHT_INNER = HEIGHT/2-OUTER_WALL_TICKNESS
-HALF_WIDTH_INNER = WIDTH/2-OUTER_WALL_TICKNESS
+HALF_HEIGHT_INNER = HEIGHT/2-OUTER_WALL_TICKNESS/2
+HALF_WIDTH_INNER = WIDTH/2-OUTER_WALL_TICKNESS/2
+
+HEIGHT_INSIDE_WALL_SIDE = 13.45
+HEIGHT_INSIDE_WALL_MIDDLE = HALF_HEIGHT_INNER - HEIGHT_INSIDE_WALL_SIDE
 
 RADIUS = 10.0
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -82,16 +83,14 @@ model.HomogeneousShellSection(idealization=NO_IDEALIZATION, integrationRule=SIMP
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE SKETCH FOR CROSS-SECTION
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-CROSS_SECTION = model.ConstrainedSketch(name='__profile__', sheetSize=200.0)
+CROSS_SECTION = model.ConstrainedSketch(name='cross_section', sheetSize=200.0)
 CROSS_SECTION.Line(point1=(0.0, 0.0), point2=(0.0, HEIGHT_INSIDE_WALL_MIDDLE/2 + HEIGHT_DIFFERENCE))
 CROSS_SECTION.VerticalConstraint(addUndoState=False, entity=CROSS_SECTION.geometry[2])
-CROSS_SECTION.Line(point1=(0.0, HEIGHT_INSIDE_WALL_MIDDLE/2 + HEIGHT_DIFFERENCE), point2=(0.0, HALF_HEIGHT_INNER + HEIGHT_DIFFERENCE + OUTER_WALL_TICKNESS/2))
+CROSS_SECTION.Line(point1=(0.0, HEIGHT_INSIDE_WALL_MIDDLE/2 + HEIGHT_DIFFERENCE), point2=(0.0, HALF_HEIGHT_INNER + HEIGHT_DIFFERENCE))
 CROSS_SECTION.VerticalConstraint(addUndoState=False, entity=CROSS_SECTION.geometry[3])
 CROSS_SECTION.ParallelConstraint(addUndoState=False, entity1=CROSS_SECTION.geometry[2], entity2=CROSS_SECTION.geometry[3])
-CROSS_SECTION.Line(point1=(0.0, HALF_HEIGHT_INNER + HEIGHT_DIFFERENCE + OUTER_WALL_TICKNESS/2), point2=(HALF_WIDTH_INNER-R, HALF_HEIGHT_INNER + OUTER_WALL_TICKNESS/2))
-#CROSS_SECTION.HorizontalConstraint(addUndoState=False, entity=CROSS_SECTION.geometry[4])
-#CROSS_SECTION.PerpendicularConstraint(addUndoState=False, entity1=CROSS_SECTION.geometry[3], entity2=CROSS_SECTION.geometry[4])
-CROSS_SECTION.Line(point1=(HALF_WIDTH_INNER + OUTER_WALL_TICKNESS/2 , 0.0), point2=(HALF_WIDTH_INNER + OUTER_WALL_TICKNESS/2, HALF_HEIGHT_INNER-RADIUS))
+CROSS_SECTION.Line(point1=(0.0, HALF_HEIGHT_INNER + HEIGHT_DIFFERENCE), point2=(HALF_WIDTH_INNER-RADIUS, HALF_HEIGHT_INNER))
+CROSS_SECTION.Line(point1=(HALF_WIDTH_INNER, 0.0), point2=(HALF_WIDTH_INNER, HALF_HEIGHT_INNER-RADIUS))
 CROSS_SECTION.VerticalConstraint(addUndoState=False, entity=CROSS_SECTION.geometry[5])
 CROSS_SECTION.FilletByRadius(curve1=CROSS_SECTION.geometry[4], curve2=CROSS_SECTION.geometry[5], nearPoint1=(45.4165077209473, 37.7963790893555), nearPoint2=(64.2001495361328, 18.3933868408203), radius=10.0)
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -99,7 +98,6 @@ CROSS_SECTION.FilletByRadius(curve1=CROSS_SECTION.geometry[4], curve2=CROSS_SECT
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 model.Part(dimensionality=THREE_D, name='Cross-section', type=DEFORMABLE_BODY)
 model.parts['Cross-section'].BaseShellExtrude(depth=LENGTH, sketch=CROSS_SECTION)
-del CROSS_SECTION
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE PLANES FOR MIRRORING
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -113,7 +111,7 @@ model.parts['Cross-section'].Mirror(keepOriginal=ON, mirrorPlane=model.parts['Cr
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE LINE TO DEVIDE INSIDE-WALL-MIDDLE AND INSIDE-WALL-SIDE
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-LINE = model.ConstrainedSketch(gridSpacing=21.83, name='__profile__', sheetSize=873.29, transform=model.parts['Cross-section'].MakeSketchTransform(sketchPlane=model.parts['Cross-section'].faces[10], sketchPlaneSide=SIDE1, sketchUpEdge=model.parts['Cross-section'].edges[5], sketchOrientation=RIGHT, origin=(0.0, 0.0, LENGTH/2)))
+LINE = model.ConstrainedSketch(gridSpacing=21.83, name='line', sheetSize=873.29, transform=model.parts['Cross-section'].MakeSketchTransform(sketchPlane=model.parts['Cross-section'].faces[10], sketchPlaneSide=SIDE1, sketchUpEdge=model.parts['Cross-section'].edges[5], sketchOrientation=RIGHT, origin=(0.0, 0.0, LENGTH/2)))
 model.parts['Cross-section'].projectReferencesOntoSketch(filter=COPLANAR_EDGES, sketch=LINE)
 LINE.Line(point1=(-HEIGHT_INSIDE_WALL_MIDDLE/2, LENGTH/2), point2=(-HEIGHT_INSIDE_WALL_MIDDLE/2, -LENGTH/2))
 LINE.VerticalConstraint(addUndoState=False, entity=LINE.geometry[16])
@@ -125,18 +123,16 @@ LINE.PerpendicularConstraint(addUndoState=False, entity1=LINE.geometry[10], enti
 # CREATE PART FOR LINE TO DEVIDE INSIDE-WALL-MIDDLE AND INSIDE-WALL-SIDE
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 model.parts['Cross-section'].PartitionFaceBySketch(faces=model.parts['Cross-section'].faces.getSequenceFromMask(('[#400 ]', ), ), sketch=LINE, sketchUpEdge=model.parts['Cross-section'].edges[5])
-del LINE
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE SKETCH FOR CUT
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-CUT = model.ConstrainedSketch(gridSpacing=24.37, name='__profile__', sheetSize=974.91, transform= model.parts['Cross-section'].MakeSketchTransform( sketchPlane=model.parts['Cross-section'].faces[6], sketchPlaneSide=SIDE1,  sketchUpEdge=model.parts['Cross-section'].edges[24], sketchOrientation=RIGHT, origin=(-63.95, 0.0, 240.0)))
-model.parts['Cross-section'].projectReferencesOntoSketch(filter= COPLANAR_EDGES, sketch=model.sketches['__profile__'])
+CUT = model.ConstrainedSketch(gridSpacing=24.37, name='cut', sheetSize=974.91, transform= model.parts['Cross-section'].MakeSketchTransform( sketchPlane=model.parts['Cross-section'].faces[6], sketchPlaneSide=SIDE1,  sketchUpEdge=model.parts['Cross-section'].edges[24], sketchOrientation=RIGHT, origin=(-63.95, 0.0, 240.0)))
+model.parts['Cross-section'].projectReferencesOntoSketch(filter= COPLANAR_EDGES, sketch=model.sketches['cut'])
 CUT.CircleByCenterPerimeter(center=( 37.95, -40.0), point1=(19.95, -40.0))
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # EXTRUDE CUT
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-model.parts['Cross-section'].CutExtrude(flipExtrudeDirection=ON,  sketch=model.sketches['__profile__'], sketchOrientation=RIGHT,  sketchPlane=model.parts['Cross-section'].faces[6],   sketchPlaneSide=SIDE1, sketchUpEdge= model.parts['Cross-section'].edges[24])
-del CUT
+model.parts['Cross-section'].CutExtrude(flipExtrudeDirection=ON,  sketch=model.sketches['cut'], sketchOrientation=RIGHT,  sketchPlane=model.parts['Cross-section'].faces[6],   sketchPlaneSide=SIDE1, sketchUpEdge= model.parts['Cross-section'].edges[24])
 #--------------------------------------------------------------------------------------------------------
 # CREATE SKETCH FOR IMPACTOR
 #--------------------------------------------------------------------------------------------------------
