@@ -39,18 +39,18 @@ mat_card_file = 'C28_{}.inp'
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # DEFINE VARIABLES
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#WIDTH = 127.9
-#HEIGHT= 75.9
-#INSIDE_WALL_MIDDLE_TICKNESS =1.5
-#INSIDE_WALL_SIDE_TICKNESS   = 2
-#OUTER_WALL_TICKNESS         = 2.7
+WIDTH = 127.9
+HEIGHT= 75.9
+INSIDE_WALL_MIDDLE_TICKNESS =1.5
+INSIDE_WALL_SIDE_TICKNESS   = 2
+OUTER_WALL_TICKNESS         = 2.7
 
 
 HEIGHT_DIFFERENCE = 0.5
 LENGTH = 480.0
 
-HALF_HEIGHT_INNER = HEIGHT/2-OUTER_WALL_TICKNESS/2
-HALF_WIDTH_INNER = WIDTH/2-OUTER_WALL_TICKNESS/2
+HALF_HEIGHT_INNER = (HEIGHT/2)- (OUTER_WALL_TICKNESS/2)
+HALF_WIDTH_INNER = (WIDTH/2) -  (OUTER_WALL_TICKNESS/2)
 
 HEIGHT_INSIDE_WALL_SIDE = 13.45
 HEIGHT_INSIDE_WALL_MIDDLE = HALF_HEIGHT_INNER - HEIGHT_INSIDE_WALL_SIDE
@@ -91,8 +91,8 @@ model.HomogeneousShellSection(idealization=NO_IDEALIZATION, integrationRule=SIMP
 # CREATE SKETCH FOR CROSS-SECTION
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 CROSS_SECTION = model.ConstrainedSketch(name='cross_section', sheetSize=200.0)
-CROSS_SECTION.Line(point1=(0.0, 0.0), point2=(0.0, HEIGHT_INSIDE_WALL_MIDDLE/2 + HEIGHT_DIFFERENCE))
-CROSS_SECTION.Line(point1=(0.0, HEIGHT_INSIDE_WALL_MIDDLE/2 + HEIGHT_DIFFERENCE), point2=(0.0, HALF_HEIGHT_INNER + HEIGHT_DIFFERENCE))
+CROSS_SECTION.Line(point1=(0.0, 0.0), point2=(0.0, HEIGHT_INSIDE_WALL_MIDDLE + HEIGHT_DIFFERENCE))
+CROSS_SECTION.Line(point1=(0.0, HEIGHT_INSIDE_WALL_MIDDLE + HEIGHT_DIFFERENCE), point2=(0.0, HALF_HEIGHT_INNER + HEIGHT_DIFFERENCE))
 CROSS_SECTION.Line(point1=(0.0, HALF_HEIGHT_INNER + HEIGHT_DIFFERENCE), point2=(HALF_WIDTH_INNER-RADIUS, HALF_HEIGHT_INNER))
 CROSS_SECTION.Line(point1=(HALF_WIDTH_INNER, 0.0), point2=(HALF_WIDTH_INNER, HALF_HEIGHT_INNER-RADIUS))
 CROSS_SECTION.FilletByRadius(curve1=CROSS_SECTION.geometry[4], curve2=CROSS_SECTION.geometry[5], nearPoint1=(45.4165077209473, 37.7963790893555), nearPoint2=(64.2001495361328, 18.3933868408203), radius=10.0)
@@ -260,8 +260,8 @@ model.parts['Cross-section'].generateMesh()
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE INPUT FILE
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-job = mdb.Job(model='BENDING', name=input_name)
-job.writeInput(consistencyChecking=OFF)
+#job = mdb.Job(model='BENDING', name=input_name)
+#job.writeInput(consistencyChecking=OFF)
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # OPEN INPUT FILE AND INCLUDE THE MATERIAL CARD
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
