@@ -11,9 +11,15 @@ filename = 'parameters_v1.txt'
 #--------------------------------------------------------------------------------------------------------------------
 # Distribute thicknesses
 #--------------------------------------------------------------------------------------------------------------------
-outer_wall_thicknesses        = np.random.uniform( 2.5, 2.9, nsamples)
-inside_wall_side_thicknesses   = np.random.uniform( 1.7, 2.3, nsamples)
-inside_wall_middle_thicknesses = np.random.uniform( 1.2, 1.8, nsamples)
+outer_wall_thicknesses = np.random.uniform(2.5, 2.9, nsamples)
+inside_wall_side_thicknesses = np.zeros(nsamples)
+inside_wall_middle_thicknesses = np.zeros(nsamples)
+for i in range(0, nsamples):
+    inside_wall_side_thicknesses[i] = np.random.uniform(1.7, 2.3)
+    inside_wall_middle_thicknesses[i] = np.random.uniform(1.2, 1.8)
+    while inside_wall_middle_thicknesses[i] > inside_wall_side_thicknesses[i]:
+        inside_wall_side_thicknesses[i] = np.random.uniform(1.7, 2.3)
+        inside_wall_middle_thicknesses[i] = np.random.uniform(1.2, 1.8)
 #--------------------------------------------------------------------------------------------------------------------
 # Distribute geometries
 #--------------------------------------------------------------------------------------------------------------------

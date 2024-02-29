@@ -43,7 +43,7 @@ data_alloys = np.loadtxt(filename,delimiter=',',skiprows=1)
 nsamples = len(data_alloys[:,0])
 #-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
-ABAQUS_PATH = '/opt/abaqus/Commands/abq2022'
+ABAQUS_PATH = '/opt/abaqus/Commands/abq2022' #TODO This needs to be changed
 nthreads = 48
 cleans = ['{}.abq','{}.com','{}.dat','{}.mdl','{}.msg','{}.pac','{}.prt',
           '{}.res','{}.sel','{}.sta','{}.stt']

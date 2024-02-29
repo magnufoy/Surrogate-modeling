@@ -39,13 +39,14 @@ except:
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # DEFINE VARIABLES
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-HEIGHT_INSIDE_WALL_SIDE = 13.45 # BRUKES IKKE
-HEIGHT_INSIDE_WALL_MIDDLE = 43.6
 HEIGHT_DIFFERENCE = 0.5
 LENGTH = 430.0
 
 HALF_HEIGHT_INNER = HEIGHT/2-OUTER_WALL_TICKNESS/2
 HALF_WIDTH_INNER = WIDTH/2-OUTER_WALL_TICKNESS/2
+
+HEIGHT_INSIDE_WALL_SIDE = 13.45
+HEIGHT_INSIDE_WALL_MIDDLE = HALF_HEIGHT_INNER - HEIGHT_INSIDE_WALL_SIDE
 
 RADIUS = 10.0
 
