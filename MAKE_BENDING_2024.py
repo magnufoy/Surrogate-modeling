@@ -41,7 +41,7 @@ except:
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 HEIGHT_INSIDE_WALL_SIDE = 13.45 # BRUKES IKKE
 HEIGHT_INSIDE_WALL_MIDDLE = 43.6
-
+HEIGHT_DIFFERENCE = 0.5
 LENGTH = 480.0
 
 HALF_HEIGHT_INNER = HEIGHT/2-OUTER_WALL_TICKNESS
@@ -91,7 +91,7 @@ CROSS_SECTION.ParallelConstraint(addUndoState=False, entity1=CROSS_SECTION.geome
 CROSS_SECTION.Line(point1=(0.0, HALF_HEIGHT_INNER + HEIGHT_DIFFERENCE + OUTER_WALL_TICKNESS/2), point2=(HALF_WIDTH_INNER-R, HALF_HEIGHT_INNER + OUTER_WALL_TICKNESS/2))
 #CROSS_SECTION.HorizontalConstraint(addUndoState=False, entity=CROSS_SECTION.geometry[4])
 #CROSS_SECTION.PerpendicularConstraint(addUndoState=False, entity1=CROSS_SECTION.geometry[3], entity2=CROSS_SECTION.geometry[4])
-CROSS_SECTION.Line(point1=(HALF_WIDTH_INNER + OUTER_WALL_TICKNESS/2 , 0.0), point2=(HALF_WIDTH_INNER + OUTER_WALL_TICKNESS/2, HALF_HEIGHT_INNER-R))
+CROSS_SECTION.Line(point1=(HALF_WIDTH_INNER + OUTER_WALL_TICKNESS/2 , 0.0), point2=(HALF_WIDTH_INNER + OUTER_WALL_TICKNESS/2, HALF_HEIGHT_INNER-RADIUS))
 CROSS_SECTION.VerticalConstraint(addUndoState=False, entity=CROSS_SECTION.geometry[5])
 CROSS_SECTION.FilletByRadius(curve1=CROSS_SECTION.geometry[4], curve2=CROSS_SECTION.geometry[5], nearPoint1=(45.4165077209473, 37.7963790893555), nearPoint2=(64.2001495361328, 18.3933868408203), radius=10.0)
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -150,7 +150,7 @@ IMPACTOR_PROFILE.VerticalConstraint(addUndoState=False, entity=IMPACTOR_PROFILE.
 #--------------------------------------------------------------------------------------------------------
 impactor_part = model.Part(dimensionality=THREE_D, name='Impactor', type=ANALYTIC_RIGID_SURFACE)
 model.parts['Impactor'].AnalyticRigidSurfRevolve(sketch=IMPACTOR_PROFILE)
-model.rootAssembly.regenerate() # Fra Benjamin for å vise hele platen
+model.rootAssembly.regenerate()  
 #--------------------------------------------------------------------------------------------------------
 # CREATE SKETCH FOR SUPPORT
 #--------------------------------------------------------------------------------------------------------
