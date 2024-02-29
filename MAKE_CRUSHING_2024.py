@@ -112,12 +112,8 @@ model.parts['Cross-section'].Mirror(keepOriginal=ON, mirrorPlane=model.parts['Cr
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 LINE = model.ConstrainedSketch(gridSpacing=21.83, name='__profile__', sheetSize=873.29, transform=model.parts['Cross-section'].MakeSketchTransform(sketchPlane=model.parts['Cross-section'].faces[10], sketchPlaneSide=SIDE1, sketchUpEdge=model.parts['Cross-section'].edges[5], sketchOrientation=RIGHT, origin=(0.0, 0.0, LENGTH/2)))
 model.parts['Cross-section'].projectReferencesOntoSketch(filter=COPLANAR_EDGES, sketch=LINE)
-LINE.Line(point1=(-HEIGHT_INSIDE_WALL_MIDDLE/2, LENGTH/2), point2=(-HEIGHT_INSIDE_WALL_MIDDLE/2, -LENGTH/2))
-LINE.VerticalConstraint(addUndoState=False, entity=LINE.geometry[16])
-LINE.PerpendicularConstraint(addUndoState=False, entity1=LINE.geometry[12], entity2=LINE.geometry[16])
-LINE.Line(point1=(HEIGHT_INSIDE_WALL_MIDDLE/2, LENGTH/2), point2=(HEIGHT_INSIDE_WALL_MIDDLE/2, -LENGTH/2))
-LINE.VerticalConstraint(addUndoState=False, entity=LINE.geometry[17])
-LINE.PerpendicularConstraint(addUndoState=False, entity1=LINE.geometry[10], entity2=LINE.geometry[17])
+LINE.Line(point1=(-HEIGHT_INSIDE_WALL_MIDDLE, LENGTH/2), point2=(-HEIGHT_INSIDE_WALL_MIDDLE, -LENGTH/2))
+LINE.Line(point1=(HEIGHT_INSIDE_WALL_MIDDLE, LENGTH/2), point2=(HEIGHT_INSIDE_WALL_MIDDLE, -LENGTH/2))
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE PART FOR LINE TO DEVIDE INSIDE-WALL-MIDDLE AND INSIDE-WALL-SIDE
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -134,7 +130,6 @@ CUT_1.HorizontalConstraint(addUndoState=False, entity=CUT_1.geometry[3])
 CUT_1.Line(point1=(-LENGTH/2, -HALF_WIDTH_INNER), point2=(-LENGTH/2-CUT_DEPTH, 0.0))
 CUT_1.Line(point1=(-LENGTH/2-CUT_DEPTH, 0.0), point2=(-LENGTH/2, HALF_WIDTH_INNER))
 CUT_1.Line(point1=(-LENGTH/2, HALF_WIDTH_INNER), point2=(-LENGTH/2+CUT_DEPTH, HALF_WIDTH_INNER))
-CUT_1.HorizontalConstraint(addUndoState=False, entity=CUT_1.geometry[6])
 CUT_1.Line(point1=(-LENGTH/2+CUT_DEPTH, HALF_WIDTH_INNER), point2=(-LENGTH/2, 0.0))
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # EXTRUDE CUT 1
@@ -149,11 +144,9 @@ model.parts['Cross-section'].projectReferencesOntoSketch(filter=COPLANAR_EDGES, 
 CUT_2.Line(point1=(LENGTH/2-CUT_DEPTH, -HALF_WIDTH_INNER), point2=(LENGTH/2, 0.0))
 CUT_2.Line(point1=(LENGTH/2, 0.0), point2=(LENGTH/2-CUT_DEPTH, HALF_WIDTH_INNER))
 CUT_2.Line(point1=(LENGTH/2-CUT_DEPTH, HALF_WIDTH_INNER), point2=(LENGTH/2, HALF_WIDTH_INNER))
-CUT_2.HorizontalConstraint(addUndoState=False, entity=CUT_2.geometry[6])
 CUT_2.Line(point1=(LENGTH/2, HALF_WIDTH_INNER), point2=(LENGTH/2+CUT_DEPTH, 0.0))
 CUT_2.Line(point1=(LENGTH/2+CUT_DEPTH, 0.0), point2=(LENGTH/2, -HALF_WIDTH_INNER))
 CUT_2.Line(point1=(LENGTH/2, -HALF_WIDTH_INNER), point2=(LENGTH/2-CUT_DEPTH, -HALF_WIDTH_INNER))
-CUT_2.HorizontalConstraint(addUndoState=False, entity=CUT_2.geometry[9])
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # EXTRUDE CUT 2
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
