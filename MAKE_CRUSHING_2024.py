@@ -41,7 +41,7 @@ except:
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 HEIGHT_INSIDE_WALL_SIDE = 13.45 # BRUKES IKKE
 HEIGHT_INSIDE_WALL_MIDDLE = 43.6
-
+HEIGHT_DIFFERENCE = 0.5
 LENGTH = 430.0
 
 HALF_HEIGHT_INNER = HEIGHT/2-OUTER_WALL_TICKNESS
@@ -85,15 +85,15 @@ model.HomogeneousShellSection(idealization=NO_IDEALIZATION, integrationRule=SIMP
 # CREATE SKETCH FOR CROSS-SECTION
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 CROSS_SECTION = model.ConstrainedSketch(name='__profile__', sheetSize=200.0)
-CROSS_SECTION.Line(point1=(0.0, 0.0), point2=(0.0, HEIGHT_INSIDE_WALL_MIDDLE/2))
+CROSS_SECTION.Line(point1=(0.0, 0.0), point2=(0.0, HEIGHT_INSIDE_WALL_MIDDLE/2 + HEIGHT_DIFFERENCE))
 CROSS_SECTION.VerticalConstraint(addUndoState=False, entity=CROSS_SECTION.geometry[2])
-CROSS_SECTION.Line(point1=(0.0, HEIGHT_INSIDE_WALL_MIDDLE/2), point2=(0.0, HALF_HEIGHT_INNER))
+CROSS_SECTION.Line(point1=(0.0, HEIGHT_INSIDE_WALL_MIDDLE/2 + HEIGHT_DIFFERENCE), point2=(0.0, HALF_HEIGHT_INNER + HEIGHT_DIFFERENCE + OUTER_WALL_TICKNESS/2))
 CROSS_SECTION.VerticalConstraint(addUndoState=False, entity=CROSS_SECTION.geometry[3])
 CROSS_SECTION.ParallelConstraint(addUndoState=False, entity1=CROSS_SECTION.geometry[2], entity2=CROSS_SECTION.geometry[3])
-CROSS_SECTION.Line(point1=(0.0, HALF_HEIGHT_INNER), point2=(HALF_WIDTH_INNER-RADIUS, HALF_HEIGHT_INNER))
-CROSS_SECTION.HorizontalConstraint(addUndoState=False, entity=CROSS_SECTION.geometry[4])
-CROSS_SECTION.PerpendicularConstraint(addUndoState=False, entity1=CROSS_SECTION.geometry[3], entity2=CROSS_SECTION.geometry[4])
-CROSS_SECTION.Line(point1=(HALF_WIDTH_INNER, 0.0), point2=(HALF_WIDTH_INNER, HALF_HEIGHT_INNER-RADIUS))
+CROSS_SECTION.Line(point1=(0.0, HALF_HEIGHT_INNER+ HEIGHT_DIFFERENCE +OUTER_WALL_TICKNESS/2), point2=(HALF_WIDTH_INNER-RADIUS, HALF_HEIGHT_INNER + OUTER_WALL_TICKNESS/2))
+#CROSS_SECTION.HorizontalConstraint(addUndoState=False, entity=CROSS_SECTION.geometry[4])
+#CROSS_SECTION.PerpendicularConstraint(addUndoState=False, entity1=CROSS_SECTION.geometry[3], entity2=CROSS_SECTION.geometry[4])
+CROSS_SECTION.Line(point1=(HALF_WIDTH_INNER + OUTER_WALL_TICKNESS/2, 0.0), point2=(HALF_WIDTH_INNER - RADIUS, HALF_HEIGHT_INNER-RADIUS))
 CROSS_SECTION.VerticalConstraint(addUndoState=False, entity=CROSS_SECTION.geometry[5])
 CROSS_SECTION.FilletByRadius(curve1=CROSS_SECTION.geometry[4], curve2=CROSS_SECTION.geometry[5], nearPoint1=(45.4165077209473, 37.7963790893555), nearPoint2=(64.2001495361328, 18.3933868408203), radius=10.0)
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
