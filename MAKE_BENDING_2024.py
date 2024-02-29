@@ -22,23 +22,30 @@ input_name = 'BENDING_{}'
 mat_name = 'C28'
 mat_card_file = 'C28_{}.inp'
 
-try:
-   E0     = float(sys.argv[-1])
-   SIGMA0 = float(sys.argv[-2])
+#try:
+#   E0     = float(sys.argv[-1])
+#   SIGMA0 = float(sys.argv[-2])
   
-   WIDTH  = float(sys.argv[-3])
-   HEIGHT = float(sys.argv[-4])
-   
-   INSIDE_WALL_MIDDLE_TICKNESS = float(sys.argv[-5])
-   INSIDE_WALL_SIDE_TICKNESS   = float(sys.argv[-6])
-   OUTER_WALL_TICKNESS         = float(sys.argv[-7])
+#   WIDTH  = float(sys.argv[-3])
+#   HEIGHT = float(sys.argv[-4])
+#   
+#   INSIDE_WALL_MIDDLE_TICKNESS = float(sys.argv[-5])
+#   INSIDE_WALL_SIDE_TICKNESS   = float(sys.argv[-6])
+#   OUTER_WALL_TICKNESS         = float(sys.argv[-7])
   
-   MODEL = int(sys.argv[-8])
-except:
-  exit() 
+#   MODEL = int(sys.argv[-8])
+#except:
+#  exit() 
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # DEFINE VARIABLES
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#WIDTH = 127.9
+#HEIGHT= 75.9
+#INSIDE_WALL_MIDDLE_TICKNESS =1.5
+#INSIDE_WALL_SIDE_TICKNESS   = 2
+#OUTER_WALL_TICKNESS         = 2.7
+
+
 HEIGHT_DIFFERENCE = 0.5
 LENGTH = 480.0
 
@@ -85,13 +92,10 @@ model.HomogeneousShellSection(idealization=NO_IDEALIZATION, integrationRule=SIMP
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 CROSS_SECTION = model.ConstrainedSketch(name='cross_section', sheetSize=200.0)
 CROSS_SECTION.Line(point1=(0.0, 0.0), point2=(0.0, HEIGHT_INSIDE_WALL_MIDDLE/2 + HEIGHT_DIFFERENCE))
-CROSS_SECTION.VerticalConstraint(addUndoState=False, entity=CROSS_SECTION.geometry[2])
 CROSS_SECTION.Line(point1=(0.0, HEIGHT_INSIDE_WALL_MIDDLE/2 + HEIGHT_DIFFERENCE), point2=(0.0, HALF_HEIGHT_INNER + HEIGHT_DIFFERENCE))
-CROSS_SECTION.VerticalConstraint(addUndoState=False, entity=CROSS_SECTION.geometry[3])
-CROSS_SECTION.ParallelConstraint(addUndoState=False, entity1=CROSS_SECTION.geometry[2], entity2=CROSS_SECTION.geometry[3])
+
 CROSS_SECTION.Line(point1=(0.0, HALF_HEIGHT_INNER + HEIGHT_DIFFERENCE), point2=(HALF_WIDTH_INNER-RADIUS, HALF_HEIGHT_INNER))
 CROSS_SECTION.Line(point1=(HALF_WIDTH_INNER, 0.0), point2=(HALF_WIDTH_INNER, HALF_HEIGHT_INNER-RADIUS))
-CROSS_SECTION.VerticalConstraint(addUndoState=False, entity=CROSS_SECTION.geometry[5])
 CROSS_SECTION.FilletByRadius(curve1=CROSS_SECTION.geometry[4], curve2=CROSS_SECTION.geometry[5], nearPoint1=(45.4165077209473, 37.7963790893555), nearPoint2=(64.2001495361328, 18.3933868408203), radius=10.0)
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE PART FOR CROSS-SECTION
@@ -262,27 +266,27 @@ job.writeInput(consistencyChecking=OFF)
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # OPEN INPUT FILE AND INCLUDE THE MATERIAL CARD
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-fp = open(input_name.format(MODEL)+'.inp','r')
-lines = fp.read()
-fp.close()
-lines=lines.replace('*Material, name=C28_INSIDE_WALL_SIDE\n','')
-lines=lines.replace('*Material, name=C28_INSIDE_WALL_MIDDLE\n','')
-lines=lines.replace('*Material, name=C28_OUTER_WALL','*include,input={}'.format(mat_card_file.format(MODEL)))
+#fp = open(input_name.format(MODEL)+'.inp','r')
+#lines = fp.read()
+#fp.close()
+#lines=lines.replace('*Material, name=C28_INSIDE_WALL_SIDE\n','')
+#lines=lines.replace('*Material, name=C28_INSIDE_WALL_MIDDLE\n','')
+#lines=lines.replace('*Material, name=C28_OUTER_WALL','*include,input={}'.format(mat_card_file.format(MODEL)))
 
-fp = open(input_name.format(MODEL)+'.inp','w')
-fp.write(lines)
-fp.close()
+#fp = open(input_name.format(MODEL)+'.inp','w')
+#fp.write(lines)
+#fp.close()
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # OPEN MATERIAL CARD FILE AND UPDATE PROPERTIES
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-fp = open('mat_parameter.inc','r')
-lines = fp.read()
-fp.close()
-lines=lines.replace('<SIGMA0>',str(SIGMA0))
-lines=lines.replace('<E0>',str(E0))
-lines=lines.replace('<OUTER_WALL_TICKNESS>',str(OUTER_WALL_TICKNESS))
-lines=lines.replace('<INSIDE_WALL_SIDE_TICKNESS>',str(INSIDE_WALL_SIDE_TICKNESS))
-lines=lines.replace('<INSIDE_WALL_MIDDLE_TICKNESS>',str(INSIDE_WALL_MIDDLE_TICKNESS))
+#fp = open('mat_parameter.inc','r')
+#lines = fp.read()
+#fp.close()
+#lines=lines.replace('<SIGMA0>',str(SIGMA0))
+#lines=lines.replace('<E0>',str(E0))
+#lines=lines.replace('<OUTER_WALL_TICKNESS>',str(OUTER_WALL_TICKNESS))
+#lines=lines.replace('<INSIDE_WALL_SIDE_TICKNESS>',str(INSIDE_WALL_SIDE_TICKNESS))
+#lines=lines.replace('<INSIDE_WALL_MIDDLE_TICKNESS>',str(INSIDE_WALL_MIDDLE_TICKNESS))
 
-fp = open(mat_card_file.format(MODEL),'w')
-fp.write(lines)
+#fp = open(mat_card_file.format(MODEL),'w')
+#fp.write(lines)
