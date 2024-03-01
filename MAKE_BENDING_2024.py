@@ -116,12 +116,9 @@ model.parts['Cross-section'].Mirror(keepOriginal=ON, mirrorPlane=model.parts['Cr
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 LINE = model.ConstrainedSketch(gridSpacing=21.83, name='line', sheetSize=873.29, transform=model.parts['Cross-section'].MakeSketchTransform(sketchPlane=model.parts['Cross-section'].faces[10], sketchPlaneSide=SIDE1, sketchUpEdge=model.parts['Cross-section'].edges[5], sketchOrientation=RIGHT, origin=(0.0, 0.0, LENGTH/2)))
 model.parts['Cross-section'].projectReferencesOntoSketch(filter=COPLANAR_EDGES, sketch=LINE)
-LINE.Line(point1=(-HEIGHT_INSIDE_WALL_MIDDLE/2, LENGTH/2), point2=(-HEIGHT_INSIDE_WALL_MIDDLE/2, -LENGTH/2))
-LINE.VerticalConstraint(addUndoState=False, entity=LINE.geometry[16])
-LINE.PerpendicularConstraint(addUndoState=False, entity1=LINE.geometry[12], entity2=LINE.geometry[16])
-LINE.Line(point1=(HEIGHT_INSIDE_WALL_MIDDLE/2, LENGTH/2), point2=(HEIGHT_INSIDE_WALL_MIDDLE/2, -LENGTH/2))
-LINE.VerticalConstraint(addUndoState=False, entity=LINE.geometry[17])
-LINE.PerpendicularConstraint(addUndoState=False, entity1=LINE.geometry[10], entity2=LINE.geometry[17])
+LINE.Line(point1=(-HEIGHT_INSIDE_WALL_MIDDLE, LENGTH/2), point2=(-HEIGHT_INSIDE_WALL_MIDDLE, -LENGTH/2))
+LINE.Line(point1=(HEIGHT_INSIDE_WALL_MIDDLE, LENGTH/2), point2=(HEIGHT_INSIDE_WALL_MIDDLE, -LENGTH/2))
+
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE PART FOR LINE TO DEVIDE INSIDE-WALL-MIDDLE AND INSIDE-WALL-SIDE
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -166,9 +163,9 @@ model.parts['Support'].AnalyticRigidSurfRevolve(sketch=SUPPORT_PROFILE)
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE SETS
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-model.parts['Cross-section'].Set(faces= model.parts['Cross-section'].faces.getSequenceFromMask(('[#1000 ]', ), ), name='INSIDE_WALL_MIDDLE')
-model.parts['Cross-section'].Set(faces= model.parts['Cross-section'].faces.getSequenceFromMask(( '[#3 ]', ), ), name='INSIDE_WALL_SIDE')
-model.parts['Cross-section'].Set(faces= model.parts['Cross-section'].faces.getSequenceFromMask(( '[#ffc ]', ), ), name='OUTER_WALL')
+model.parts['Cross-section'].Set(faces=model.parts['Cross-section'].faces.getSequenceFromMask(('[#4 ]', ), ), name='INSIDE_WALL_MIDDLE')
+model.parts['Cross-section'].Set(faces=model.parts['Cross-section'].faces.getSequenceFromMask(( '[#90 ]', ), ), name='INSIDE_WALL_SIDE')
+model.parts['Cross-section'].Set(faces= model.parts['Cross-section'].faces.getSequenceFromMask(( '[#3fe6b ]', ), ), name='OUTER_WALL')
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # ASSIGN SECTION CARD
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -257,6 +254,7 @@ model.HistoryOutputRequest(createStepName='Load', name='F-D', numIntervals=100, 
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 model.parts['Cross-section'].seedPart(deviationFactor=0.1, minSizeFactor=0.1, size=ELEMENT_SIZE)
 model.parts['Cross-section'].generateMesh()
+model.rootAssembly.regenerate()
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE INPUT FILE
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
