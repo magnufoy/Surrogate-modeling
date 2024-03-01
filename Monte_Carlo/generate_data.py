@@ -18,7 +18,7 @@ def run_process(cmdlist,jobname,cleans):
     print('Job {} finished'.format(jobname))
     for clean in cleans:
         os.remove(clean.format(jobname))
-    os.system('{0} python {1} {2}'.format(ABAQUS_PATH,POST_PYTHON,jobname))
+    os.system('{0} python {1} {2}'.format(ABAQUS_PATH,POST_PYTHON,jobname)) # Kjører postprosessering
     return
 ################################################################################
 ################################################################################
@@ -43,8 +43,8 @@ data_alloys = np.loadtxt(filename,delimiter=',',skiprows=1)
 nsamples = len(data_alloys[:,0])
 #-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
-ABAQUS_PATH = '/opt/abaqus/Commands/abq2022' #TODO This needs to be changed
-nthreads = 48
+ABAQUS_PATH = '/opt/abaqus/Commands/abq2022'
+nthreads = 2
 cleans = ['{}.abq','{}.com','{}.dat','{}.mdl','{}.msg','{}.pac','{}.prt',
           '{}.res','{}.sel','{}.sta','{}.stt']
 #-------------------------------------------------------------------------------
