@@ -40,13 +40,11 @@ except:
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # DEFINE VARIABLES
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
 #WIDTH = 127.9
 #HEIGHT= 75.9
 #INSIDE_WALL_MIDDLE_TICKNESS =1.5
 #INSIDE_WALL_SIDE_TICKNESS   = 2
 #OUTER_WALL_TICKNESS         = 2.7
-
 
 HEIGHT_DIFFERENCE         = 0.5
 
@@ -107,7 +105,6 @@ CROSS_SECTION.FilletByRadius(curve1=CROSS_SECTION.geometry[4], curve2=CROSS_SECT
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 model.Part(dimensionality=THREE_D, name='Cross-section', type=DEFORMABLE_BODY)
 model.parts['Cross-section'].BaseShellExtrude(depth=LENGTH, sketch=CROSS_SECTION)
-
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE PLANES FOR MIRRORING
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -164,13 +161,13 @@ model.parts['Cross-section'].CutExtrude(flipExtrudeDirection=ON, sketch=CUT_2, s
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #TODO Antar dette er for impactor?
 IMPACTOR = model.ConstrainedSketch(name='IMPACTOR', sheetSize=200.0)
-IMPACTOR.Line(point1=(-100.0, 0.0), point2=(100.0, 0.0))
+IMPACTOR.Line(point1=(-100.0, 0.0), point2=(100.0, 0.0)) # TODO Parameterize
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE PART FOR IMPACTOR
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 model.Part(dimensionality=THREE_D, name='Plate_impactor', type=ANALYTIC_RIGID_SURFACE)
 model.parts['Plate_impactor'].AnalyticRigidSurfExtrude(depth=1.0, sketch=IMPACTOR)
-model.parts['Plate_impactor'].features['3D Analytic rigid shell-1'].setValues(depth=200.0)
+model.parts['Plate_impactor'].features['3D Analytic rigid shell-1'].setValues(depth=200.0) # TODO Parameterize
 model.parts['Plate_impactor'].regenerate() # Fra Benjamin for  vise hele platen
 model.rootAssembly.regenerate() # Fra Benjamin for  vise hele platen
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -210,7 +207,7 @@ assembly.Instance(dependent=ON, name='Cross-section', part=model.parts['Cross-se
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 assembly.Instance(dependent=ON, name='Plate_impactor-1', part=model.parts['Plate_impactor'])
 assembly.rotate(angle=90.0, axisDirection=(1.0, 0.0, 0.0), axisPoint=(0.0, 0.0, 0.0), instanceList=('Plate_impactor-1', ))
-assembly.translate(instanceList=('Plate_impactor-1', ), vector=(0.0, 0.0, 431.0))
+assembly.translate(instanceList=('Plate_impactor-1', ), vector=(0.0, 0.0, 431.0)) # TODO Parameterize
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE STEP
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------

@@ -18,22 +18,23 @@ import sys
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # DEFINE INPUT FILE NAMES
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-input_name = 'BENDING_{}'
-mat_name = 'C28'
+input_name    = 'BENDING_{}'
+mat_name      = 'C28'
 mat_card_file = 'C28_{}.inp'
 
 try:
-   E0     = float(sys.argv[-1])
-   SIGMA0 = float(sys.argv[-2])
+   E0                          = float(sys.argv[-1])
+   SIGMA0                      = float(sys.argv[-2])
  
-   WIDTH  = float(sys.argv[-3])
-   HEIGHT = float(sys.argv[-4])
+   WIDTH                       = float(sys.argv[-3])
+   HEIGHT                      = float(sys.argv[-4])
    
    INSIDE_WALL_MIDDLE_TICKNESS = float(sys.argv[-5])
    INSIDE_WALL_SIDE_TICKNESS   = float(sys.argv[-6])
    OUTER_WALL_TICKNESS         = float(sys.argv[-7])
  
-   MODEL = int(sys.argv[-8])
+   MODEL                       = int(sys.argv[-8])
+
 except:
   exit() 
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -45,15 +46,16 @@ except:
 #INSIDE_WALL_SIDE_TICKNESS   = 2
 #OUTER_WALL_TICKNESS         = 2.7
 
-
 HEIGHT_DIFFERENCE = 0.5
+
 LENGTH = 480.0
 
-HALF_HEIGHT_INNER = (HEIGHT/2)- (OUTER_WALL_TICKNESS/2)
-HALF_WIDTH_INNER = (WIDTH/2) -  (OUTER_WALL_TICKNESS/2)
+HALF_HEIGHT               = (HEIGHT - OUTER_WALL_TICKNESS)/2
+HALF_HEIGHT_CENTER        = HALF_HEIGHT + HEIGHT_DIFFERENCE
+HALF_WIDTH                = (WIDTH - OUTER_WALL_TICKNESS)/2
 
 HEIGHT_INSIDE_WALL_SIDE = 13.45
-HEIGHT_INSIDE_WALL_MIDDLE = HALF_HEIGHT_INNER - HEIGHT_INSIDE_WALL_SIDE
+HEIGHT_INSIDE_WALL_MIDDLE = HALF_HEIGHT_CENTER - HEIGHT_INSIDE_WALL_SIDE
 
 RADIUS = 10.0
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -84,17 +86,17 @@ except:
 model.Material(name='C28_OUTER_WALL')
 model.Material(name='C28_INSIDE_WALL_SIDE')
 model.Material(name='C28_INSIDE_WALL_MIDDLE')
-model.HomogeneousShellSection(idealization=NO_IDEALIZATION, integrationRule=SIMPSON, material='C28_OUTER_WALL', name='OUTER_WALL', nodalThicknessField='', numIntPts=5, poissonDefinition=DEFAULT, preIntegrate=OFF, temperature=GRADIENT, thickness=OUTER_WALL_TICKNESS, thicknessField='', thicknessModulus=None, thicknessType=UNIFORM, useDensity=OFF)
-model.HomogeneousShellSection(idealization=NO_IDEALIZATION, integrationRule=SIMPSON, material='C28_INSIDE_WALL_SIDE', name='INSIDE_WALL_SIDE', nodalThicknessField='', numIntPts=5, poissonDefinition=DEFAULT, preIntegrate=OFF, temperature=GRADIENT, thickness=INSIDE_WALL_SIDE_TICKNESS, thicknessField='', thicknessModulus=None, thicknessType=UNIFORM, useDensity=OFF)
+model.HomogeneousShellSection(idealization=NO_IDEALIZATION, integrationRule=SIMPSON, material='C28_OUTER_WALL'        , name='OUTER_WALL'        , nodalThicknessField='', numIntPts=5, poissonDefinition=DEFAULT, preIntegrate=OFF, temperature=GRADIENT, thickness=OUTER_WALL_TICKNESS        , thicknessField='', thicknessModulus=None, thicknessType=UNIFORM, useDensity=OFF)
+model.HomogeneousShellSection(idealization=NO_IDEALIZATION, integrationRule=SIMPSON, material='C28_INSIDE_WALL_SIDE'  , name='INSIDE_WALL_SIDE'  , nodalThicknessField='', numIntPts=5, poissonDefinition=DEFAULT, preIntegrate=OFF, temperature=GRADIENT, thickness=INSIDE_WALL_SIDE_TICKNESS  , thicknessField='', thicknessModulus=None, thicknessType=UNIFORM, useDensity=OFF)
 model.HomogeneousShellSection(idealization=NO_IDEALIZATION, integrationRule=SIMPSON, material='C28_INSIDE_WALL_MIDDLE', name='INSIDE_WALL_MIDDLE', nodalThicknessField='', numIntPts=5, poissonDefinition=DEFAULT, preIntegrate=OFF, temperature=GRADIENT, thickness=INSIDE_WALL_MIDDLE_TICKNESS, thicknessField='', thicknessModulus=None, thicknessType=UNIFORM, useDensity=OFF)
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE SKETCH FOR CROSS-SECTION
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-CROSS_SECTION = model.ConstrainedSketch(name='cross_section', sheetSize=200.0)
-CROSS_SECTION.Line(point1=(0.0, 0.0), point2=(0.0, HEIGHT_INSIDE_WALL_MIDDLE + HEIGHT_DIFFERENCE))
-CROSS_SECTION.Line(point1=(0.0, HEIGHT_INSIDE_WALL_MIDDLE + HEIGHT_DIFFERENCE), point2=(0.0, HALF_HEIGHT_INNER + HEIGHT_DIFFERENCE))
-CROSS_SECTION.Line(point1=(0.0, HALF_HEIGHT_INNER + HEIGHT_DIFFERENCE), point2=(HALF_WIDTH_INNER-RADIUS, HALF_HEIGHT_INNER))
-CROSS_SECTION.Line(point1=(HALF_WIDTH_INNER, 0.0), point2=(HALF_WIDTH_INNER, HALF_HEIGHT_INNER-RADIUS))
+CROSS_SECTION = model.ConstrainedSketch(name='cross-section', sheetSize=200.0)
+CROSS_SECTION.Line(point1=(       0.0,                       0.0), point2=(                0.0, HEIGHT_INSIDE_WALL_MIDDLE))
+CROSS_SECTION.Line(point1=(       0.0, HEIGHT_INSIDE_WALL_MIDDLE), point2=(                0.0,        HALF_HEIGHT_CENTER))
+CROSS_SECTION.Line(point1=(       0.0,        HALF_HEIGHT_CENTER), point2=(HALF_WIDTH - RADIUS,               HALF_HEIGHT))
+CROSS_SECTION.Line(point1=(HALF_WIDTH,                       0.0), point2=(         HALF_WIDTH,      HALF_HEIGHT - RADIUS))
 CROSS_SECTION.FilletByRadius(curve1=CROSS_SECTION.geometry[4], curve2=CROSS_SECTION.geometry[5], nearPoint1=(45.4165077209473, 37.7963790893555), nearPoint2=(64.2001495361328, 18.3933868408203), radius=10.0)
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE PART FOR CROSS-SECTION
@@ -117,7 +119,7 @@ model.parts['Cross-section'].Mirror(keepOriginal=ON, mirrorPlane=model.parts['Cr
 LINE = model.ConstrainedSketch(gridSpacing=21.83, name='line', sheetSize=873.29, transform=model.parts['Cross-section'].MakeSketchTransform(sketchPlane=model.parts['Cross-section'].faces[10], sketchPlaneSide=SIDE1, sketchUpEdge=model.parts['Cross-section'].edges[5], sketchOrientation=RIGHT, origin=(0.0, 0.0, LENGTH/2)))
 model.parts['Cross-section'].projectReferencesOntoSketch(filter=COPLANAR_EDGES, sketch=LINE)
 LINE.Line(point1=(-HEIGHT_INSIDE_WALL_MIDDLE, LENGTH/2), point2=(-HEIGHT_INSIDE_WALL_MIDDLE, -LENGTH/2))
-LINE.Line(point1=(HEIGHT_INSIDE_WALL_MIDDLE, LENGTH/2), point2=(HEIGHT_INSIDE_WALL_MIDDLE, -LENGTH/2))
+LINE.Line(point1=( HEIGHT_INSIDE_WALL_MIDDLE, LENGTH/2), point2=( HEIGHT_INSIDE_WALL_MIDDLE, -LENGTH/2))
 
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE PART FOR LINE TO DEVIDE INSIDE-WALL-MIDDLE AND INSIDE-WALL-SIDE
@@ -128,18 +130,18 @@ model.parts['Cross-section'].PartitionFaceBySketch(faces=model.parts['Cross-sect
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 CUT = model.ConstrainedSketch(gridSpacing=24.37, name='cut', sheetSize=974.91, transform= model.parts['Cross-section'].MakeSketchTransform( sketchPlane=model.parts['Cross-section'].faces[6], sketchPlaneSide=SIDE1,  sketchUpEdge=model.parts['Cross-section'].edges[24], sketchOrientation=RIGHT, origin=(-63.95, 0.0, 240.0)))
 model.parts['Cross-section'].projectReferencesOntoSketch(filter= COPLANAR_EDGES, sketch=model.sketches['cut'])
-CUT.CircleByCenterPerimeter(center=( 37.95, -40.0), point1=(19.95, -40.0))
+CUT.CircleByCenterPerimeter(center=( 37.95, -40.0), point1=(19.95, -40.0)) # TODO Parameterize
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # EXTRUDE CUT
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-model.parts['Cross-section'].CutExtrude(flipExtrudeDirection=ON,  sketch=model.sketches['cut'], sketchOrientation=RIGHT,  sketchPlane=model.parts['Cross-section'].faces[6],   sketchPlaneSide=SIDE1, sketchUpEdge= model.parts['Cross-section'].edges[24])
+model.parts['Cross-section'].CutExtrude(flipExtrudeDirection=ON,  sketch=CUT, sketchOrientation=RIGHT,  sketchPlane=model.parts['Cross-section'].faces[6],   sketchPlaneSide=SIDE1, sketchUpEdge= model.parts['Cross-section'].edges[24])
 #--------------------------------------------------------------------------------------------------------
 # CREATE SKETCH FOR IMPACTOR
 #--------------------------------------------------------------------------------------------------------
 IMPACTOR_PROFILE = model.ConstrainedSketch(name='IMPACTOR_PROFILE', sheetSize=200.0)
-IMPACTOR_PROFILE.ConstructionLine(point1=(0.0, -100.0), point2=(0.0, 100.0))
+IMPACTOR_PROFILE.ConstructionLine(point1=(0.0, -100.0), point2=(0.0, 100.0)) # TODO Parameterize
 IMPACTOR_PROFILE.FixedConstraint(entity=IMPACTOR_PROFILE.geometry[2])
-IMPACTOR_PROFILE.Line(point1=(30.0, -100.0), point2=(30.0, 100.0))
+IMPACTOR_PROFILE.Line(point1=(30.0, -100.0), point2=(30.0, 100.0)) # TODO Parameterize
 IMPACTOR_PROFILE.VerticalConstraint(addUndoState=False, entity=IMPACTOR_PROFILE.geometry[3])
 #--------------------------------------------------------------------------------------------------------
 # CREATE PART FOR IMPACTOR
@@ -151,9 +153,9 @@ model.rootAssembly.regenerate()
 # CREATE SKETCH FOR SUPPORT
 #--------------------------------------------------------------------------------------------------------
 SUPPORT_PROFILE = model.ConstrainedSketch(name='SUPPORT_PROFILE', sheetSize=200.0)
-SUPPORT_PROFILE.ConstructionLine(point1=(0.0,  -100.0), point2=(0.0, 100.0))
+SUPPORT_PROFILE.ConstructionLine(point1=(0.0,  -100.0), point2=(0.0, 100.0)) # TODO Parameterize
 SUPPORT_PROFILE.FixedConstraint(entity=SUPPORT_PROFILE.geometry[2])
-SUPPORT_PROFILE.Line(point1=(30.0, -100.0), point2=(30.0, 100.0))
+SUPPORT_PROFILE.Line(point1=(30.0, -100.0), point2=(30.0, 100.0)) # TODO Parameterize
 SUPPORT_PROFILE.VerticalConstraint(addUndoState=False, entity=SUPPORT_PROFILE.geometry[3])
 #--------------------------------------------------------------------------------------------------------
 # CREATE PART FOR SUPPORT
@@ -163,15 +165,15 @@ model.parts['Support'].AnalyticRigidSurfRevolve(sketch=SUPPORT_PROFILE)
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE SETS
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-model.parts['Cross-section'].Set(faces= model.parts['Cross-section'].faces.getSequenceFromMask(( '[#3fe6b ]', ), ), name='OUTER_WALL')
-model.parts['Cross-section'].Set(faces= model.parts['Cross-section'].faces.getSequenceFromMask(( '[#190 ]', ), ), name='INSIDE_WALL_SIDE')
-model.parts['Cross-section'].Set(faces= model.parts['Cross-section'].faces.getSequenceFromMask(( '[#4 ]', ), ), name='INSIDE_WALL_MIDDLE')
+model.parts['Cross-section'].Set(faces= model.parts['Cross-section'].faces.getSequenceFromMask(( '[#3fe6b ]', ), ), name='OUTER_WALL'        )
+model.parts['Cross-section'].Set(faces= model.parts['Cross-section'].faces.getSequenceFromMask(( '[#190 ]'  , ), ), name='INSIDE_WALL_SIDE'  )
+model.parts['Cross-section'].Set(faces= model.parts['Cross-section'].faces.getSequenceFromMask(( '[#4 ]'    , ), ), name='INSIDE_WALL_MIDDLE')
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # ASSIGN SECTION CARD
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 model.parts['Cross-section'].SectionAssignment(offset=0.0, offsetField='', offsetType=MIDDLE_SURFACE, region=model.parts['Cross-section'].sets['INSIDE_WALL_MIDDLE'], sectionName='INSIDE_WALL_MIDDLE', thicknessAssignment=FROM_SECTION)
-model.parts['Cross-section'].SectionAssignment(offset=0.0, offsetField='', offsetType=MIDDLE_SURFACE, region=model.parts['Cross-section'].sets['INSIDE_WALL_SIDE'], sectionName='INSIDE_WALL_SIDE', thicknessAssignment=FROM_SECTION)
-model.parts['Cross-section'].SectionAssignment(offset=0.0, offsetField='', offsetType=MIDDLE_SURFACE, region=model.parts['Cross-section'].sets['OUTER_WALL'], sectionName='OUTER_WALL', thicknessAssignment=FROM_SECTION)
+model.parts['Cross-section'].SectionAssignment(offset=0.0, offsetField='', offsetType=MIDDLE_SURFACE, region=model.parts['Cross-section'].sets['INSIDE_WALL_SIDE']  , sectionName='INSIDE_WALL_SIDE'  , thicknessAssignment=FROM_SECTION)
+model.parts['Cross-section'].SectionAssignment(offset=0.0, offsetField='', offsetType=MIDDLE_SURFACE, region=model.parts['Cross-section'].sets['OUTER_WALL']        , sectionName='OUTER_WALL'        , thicknessAssignment=FROM_SECTION)
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE REFERENCE POINT - IMPACTOR
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -186,7 +188,7 @@ model.parts['Support'].Set(name='SUPPORT_RP', referencePoints=(model.parts['Supp
 # CREATE SURFACES
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 model.parts['Impactor'].Surface(name='Impactor', side2Faces=model.parts['Impactor'].faces.getSequenceFromMask(('[#1 ]', ), ))
-model.parts['Support'].Surface(name='Support', side2Faces=model.parts['Support'].faces.getSequenceFromMask(('[#1 ]', ), ))
+model.parts['Support' ].Surface(name='Support' , side2Faces=model.parts['Support' ].faces.getSequenceFromMask(('[#1 ]', ), ))
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE ASSEMBLY
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -225,9 +227,9 @@ model.SmoothStepAmplitude(data=((0.0, 0.0), (TIME_RAMP, 1.0)), name='Load_amp', 
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE INITIAL BOUNDARY CONDITIONS
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-model.DisplacementBC(amplitude=UNSET, createStepName='Initial', distributionType=UNIFORM, fieldName='', localCsys=None, name='Clamp_support1', region=assembly.instances['Support-1'].sets['SUPPORT_RP'], u1=SET, u2=SET, u3=SET, ur1=SET, ur2=SET, ur3=SET)
-model.DisplacementBC(amplitude=UNSET, createStepName='Initial', distributionType=UNIFORM, fieldName='', localCsys=None, name='Clamp_support_2', region=assembly.instances['Support-2'].sets['SUPPORT_RP'], u1=SET, u2=SET, u3=SET, ur1=SET, ur2=SET, ur3=SET)
-model.DisplacementBC(amplitude=UNSET, createStepName='Initial', distributionType=UNIFORM, fieldName='', localCsys=None, name='Clamp_impactor', region=assembly.instances['Impactor-1'].sets['IMPACTOR_PP'], u1=SET, u2=UNSET, u3=SET, ur1=SET, ur2=SET, ur3=SET)
+model.DisplacementBC(amplitude=UNSET, createStepName='Initial', distributionType=UNIFORM, fieldName='', localCsys=None, name='Clamp_support1' , region=assembly.instances['Support-1' ].sets['SUPPORT_RP' ], u1=SET, u2=SET  , u3=SET, ur1=SET, ur2=SET, ur3=SET)
+model.DisplacementBC(amplitude=UNSET, createStepName='Initial', distributionType=UNIFORM, fieldName='', localCsys=None, name='Clamp_support_2', region=assembly.instances['Support-2' ].sets['SUPPORT_RP' ], u1=SET, u2=SET  , u3=SET, ur1=SET, ur2=SET, ur3=SET)
+model.DisplacementBC(amplitude=UNSET, createStepName='Initial', distributionType=UNIFORM, fieldName='', localCsys=None, name='Clamp_impactor' , region=assembly.instances['Impactor-1'].sets['IMPACTOR_PP'], u1=SET, u2=UNSET, u3=SET, ur1=SET, ur2=SET, ur3=SET)
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE LOADING CONDITIONS
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
