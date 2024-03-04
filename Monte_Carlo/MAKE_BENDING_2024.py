@@ -58,6 +58,8 @@ HEIGHT_INSIDE_WALL_SIDE = 13.45
 HEIGHT_INSIDE_WALL_MIDDLE = HALF_HEIGHT_CENTER - HEIGHT_INSIDE_WALL_SIDE
 
 RADIUS = 10.0
+
+IMPACTOR_AND_SUPPORT_RADIUS = 30.0
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # DEFINE MESH SIZE
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -124,7 +126,7 @@ LINE.Line(point1=( HEIGHT_INSIDE_WALL_MIDDLE, LENGTH/2), point2=( HEIGHT_INSIDE_
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE PART FOR LINE TO DEVIDE INSIDE-WALL-MIDDLE AND INSIDE-WALL-SIDE
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-model.parts['Cross-section'].PartitionFaceBySketch(faces=model.parts['Cross-section'].faces.getSequenceFromMask(('[#400 ]', ), ), sketch=LINE, sketchUpEdge=model.parts['Cross-section'].edges[5])
+model.parts['Cross-section'].PartitionFaceBySketch(faces=model.parts['Cross-section'].faces.findAt(( 0, 0, 0),), sketch=LINE, sketchUpEdge=model.parts['Cross-section'].edges[5])
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE SKETCH FOR CUT
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -141,7 +143,7 @@ model.parts['Cross-section'].CutExtrude(flipExtrudeDirection=ON,  sketch=CUT, sk
 IMPACTOR_PROFILE = model.ConstrainedSketch(name='IMPACTOR_PROFILE', sheetSize=200.0)
 IMPACTOR_PROFILE.ConstructionLine(point1=(0.0, -100.0), point2=(0.0, 100.0)) # TODO Parameterize
 IMPACTOR_PROFILE.FixedConstraint(entity=IMPACTOR_PROFILE.geometry[2])
-IMPACTOR_PROFILE.Line(point1=(30.0, -100.0), point2=(30.0, 100.0)) # TODO Parameterize
+IMPACTOR_PROFILE.Line(point1=(IMPACTOR_AND_SUPPORT_RADIUS, -100.0), point2=(IMPACTOR_AND_SUPPORT_RADIUS, 100.0)) # TODO Parameterize
 IMPACTOR_PROFILE.VerticalConstraint(addUndoState=False, entity=IMPACTOR_PROFILE.geometry[3])
 #--------------------------------------------------------------------------------------------------------
 # CREATE PART FOR IMPACTOR
@@ -155,7 +157,7 @@ model.rootAssembly.regenerate()
 SUPPORT_PROFILE = model.ConstrainedSketch(name='SUPPORT_PROFILE', sheetSize=200.0)
 SUPPORT_PROFILE.ConstructionLine(point1=(0.0,  -100.0), point2=(0.0, 100.0)) # TODO Parameterize
 SUPPORT_PROFILE.FixedConstraint(entity=SUPPORT_PROFILE.geometry[2])
-SUPPORT_PROFILE.Line(point1=(30.0, -100.0), point2=(30.0, 100.0)) # TODO Parameterize
+SUPPORT_PROFILE.Line(point1=(IMPACTOR_AND_SUPPORT_RADIUS, -100.0), point2=(IMPACTOR_AND_SUPPORT_RADIUS, 100.0)) # TODO Parameterize
 SUPPORT_PROFILE.VerticalConstraint(addUndoState=False, entity=SUPPORT_PROFILE.geometry[3])
 #--------------------------------------------------------------------------------------------------------
 # CREATE PART FOR SUPPORT
@@ -165,9 +167,21 @@ model.parts['Support'].AnalyticRigidSurfRevolve(sketch=SUPPORT_PROFILE)
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE SETS
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-model.parts['Cross-section'].Set(faces= model.parts['Cross-section'].faces.getSequenceFromMask(( '[#3fe6b ]', ), ), name='OUTER_WALL'        )
-model.parts['Cross-section'].Set(faces= model.parts['Cross-section'].faces.getSequenceFromMask(( '[#190 ]'  , ), ), name='INSIDE_WALL_SIDE'  )
-model.parts['Cross-section'].Set(faces= model.parts['Cross-section'].faces.getSequenceFromMask(( '[#4 ]'    , ), ), name='INSIDE_WALL_MIDDLE')
+# OUTER WALL
+faces_outer_wall = model.parts['Cross-section'].faces.findAt(((           0,  HALF_HEIGHT_CENTER, 0),),
+                                                             ((           0, -HALF_HEIGHT_CENTER, 0),),
+                                                             ((  HALF_WIDTH,                   0, 0),),
+                                                             (( -HALF_WIDTH,                   0, 0),),)
+model.parts['Cross-section'].Set(faces=faces_outer_wall, name='OUTER_WALL')
+
+# INSIDE WALL SIDE
+faces_inside_wall_side = model.parts['Cross-section'].faces.findAt((( 0,    HEIGHT_INSIDE_WALL_MIDDLE + HEIGHT_INSIDE_WALL_SIDE/2, 0),),
+                                                                   (( 0, -(HEIGHT_INSIDE_WALL_MIDDLE + HEIGHT_INSIDE_WALL_SIDE/2), 0),),)
+model.parts['Cross-section'].Set(faces=faces_inside_wall_side, name='INSIDE_WALL_SIDE'  )
+
+# INSIDE WALL MIDDLE
+faces_inside_wall_middle = model.parts['Cross-section'].faces.findAt((( 0, 0, 0),),)
+model.parts['Cross-section'].Set(faces=faces_inside_wall_middle, name='INSIDE_WALL_MIDDLE')
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # ASSIGN SECTION CARD
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -187,8 +201,9 @@ model.parts['Support'].Set(name='SUPPORT_RP', referencePoints=(model.parts['Supp
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE SURFACES
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-model.parts['Impactor'].Surface(name='Impactor', side2Faces=model.parts['Impactor'].faces.getSequenceFromMask(('[#1 ]', ), ))
-model.parts['Support' ].Surface(name='Support' , side2Faces=model.parts['Support' ].faces.getSequenceFromMask(('[#1 ]', ), ))
+impactor_support_surface = model.parts['Impactor'].facesfindAt(((IMPACTOR_AND_SUPPORT_RADIUS, 0, 0),),)
+model.parts['Impactor'].Surface(name='Impactor', side2Faces=impactor_support_surface)
+model.parts['Support' ].Surface(name='Support' , side2Faces=impactor_support_surface)
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE ASSEMBLY
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
