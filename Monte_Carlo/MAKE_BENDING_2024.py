@@ -25,14 +25,14 @@ mat_card_file = 'C28_{}.inp'
 try:
    E0     = float(sys.argv[-1])
    SIGMA0 = float(sys.argv[-2])
-  
+ 
    WIDTH  = float(sys.argv[-3])
    HEIGHT = float(sys.argv[-4])
    
    INSIDE_WALL_MIDDLE_TICKNESS = float(sys.argv[-5])
    INSIDE_WALL_SIDE_TICKNESS   = float(sys.argv[-6])
    OUTER_WALL_TICKNESS         = float(sys.argv[-7])
-  
+ 
    MODEL = int(sys.argv[-8])
 except:
   exit() 
@@ -163,9 +163,9 @@ model.parts['Support'].AnalyticRigidSurfRevolve(sketch=SUPPORT_PROFILE)
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE SETS
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-model.parts['Cross-section'].Set(faces=model.parts['Cross-section'].faces.getSequenceFromMask(('[#4 ]', ), ), name='INSIDE_WALL_MIDDLE')
-model.parts['Cross-section'].Set(faces=model.parts['Cross-section'].faces.getSequenceFromMask(( '[#90 ]', ), ), name='INSIDE_WALL_SIDE')
 model.parts['Cross-section'].Set(faces= model.parts['Cross-section'].faces.getSequenceFromMask(( '[#3fe6b ]', ), ), name='OUTER_WALL')
+model.parts['Cross-section'].Set(faces= model.parts['Cross-section'].faces.getSequenceFromMask(( '[#190 ]', ), ), name='INSIDE_WALL_SIDE')
+model.parts['Cross-section'].Set(faces= model.parts['Cross-section'].faces.getSequenceFromMask(( '[#4 ]', ), ), name='INSIDE_WALL_MIDDLE')
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # ASSIGN SECTION CARD
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -255,10 +255,11 @@ model.HistoryOutputRequest(createStepName='Load', name='F-D', numIntervals=100, 
 model.parts['Cross-section'].seedPart(deviationFactor=0.1, minSizeFactor=0.1, size=ELEMENT_SIZE)
 model.parts['Cross-section'].generateMesh()
 model.rootAssembly.regenerate()
+model.rootAssembly.regenerate()
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE INPUT FILE
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-job = mdb.Job(model='BENDING', name=input_name)
+job = mdb.Job(model='BENDING', name=input_name.format(MODEL))
 job.writeInput(consistencyChecking=OFF)
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # OPEN INPUT FILE AND INCLUDE THE MATERIAL CARD
