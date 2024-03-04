@@ -28,7 +28,6 @@ ratio_between_side_and_middle = np.array([np.random.uniform(min_ratios_between_s
 inside_wall_side_thicknesses_2 = ratio_between_side_and_middle*inside_wall_middle_thicknesses_2
 
 # Plot thickness distribution - histogram
-
 axis_label = ['Outer wall thickness (mm)', 'Inside wall "side" thickness (mm)', 'Inside wall "middle" thickness (mm)']
 fig, axs = plt.subplots(1,3,figsize=(12,4))
 axs[0].hist(outer_wall_thicknesses,20, density=False)
@@ -52,5 +51,3 @@ for i in range(0,3):
 plt.tight_layout()
 plt.savefig('Option_2.pdf')
 plt.show()
-
-print('Done')

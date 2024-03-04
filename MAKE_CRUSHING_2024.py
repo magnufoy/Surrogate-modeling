@@ -51,11 +51,12 @@ except:
 HEIGHT_DIFFERENCE = 0.5
 LENGTH = 430.0
 
-HALF_HEIGHT_INNER = HEIGHT/2-OUTER_WALL_TICKNESS/2
-HALF_WIDTH_INNER = WIDTH/2-OUTER_WALL_TICKNESS/2
+HALF_HEIGHT = (HEIGHT - OUTER_WALL_TICKNESS)/2
+HALF_HEIGHT_CENTER = HALF_HEIGHT + HEIGHT_DIFFERENCE
+HALF_WIDTH = (WIDTH - OUTER_WALL_TICKNESS)/2
 
 HEIGHT_INSIDE_WALL_SIDE = 13.45
-HEIGHT_INSIDE_WALL_MIDDLE = HALF_HEIGHT_INNER - HEIGHT_INSIDE_WALL_SIDE
+HEIGHT_INSIDE_WALL_MIDDLE = HALF_HEIGHT_CENTER - HEIGHT_INSIDE_WALL_SIDE
 
 RADIUS = 10.0
 
@@ -95,10 +96,10 @@ model.HomogeneousShellSection(idealization=NO_IDEALIZATION, integrationRule=SIMP
 # CREATE SKETCH FOR CROSS-SECTION
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 CROSS_SECTION = model.ConstrainedSketch(name='cross-section', sheetSize=200.0)
-CROSS_SECTION.Line(point1=(0.0, 0.0), point2=(0.0, HEIGHT_INSIDE_WALL_MIDDLE + HEIGHT_DIFFERENCE))
-CROSS_SECTION.Line(point1=(0.0, HEIGHT_INSIDE_WALL_MIDDLE + HEIGHT_DIFFERENCE), point2=(0.0, HALF_HEIGHT_INNER + HEIGHT_DIFFERENCE))
-CROSS_SECTION.Line(point1=(0.0, HALF_HEIGHT_INNER+ HEIGHT_DIFFERENCE ), point2=(HALF_WIDTH_INNER-RADIUS, HALF_HEIGHT_INNER ))
-CROSS_SECTION.Line(point1=(HALF_WIDTH_INNER, 0.0), point2=(HALF_WIDTH_INNER , HALF_HEIGHT_INNER-RADIUS))
+CROSS_SECTION.Line(point1=(0.0, 0.0), point2=(0.0, HEIGHT_INSIDE_WALL_MIDDLE))
+CROSS_SECTION.Line(point1=(0.0, HEIGHT_INSIDE_WALL_MIDDLE), point2=(0.0, HALF_HEIGHT_CENTER))
+CROSS_SECTION.Line(point1=(0.0, HALF_HEIGHT_CENTER ), point2=(HALF_WIDTH - RADIUS, HALF_HEIGHT ))
+CROSS_SECTION.Line(point1=(HALF_WIDTH, 0.0), point2=(HALF_WIDTH, HALF_HEIGHT - RADIUS))
 CROSS_SECTION.FilletByRadius(curve1=CROSS_SECTION.geometry[4], curve2=CROSS_SECTION.geometry[5], nearPoint1=(45.4165077209473, 37.7963790893555), nearPoint2=(64.2001495361328, 18.3933868408203), radius=10.0)
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE PART FOR CROSS-SECTION
@@ -133,12 +134,12 @@ del LINE
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 CUT_1= model.ConstrainedSketch(gridSpacing=25.02, name='cut_1', sheetSize=1000.98, transform=model.parts['Cross-section'].MakeSketchTransform(sketchPlane=model.parts['Cross-section'].datums[3], sketchPlaneSide=SIDE1, sketchUpEdge=model.parts['Cross-section'].edges[41], sketchOrientation=LEFT, origin=(0.0, 0.0, LENGTH/2)))
 model.parts['Cross-section'].projectReferencesOntoSketch(filter=COPLANAR_EDGES, sketch=CUT_1)
-CUT_1.Line(point1=(LENGTH/2-CUT_DEPTH, -HALF_WIDTH_INNER), point2=(LENGTH/2, 0.0))
-CUT_1.Line(point1=(LENGTH/2, 0.0), point2=(LENGTH/2-CUT_DEPTH, HALF_WIDTH_INNER))
-CUT_1.Line(point1=(LENGTH/2-CUT_DEPTH, HALF_WIDTH_INNER), point2=(LENGTH/2, HALF_WIDTH_INNER))
-CUT_1.Line(point1=(LENGTH/2, HALF_WIDTH_INNER), point2=(LENGTH/2+CUT_DEPTH, 0.0))
-CUT_1.Line(point1=(LENGTH/2+CUT_DEPTH, 0.0), point2=(LENGTH/2, -HALF_WIDTH_INNER))
-CUT_1.Line(point1=(LENGTH/2, -HALF_WIDTH_INNER), point2=(LENGTH/2-CUT_DEPTH, -HALF_WIDTH_INNER))
+CUT_1.Line(point1=(LENGTH/2 - CUT_DEPTH, -HALF_WIDTH), point2=(LENGTH/2          ,         0.0))
+CUT_1.Line(point1=(LENGTH/2            ,         0.0), point2=(LENGTH/2-CUT_DEPTH,  HALF_WIDTH))
+CUT_1.Line(point1=(LENGTH/2 - CUT_DEPTH,  HALF_WIDTH), point2=(LENGTH/2          ,  HALF_WIDTH))
+CUT_1.Line(point1=(LENGTH/2            ,  HALF_WIDTH), point2=(LENGTH/2+CUT_DEPTH,         0.0))
+CUT_1.Line(point1=(LENGTH/2 + CUT_DEPTH,         0.0), point2=(LENGTH/2          , -HALF_WIDTH))
+CUT_1.Line(point1=(LENGTH/2            , -HALF_WIDTH), point2=(LENGTH/2-CUT_DEPTH, -HALF_WIDTH))
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # EXTRUDE CUT 2
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -149,12 +150,12 @@ del CUT_1
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 CUT_2 = model.ConstrainedSketch(gridSpacing=25.02, name='cut_2', sheetSize=1000.98, transform=model.parts['Cross-section'].MakeSketchTransform(sketchPlane=model.parts['Cross-section'].datums[3], sketchPlaneSide=SIDE1, sketchUpEdge=model.parts['Cross-section'].edges[41], sketchOrientation=RIGHT, origin=(0.0, 0.0, LENGTH/2)))
 model.parts['Cross-section'].projectReferencesOntoSketch(filter=COPLANAR_EDGES, sketch=CUT_2)
-CUT_2.Line(point1=(LENGTH/2-CUT_DEPTH, -HALF_WIDTH_INNER), point2=(LENGTH/2, 0.0))
-CUT_2.Line(point1=(LENGTH/2, 0.0), point2=(LENGTH/2-CUT_DEPTH, HALF_WIDTH_INNER))
-CUT_2.Line(point1=(LENGTH/2-CUT_DEPTH, HALF_WIDTH_INNER), point2=(LENGTH/2, HALF_WIDTH_INNER))
-CUT_2.Line(point1=(LENGTH/2, HALF_WIDTH_INNER), point2=(LENGTH/2+CUT_DEPTH, 0.0))
-CUT_2.Line(point1=(LENGTH/2+CUT_DEPTH, 0.0), point2=(LENGTH/2, -HALF_WIDTH_INNER))
-CUT_2.Line(point1=(LENGTH/2, -HALF_WIDTH_INNER), point2=(LENGTH/2-CUT_DEPTH, -HALF_WIDTH_INNER))
+CUT_2.Line(point1=(LENGTH/2 - CUT_DEPTH, -HALF_WIDTH), point2=(LENGTH/2          ,           0.0))
+CUT_2.Line(point1=(LENGTH/2          ,           0.0), point2=(LENGTH/2 - CUT_DEPTH,  HALF_WIDTH))
+CUT_2.Line(point1=(LENGTH/2 - CUT_DEPTH,  HALF_WIDTH), point2=(LENGTH/2          ,    HALF_WIDTH))
+CUT_2.Line(point1=(LENGTH/2          ,    HALF_WIDTH), point2=(LENGTH/2 + CUT_DEPTH,         0.0))
+CUT_2.Line(point1=(LENGTH/2 + CUT_DEPTH,         0.0), point2=(LENGTH/2          ,   -HALF_WIDTH))
+CUT_2.Line(point1=(LENGTH/2          ,   -HALF_WIDTH), point2=(LENGTH/2 - CUT_DEPTH, -HALF_WIDTH))
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # EXTRUDE CUT 2
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
