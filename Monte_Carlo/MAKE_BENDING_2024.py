@@ -15,6 +15,7 @@ from sketch import *
 from visualization import *
 from connectorBehavior import *
 import sys
+import math
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # DEFINE INPUT FILE NAMES
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -168,14 +169,21 @@ model.parts['Support'].AnalyticRigidSurfRevolve(sketch=SUPPORT_PROFILE)
 # CREATE SETS
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # OUTER WALL
-faces_outer_wall = model.parts['Cross-section'].faces.findAt(((           0,  HALF_HEIGHT_CENTER, 0),),
-                                                             ((           0, -HALF_HEIGHT_CENTER, 0),),
-                                                             ((  HALF_WIDTH,                   0, 0),),
-                                                             (( -HALF_WIDTH,                   0, 0),),)
+X = math.cos(math.pi/4)*RADIUS
+faces_outer_wall = model.parts['Cross-section'].faces.findAt(((    HALF_WIDTH-RADIUS,  HALF_HEIGHT,      0),), # TOP 1
+                                                             (( -(HALF_WIDTH-RADIUS),  HALF_HEIGHT,      0),), # TOP 2
+                                                             ((    HALF_WIDTH-RADIUS,  HALF_HEIGHT, LENGTH),), # TOP 3
+                                                             (( -(HALF_WIDTH-RADIUS),  HALF_HEIGHT, LENGTH),), # TOP 4
+                                                             ((    HALF_WIDTH-RADIUS, -HALF_HEIGHT,      0),), # BOTTOM 1
+                                                             ((HALF_WIDTH - RADIUS + X, HALF_HEIGHT - (RADIUS - X),      0),), # FIXME CORNER 1                                                             
+                                                             (( -(HALF_WIDTH-RADIUS), -HALF_HEIGHT,      0),), # BOTTOM 2
+                                                             ((           HALF_WIDTH,            0,      0),), # SIDE 1
+                                                             ((          -HALF_WIDTH,            0,      0),),) # SIDE 2
 model.parts['Cross-section'].Set(faces=faces_outer_wall, name='OUTER_WALL')
 
 # INSIDE WALL SIDE
 faces_inside_wall_side = model.parts['Cross-section'].faces.findAt((( 0,    HEIGHT_INSIDE_WALL_MIDDLE + HEIGHT_INSIDE_WALL_SIDE/2, 0),),
+                                                                   (( 0,    HEIGHT_INSIDE_WALL_MIDDLE + HEIGHT_INSIDE_WALL_SIDE/2, LENGTH),),
                                                                    (( 0, -(HEIGHT_INSIDE_WALL_MIDDLE + HEIGHT_INSIDE_WALL_SIDE/2), 0),),)
 model.parts['Cross-section'].Set(faces=faces_inside_wall_side, name='INSIDE_WALL_SIDE'  )
 
