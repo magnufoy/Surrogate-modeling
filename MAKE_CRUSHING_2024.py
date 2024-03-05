@@ -60,6 +60,10 @@ HEIGHT_INSIDE_WALL_MIDDLE = HALF_HEIGHT_CENTER - HEIGHT_INSIDE_WALL_SIDE
 RADIUS                    = 10.0
 
 CUT_DEPTH                 = 9.915
+
+LENGHT_IMPACTOR = 200
+DEPTH_IMPACTOR= 1
+GAP_IMPACTOR = -0.5
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # DEFINE MESH SIZE
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -159,15 +163,14 @@ model.parts['Cross-section'].CutExtrude(flipExtrudeDirection=ON, sketch=CUT_2, s
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE SKETCH FOR IMPACTOR
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#TODO Antar dette er for impactor?
-IMPACTOR = model.ConstrainedSketch(name='IMPACTOR', sheetSize=200.0)
-IMPACTOR.Line(point1=(-100.0, 0.0), point2=(100.0, 0.0)) # TODO Parameterize
+IMPACTOR = model.ConstrainedSketch(name='IMPACTOR', sheetSize=LENGHT_IMPACTOR)
+IMPACTOR.Line(point1=(-LENGHT_IMPACTOR/2, 0.0), point2=(LENGHT_IMPACTOR/2, 0.0)) 
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE PART FOR IMPACTOR
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 model.Part(dimensionality=THREE_D, name='Plate_impactor', type=ANALYTIC_RIGID_SURFACE)
-model.parts['Plate_impactor'].AnalyticRigidSurfExtrude(depth=1.0, sketch=IMPACTOR)
-model.parts['Plate_impactor'].features['3D Analytic rigid shell-1'].setValues(depth=200.0) # TODO Parameterize
+model.parts['Plate_impactor'].AnalyticRigidSurfExtrude(DEPTH_IMPACTOR, sketch=IMPACTOR)
+model.parts['Plate_impactor'].features['3D Analytic rigid shell-1'].setValues(depth=LENGHT_IMPACTOR) 
 model.parts['Plate_impactor'].regenerate() # Fra Benjamin for  vise hele platen
 model.rootAssembly.regenerate() # Fra Benjamin for  vise hele platen
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -227,7 +230,7 @@ assembly.Instance(dependent=ON, name='Cross-section', part=model.parts['Cross-se
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 assembly.Instance(dependent=ON, name='Plate_impactor-1', part=model.parts['Plate_impactor'])
 assembly.rotate(angle=90.0, axisDirection=(1.0, 0.0, 0.0), axisPoint=(0.0, 0.0, 0.0), instanceList=('Plate_impactor-1', ))
-assembly.translate(instanceList=('Plate_impactor-1', ), vector=(0.0, 0.0, -0.5)) # TODO Parameterize
+assembly.translate(instanceList=('Plate_impactor-1', ), vector=(0.0, 0.0, GAP_IMPACTOR)) 
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE STEP
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -237,8 +240,8 @@ model.ExplicitDynamicsStep(improvedDtMethod=ON, name='Load', previous='Initial',
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 model.SmoothStepAmplitude(data=((0.0, 0.0), (TIME_RAMP, 1.0)), name='Load_amp', timeSpan=STEP)
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#TODO Hva er dette?
-model.steps['Load'].setValues(improvedDtMethod=ON, timePeriod=0.05)
+#TSIZE TIMESTEP
+model.steps['Load'].setValues(improvedDtMethod=ON, timePeriod=TIME)
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE INITIAL BOUNDARY CONDITIONS
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -263,8 +266,8 @@ contact.contactPropertyAssignments.appendInStep(assignments=((GLOBAL, SELF, 'Int
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE FIELD AND HISTORY OUTPUTS
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-model.fieldOutputRequests['F-Output-1'].setValues(variables=('MISES', 'PEEQ', 'LE', 'U', 'SDV', 'STATUS'))
-model.HistoryOutputRequest(createStepName='Load', name='F-D', numIntervals=100, rebar=EXCLUDE, region=assembly.allInstances['Plate_impactor-1'].sets['IMPACTOR_PP'], sectionPoints=DEFAULT, variables=('U3', 'RF3'))
+model.fieldOutputRequests['F-Output-1'].setValues(numIntervals=2, variables=('MISES', 'PEEQ', 'LE', 'U', 'SDV', 'STATUS'))
+model.HistoryOutputRequest(createStepName='Load', name='F-D', numIntervals=1000, rebar=EXCLUDE, region=assembly.allInstances['Plate_impactor-1'].sets['IMPACTOR_PP'], sectionPoints=DEFAULT, variables=('U3', 'RF3'))
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE MESH
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
