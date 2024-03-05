@@ -125,7 +125,7 @@ LINE.Line(point1=( HEIGHT_INSIDE_WALL_MIDDLE, LENGTH/2), point2=( HEIGHT_INSIDE_
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE PART FOR LINE TO DEVIDE INSIDE-WALL-MIDDLE AND INSIDE-WALL-SIDE
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-model.parts['Cross-section'].PartitionFaceBySketch(faces=model.parts['Cross-section'].faces.getSequenceFromMask(('[#400 ]', ), ), sketch=LINE, sketchUpEdge=model.parts['Cross-section'].edges[5])
+model.parts['Cross-section'].PartitionFaceBySketch(faces=model.parts['Cross-section'].faces.findAt(( 0, 0, 0),), sketch=LINE, sketchUpEdge=model.parts['Cross-section'].edges[5])
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE SKETCH FOR CUT 1
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
