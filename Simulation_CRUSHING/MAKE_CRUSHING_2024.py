@@ -169,7 +169,7 @@ IMPACTOR.Line(point1=(-LENGHT_IMPACTOR/2, 0.0), point2=(LENGHT_IMPACTOR/2, 0.0))
 # CREATE PART FOR IMPACTOR
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 model.Part(dimensionality=THREE_D, name='Plate_impactor', type=ANALYTIC_RIGID_SURFACE)
-model.parts['Plate_impactor'].AnalyticRigidSurfExtrude(DEPTH_IMPACTOR, sketch=IMPACTOR)
+model.parts['Plate_impactor'].AnalyticRigidSurfExtrude(depth = DEPTH_IMPACTOR, sketch=IMPACTOR)
 model.parts['Plate_impactor'].features['3D Analytic rigid shell-1'].setValues(depth=LENGHT_IMPACTOR) 
 model.parts['Plate_impactor'].regenerate() # Fra Benjamin for  vise hele platen
 model.rootAssembly.regenerate() # Fra Benjamin for  vise hele platen
