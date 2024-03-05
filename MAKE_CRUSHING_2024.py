@@ -71,7 +71,7 @@ FRICTION_COEFFICIENT = 0.05
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # DEFINE LOADING CONDITIONS
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-VELOCITY  = -1500.0
+VELOCITY  = 1500.0
 TIME      = 0.05
 TIME_RAMP = TIME/10.0
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -129,33 +129,33 @@ model.parts['Cross-section'].PartitionFaceBySketch(faces=model.parts['Cross-sect
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE SKETCH FOR CUT 1
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#CUT_1= model.ConstrainedSketch(gridSpacing=25.02, name='cut_1', sheetSize=1000.98, transform=model.parts['Cross-section'].MakeSketchTransform(sketchPlane=model.parts['Cross-section'].datums[3], sketchPlaneSide=SIDE1, sketchUpEdge=model.parts['Cross-section'].edges[41], sketchOrientation=LEFT, origin=(0.0, 0.0, LENGTH/2)))
-#model.parts['Cross-section'].projectReferencesOntoSketch(filter=COPLANAR_EDGES, sketch=CUT_1)
-#CUT_1.Line(point1=(LENGTH/2 - CUT_DEPTH, -HALF_WIDTH), point2=(            LENGTH/2,         0.0))
-#CUT_1.Line(point1=(            LENGTH/2,         0.0), point2=(LENGTH/2 - CUT_DEPTH,  HALF_WIDTH))
-#CUT_1.Line(point1=(LENGTH/2 - CUT_DEPTH,  HALF_WIDTH), point2=(            LENGTH/2,  HALF_WIDTH))
-#CUT_1.Line(point1=(            LENGTH/2,  HALF_WIDTH), point2=(LENGTH/2 + CUT_DEPTH,         0.0))
-#CUT_1.Line(point1=(LENGTH/2 + CUT_DEPTH,         0.0), point2=(            LENGTH/2, -HALF_WIDTH))
-#CUT_1.Line(point1=(            LENGTH/2, -HALF_WIDTH), point2=(LENGTH/2 - CUT_DEPTH, -HALF_WIDTH))
+CUT_1= model.ConstrainedSketch(gridSpacing=25.02, name='cut_1', sheetSize=1000.98, transform=model.parts['Cross-section'].MakeSketchTransform(sketchPlane=model.parts['Cross-section'].datums[3], sketchPlaneSide=SIDE1, sketchUpEdge=model.parts['Cross-section'].edges[28], sketchOrientation=LEFT, origin=(0.0, 0.0, LENGTH/2)))
+model.parts['Cross-section'].projectReferencesOntoSketch(filter=COPLANAR_EDGES, sketch=CUT_1)
+CUT_1.Line(point1=(LENGTH/2 - CUT_DEPTH, -HALF_WIDTH), point2=(            LENGTH/2,         0.0))
+CUT_1.Line(point1=(            LENGTH/2,         0.0), point2=(LENGTH/2 - CUT_DEPTH,  HALF_WIDTH))
+CUT_1.Line(point1=(LENGTH/2 - CUT_DEPTH,  HALF_WIDTH), point2=(            LENGTH/2,  HALF_WIDTH))
+CUT_1.Line(point1=(            LENGTH/2,  HALF_WIDTH), point2=(LENGTH/2 + CUT_DEPTH,         0.0))
+CUT_1.Line(point1=(LENGTH/2 + CUT_DEPTH,         0.0), point2=(            LENGTH/2, -HALF_WIDTH))
+CUT_1.Line(point1=(            LENGTH/2, -HALF_WIDTH), point2=(LENGTH/2 - CUT_DEPTH, -HALF_WIDTH))
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-# EXTRUDE CUT 2
+# EXTRUDE CUT 1
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#model.parts['Cross-section'].CutExtrude(flipExtrudeDirection=OFF, sketch=CUT_1, sketchOrientation=LEFT, sketchPlane=model.parts['Cross-section'].datums[3], sketchPlaneSide=SIDE1, sketchUpEdge=model.parts['Cross-section'].edges[41])
+model.parts['Cross-section'].CutExtrude(flipExtrudeDirection=OFF, sketch=CUT_1, sketchOrientation=LEFT, sketchPlane=model.parts['Cross-section'].datums[3], sketchPlaneSide=SIDE1, sketchUpEdge=model.parts['Cross-section'].edges[28])
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE SKETCH FOR CUT 2
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#CUT_2 = model.ConstrainedSketch(gridSpacing=25.02, name='cut_2', sheetSize=1000.98, transform=model.parts['Cross-section'].MakeSketchTransform(sketchPlane=model.parts['Cross-section'].datums[3], sketchPlaneSide=SIDE1, sketchUpEdge=model.parts['Cross-section'].edges[41], sketchOrientation=RIGHT, origin=(0.0, 0.0, LENGTH/2)))
-#model.parts['Cross-section'].projectReferencesOntoSketch(filter=COPLANAR_EDGES, sketch=CUT_2)
-#CUT_2.Line(point1=(LENGTH/2 - CUT_DEPTH, -HALF_WIDTH), point2=(            LENGTH/2,         0.0))
-#CUT_2.Line(point1=(            LENGTH/2,         0.0), point2=(LENGTH/2 - CUT_DEPTH,  HALF_WIDTH))
-#CUT_2.Line(point1=(LENGTH/2 - CUT_DEPTH,  HALF_WIDTH), point2=(            LENGTH/2,  HALF_WIDTH))
-#CUT_2.Line(point1=(            LENGTH/2,  HALF_WIDTH), point2=(LENGTH/2 + CUT_DEPTH,         0.0))
-#CUT_2.Line(point1=(LENGTH/2 + CUT_DEPTH,         0.0), point2=(            LENGTH/2, -HALF_WIDTH))
-#CUT_2.Line(point1=(            LENGTH/2, -HALF_WIDTH), point2=(LENGTH/2 - CUT_DEPTH, -HALF_WIDTH))
+CUT_2 = model.ConstrainedSketch(gridSpacing=25.02, name='cut_2', sheetSize=1000.98, transform=model.parts['Cross-section'].MakeSketchTransform(sketchPlane=model.parts['Cross-section'].datums[3], sketchPlaneSide=SIDE1, sketchUpEdge=model.parts['Cross-section'].edges[41], sketchOrientation=RIGHT, origin=(0.0, 0.0, LENGTH/2)))
+model.parts['Cross-section'].projectReferencesOntoSketch(filter=COPLANAR_EDGES, sketch=CUT_2)
+CUT_2.Line(point1=(LENGTH/2 - CUT_DEPTH, -HALF_WIDTH), point2=(            LENGTH/2,         0.0))
+CUT_2.Line(point1=(            LENGTH/2,         0.0), point2=(LENGTH/2 - CUT_DEPTH,  HALF_WIDTH))
+CUT_2.Line(point1=(LENGTH/2 - CUT_DEPTH,  HALF_WIDTH), point2=(            LENGTH/2,  HALF_WIDTH))
+CUT_2.Line(point1=(            LENGTH/2,  HALF_WIDTH), point2=(LENGTH/2 + CUT_DEPTH,         0.0))
+CUT_2.Line(point1=(LENGTH/2 + CUT_DEPTH,         0.0), point2=(            LENGTH/2, -HALF_WIDTH))
+CUT_2.Line(point1=(            LENGTH/2, -HALF_WIDTH), point2=(LENGTH/2 - CUT_DEPTH, -HALF_WIDTH))
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # EXTRUDE CUT 2
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#model.parts['Cross-section'].CutExtrude(flipExtrudeDirection=ON, sketch=CUT_2, sketchOrientation=RIGHT, sketchPlane=model.parts['Cross-section'].datums[3], sketchPlaneSide=SIDE1, sketchUpEdge=model.parts['Cross-section'].edges[41])
+model.parts['Cross-section'].CutExtrude(flipExtrudeDirection=ON, sketch=CUT_2, sketchOrientation=RIGHT, sketchPlane=model.parts['Cross-section'].datums[3], sketchPlaneSide=SIDE1, sketchUpEdge=model.parts['Cross-section'].edges[41])
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE SKETCH FOR IMPACTOR
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -195,8 +195,8 @@ model.parts['Cross-section'].SetByBoolean(name ='OUTER_WALL', operation=DIFFEREN
                                                                          model.parts['Cross-section'].sets['INSIDE_WALL_SIDE'],))
 
 #CLAMPED
-edges_clamp = model.parts['Cross-section'].edges.getByBoundingBox(xMin = -HALF_WIDTH, yMin= -HALF_HEIGHT_CENTER, zMin = 0,
-                                                                  xMax =HALF_WIDTH, yMax =  HALF_HEIGHT_CENTER, zMax = 0)
+edges_clamp = model.parts['Cross-section'].edges.getByBoundingBox(xMin = -HALF_WIDTH, yMin= -HALF_HEIGHT_CENTER, zMin = LENGTH,
+                                                                  xMax =HALF_WIDTH, yMax =  HALF_HEIGHT_CENTER, zMax = LENGTH)
 model.parts['Cross-section'].Set(edges= edges_clamp, name='CLAMPED')
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # ASSIGN SECTION CARD
@@ -227,7 +227,7 @@ assembly.Instance(dependent=ON, name='Cross-section', part=model.parts['Cross-se
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 assembly.Instance(dependent=ON, name='Plate_impactor-1', part=model.parts['Plate_impactor'])
 assembly.rotate(angle=90.0, axisDirection=(1.0, 0.0, 0.0), axisPoint=(0.0, 0.0, 0.0), instanceList=('Plate_impactor-1', ))
-assembly.translate(instanceList=('Plate_impactor-1', ), vector=(0.0, 0.0, 431.0)) # TODO Parameterize
+assembly.translate(instanceList=('Plate_impactor-1', ), vector=(0.0, 0.0, -0.5)) # TODO Parameterize
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE STEP
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
