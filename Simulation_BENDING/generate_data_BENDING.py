@@ -63,8 +63,8 @@ for k in range(0,nsamples):
 tp = ThreadPool(nthreads)
 for i,job in enumerate(jobs):
     tp.apply_async(run_process, (job, model_name.format(i+1), cleans))
-tp.close()# Close ThreadPool
-tp.join()# Run ThreadPool
+tp.close() # Close ThreadPool
+tp.join() # Run ThreadPool
 print('Finish running jobs')
 #-------------------------------------------------------------------------------
 # Remove unnecessary files

@@ -34,7 +34,7 @@ except:
 # Define model name
 #-------------------------------------------------------------------------------   
 model_name  = 'CRUSHING_{}'
-MAKE_PYTHON = 'MAKE_CRUSHING__2024.py'
+MAKE_PYTHON = 'MAKE_CRUSHING_2024.py'
 POST_PYTHON = 'POST_CRUSHING_.py'
 #-------------------------------------------------------------------------------
 # Read parameters for simulations
