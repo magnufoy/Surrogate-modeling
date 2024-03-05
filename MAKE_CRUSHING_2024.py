@@ -22,29 +22,29 @@ input_name    = 'CRUSHING_{}'
 mat_name      = 'C28'
 mat_card_file = 'C28_{}.inp'
 
-try:
-   E0                          = float(sys.argv[-1])
-   SIGMA0                      = float(sys.argv[-2])
+#try:
+#   E0                          = float(sys.argv[-1])
+#   SIGMA0                      = float(sys.argv[-2])
   
-   WIDTH                       = float(sys.argv[-3])
-   HEIGHT                      = float(sys.argv[-4])
+#   WIDTH                       = float(sys.argv[-3])
+#   HEIGHT                      = float(sys.argv[-4])
 
-   INSIDE_WALL_MIDDLE_TICKNESS = float(sys.argv[-5])
-   INSIDE_WALL_SIDE_TICKNESS   = float(sys.argv[-6])
-   OUTER_WALL_TICKNESS         = float(sys.argv[-7])
+#   INSIDE_WALL_MIDDLE_TICKNESS = float(sys.argv[-5])
+#   INSIDE_WALL_SIDE_TICKNESS   = float(sys.argv[-6])
+#   OUTER_WALL_TICKNESS         = float(sys.argv[-7])
   
-   MODEL                       = int(sys.argv[-8]) 
+#   MODEL                       = int(sys.argv[-8]) 
 
-except:
-  exit() 
+#except:
+#  exit() 
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # DEFINE VARIABLES
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#WIDTH = 127.9
-#HEIGHT= 75.9
-#INSIDE_WALL_MIDDLE_TICKNESS =1.5
-#INSIDE_WALL_SIDE_TICKNESS   = 2
-#OUTER_WALL_TICKNESS         = 2.7
+WIDTH = 127.9
+HEIGHT= 75.9
+INSIDE_WALL_MIDDLE_TICKNESS =1.5
+INSIDE_WALL_SIDE_TICKNESS   = 2
+OUTER_WALL_TICKNESS         = 2.7
 
 HEIGHT_DIFFERENCE         = 0.5
 
@@ -129,33 +129,33 @@ model.parts['Cross-section'].PartitionFaceBySketch(faces=model.parts['Cross-sect
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE SKETCH FOR CUT 1
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-CUT_1= model.ConstrainedSketch(gridSpacing=25.02, name='cut_1', sheetSize=1000.98, transform=model.parts['Cross-section'].MakeSketchTransform(sketchPlane=model.parts['Cross-section'].datums[3], sketchPlaneSide=SIDE1, sketchUpEdge=model.parts['Cross-section'].edges[41], sketchOrientation=LEFT, origin=(0.0, 0.0, LENGTH/2)))
-model.parts['Cross-section'].projectReferencesOntoSketch(filter=COPLANAR_EDGES, sketch=CUT_1)
-CUT_1.Line(point1=(LENGTH/2 - CUT_DEPTH, -HALF_WIDTH), point2=(            LENGTH/2,         0.0))
-CUT_1.Line(point1=(            LENGTH/2,         0.0), point2=(LENGTH/2 - CUT_DEPTH,  HALF_WIDTH))
-CUT_1.Line(point1=(LENGTH/2 - CUT_DEPTH,  HALF_WIDTH), point2=(            LENGTH/2,  HALF_WIDTH))
-CUT_1.Line(point1=(            LENGTH/2,  HALF_WIDTH), point2=(LENGTH/2 + CUT_DEPTH,         0.0))
-CUT_1.Line(point1=(LENGTH/2 + CUT_DEPTH,         0.0), point2=(            LENGTH/2, -HALF_WIDTH))
-CUT_1.Line(point1=(            LENGTH/2, -HALF_WIDTH), point2=(LENGTH/2 - CUT_DEPTH, -HALF_WIDTH))
+#CUT_1= model.ConstrainedSketch(gridSpacing=25.02, name='cut_1', sheetSize=1000.98, transform=model.parts['Cross-section'].MakeSketchTransform(sketchPlane=model.parts['Cross-section'].datums[3], sketchPlaneSide=SIDE1, sketchUpEdge=model.parts['Cross-section'].edges[41], sketchOrientation=LEFT, origin=(0.0, 0.0, LENGTH/2)))
+#model.parts['Cross-section'].projectReferencesOntoSketch(filter=COPLANAR_EDGES, sketch=CUT_1)
+#CUT_1.Line(point1=(LENGTH/2 - CUT_DEPTH, -HALF_WIDTH), point2=(            LENGTH/2,         0.0))
+#CUT_1.Line(point1=(            LENGTH/2,         0.0), point2=(LENGTH/2 - CUT_DEPTH,  HALF_WIDTH))
+#CUT_1.Line(point1=(LENGTH/2 - CUT_DEPTH,  HALF_WIDTH), point2=(            LENGTH/2,  HALF_WIDTH))
+#CUT_1.Line(point1=(            LENGTH/2,  HALF_WIDTH), point2=(LENGTH/2 + CUT_DEPTH,         0.0))
+#CUT_1.Line(point1=(LENGTH/2 + CUT_DEPTH,         0.0), point2=(            LENGTH/2, -HALF_WIDTH))
+#CUT_1.Line(point1=(            LENGTH/2, -HALF_WIDTH), point2=(LENGTH/2 - CUT_DEPTH, -HALF_WIDTH))
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # EXTRUDE CUT 2
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-model.parts['Cross-section'].CutExtrude(flipExtrudeDirection=OFF, sketch=CUT_1, sketchOrientation=LEFT, sketchPlane=model.parts['Cross-section'].datums[3], sketchPlaneSide=SIDE1, sketchUpEdge=model.parts['Cross-section'].edges[41])
+#model.parts['Cross-section'].CutExtrude(flipExtrudeDirection=OFF, sketch=CUT_1, sketchOrientation=LEFT, sketchPlane=model.parts['Cross-section'].datums[3], sketchPlaneSide=SIDE1, sketchUpEdge=model.parts['Cross-section'].edges[41])
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE SKETCH FOR CUT 2
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-CUT_2 = model.ConstrainedSketch(gridSpacing=25.02, name='cut_2', sheetSize=1000.98, transform=model.parts['Cross-section'].MakeSketchTransform(sketchPlane=model.parts['Cross-section'].datums[3], sketchPlaneSide=SIDE1, sketchUpEdge=model.parts['Cross-section'].edges[41], sketchOrientation=RIGHT, origin=(0.0, 0.0, LENGTH/2)))
-model.parts['Cross-section'].projectReferencesOntoSketch(filter=COPLANAR_EDGES, sketch=CUT_2)
-CUT_2.Line(point1=(LENGTH/2 - CUT_DEPTH, -HALF_WIDTH), point2=(            LENGTH/2,         0.0))
-CUT_2.Line(point1=(            LENGTH/2,         0.0), point2=(LENGTH/2 - CUT_DEPTH,  HALF_WIDTH))
-CUT_2.Line(point1=(LENGTH/2 - CUT_DEPTH,  HALF_WIDTH), point2=(            LENGTH/2,  HALF_WIDTH))
-CUT_2.Line(point1=(            LENGTH/2,  HALF_WIDTH), point2=(LENGTH/2 + CUT_DEPTH,         0.0))
-CUT_2.Line(point1=(LENGTH/2 + CUT_DEPTH,         0.0), point2=(            LENGTH/2, -HALF_WIDTH))
-CUT_2.Line(point1=(            LENGTH/2, -HALF_WIDTH), point2=(LENGTH/2 - CUT_DEPTH, -HALF_WIDTH))
+#CUT_2 = model.ConstrainedSketch(gridSpacing=25.02, name='cut_2', sheetSize=1000.98, transform=model.parts['Cross-section'].MakeSketchTransform(sketchPlane=model.parts['Cross-section'].datums[3], sketchPlaneSide=SIDE1, sketchUpEdge=model.parts['Cross-section'].edges[41], sketchOrientation=RIGHT, origin=(0.0, 0.0, LENGTH/2)))
+#model.parts['Cross-section'].projectReferencesOntoSketch(filter=COPLANAR_EDGES, sketch=CUT_2)
+#CUT_2.Line(point1=(LENGTH/2 - CUT_DEPTH, -HALF_WIDTH), point2=(            LENGTH/2,         0.0))
+#CUT_2.Line(point1=(            LENGTH/2,         0.0), point2=(LENGTH/2 - CUT_DEPTH,  HALF_WIDTH))
+#CUT_2.Line(point1=(LENGTH/2 - CUT_DEPTH,  HALF_WIDTH), point2=(            LENGTH/2,  HALF_WIDTH))
+#CUT_2.Line(point1=(            LENGTH/2,  HALF_WIDTH), point2=(LENGTH/2 + CUT_DEPTH,         0.0))
+#CUT_2.Line(point1=(LENGTH/2 + CUT_DEPTH,         0.0), point2=(            LENGTH/2, -HALF_WIDTH))
+#CUT_2.Line(point1=(            LENGTH/2, -HALF_WIDTH), point2=(LENGTH/2 - CUT_DEPTH, -HALF_WIDTH))
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # EXTRUDE CUT 2
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-model.parts['Cross-section'].CutExtrude(flipExtrudeDirection=ON, sketch=CUT_2, sketchOrientation=RIGHT, sketchPlane=model.parts['Cross-section'].datums[3], sketchPlaneSide=SIDE1, sketchUpEdge=model.parts['Cross-section'].edges[41])
+#model.parts['Cross-section'].CutExtrude(flipExtrudeDirection=ON, sketch=CUT_2, sketchOrientation=RIGHT, sketchPlane=model.parts['Cross-section'].datums[3], sketchPlaneSide=SIDE1, sketchUpEdge=model.parts['Cross-section'].edges[41])
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE SKETCH FOR IMPACTOR
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -173,11 +173,31 @@ model.rootAssembly.regenerate() # Fra Benjamin for  vise hele platen
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE SETS
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-model.parts['Cross-section'].Set(edges=model.parts['Cross-section'].edges.getSequenceFromMask(('[#8441890c #c94a ]', ), ), name='CLAMPED'           )
-model.parts['Cross-section'].Set(faces=model.parts['Cross-section'].faces.getSequenceFromMask(('[#1000 ]'          , ), ), name='INSIDE_WALL_MIDDLE')
-model.parts['Cross-section'].Set(faces=model.parts['Cross-section'].faces.getSequenceFromMask(( '[#1fff ]'         , ), ), name='WHOLE_MODEL'       )
-model.parts['Cross-section'].Set(faces=model.parts['Cross-section'].faces.getSequenceFromMask(('[#30 ]'            , ), ), name='INSIDE_WALL_SIDE'  )
-model.parts['Cross-section'].Set(faces=model.parts['Cross-section'].faces.getSequenceFromMask(('[#fcf ]'           , ), ), name='OUTER_WALL'        )
+# INSIDE WALL SIDE
+faces_inside_wall_side = model.parts['Cross-section'].faces.findAt((( 0,    HEIGHT_INSIDE_WALL_MIDDLE + HEIGHT_INSIDE_WALL_SIDE/2, 0),),
+                                                                   (( 0,    HEIGHT_INSIDE_WALL_MIDDLE + HEIGHT_INSIDE_WALL_SIDE/2, LENGTH),),
+                                                                   (( 0, -(HEIGHT_INSIDE_WALL_MIDDLE + HEIGHT_INSIDE_WALL_SIDE/2), 0),),)
+model.parts['Cross-section'].Set(faces=faces_inside_wall_side, name='INSIDE_WALL_SIDE'  )
+
+# INSIDE WALL MIDDLE
+faces_inside_wall_middle = model.parts['Cross-section'].faces.findAt((( 0, 0, 0),),)
+model.parts['Cross-section'].Set(faces=faces_inside_wall_middle, name='INSIDE_WALL_MIDDLE')
+
+# WHOLE
+faces_whole = model.parts['Cross-section'].faces.getByBoundingBox(xMin = -HALF_WIDTH, yMin= -HALF_HEIGHT_CENTER, zMin = 0,
+                                                                  xMax =HALF_WIDTH, yMax =  HALF_HEIGHT_CENTER, zMax = LENGTH)
+model.parts['Cross-section'].Set(faces=faces_whole, name='WHOLE')
+
+#OUTER
+model.parts['Cross-section'].SetByBoolean(name ='OUTER_WALL', operation=DIFFERENCE,
+                                                                   sets=(model.parts['Cross-section'].sets['WHOLE'],
+                                                                         model.parts['Cross-section'].sets['INSIDE_WALL_MIDDLE'],
+                                                                         model.parts['Cross-section'].sets['INSIDE_WALL_SIDE'],))
+
+#CLAMPED
+edges_clamp = model.parts['Cross-section'].edges.getByBoundingBox(xMin = -HALF_WIDTH, yMin= -HALF_HEIGHT_CENTER, zMin = 0,
+                                                                  xMax =HALF_WIDTH, yMax =  HALF_HEIGHT_CENTER, zMax = 0)
+model.parts['Cross-section'].Set(edges= edges_clamp, name='CLAMPED')
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # ASSIGN SECTION CARD
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -255,31 +275,31 @@ model.rootAssembly.regenerate()
 # CREATE INPUT FILE
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 job = mdb.Job(model='CRUSHING', name=input_name.format(MODEL))
-job.writeInput(consistencyChecking=OFF)
+#job.writeInput(consistencyChecking=OFF)
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # OPEN INPUT FILE AND INCLUDE THE MATERIAL CARD
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-fp = open(input_name.format(MODEL)+'.inp','r')
-lines = fp.read()
-fp.close()
-lines=lines.replace('*Material, name=C28_INSIDE_WALL_SIDE\n','')
-lines=lines.replace('*Material, name=C28_INSIDE_WALL_MIDDLE\n','')
-lines=lines.replace('*Material, name=C28_OUTER_WALL','*include,input={}'.format(mat_card_file.format(MODEL)))
+#fp = open(input_name.format(MODEL)+'.inp','r')
+#lines = fp.read()
+#fp.close()
+#lines=lines.replace('*Material, name=C28_INSIDE_WALL_SIDE\n','')
+#lines=lines.replace('*Material, name=C28_INSIDE_WALL_MIDDLE\n','')
+#lines=lines.replace('*Material, name=C28_OUTER_WALL','*include,input={}'.format(mat_card_file.format(MODEL)))
 
-fp = open(input_name.format(MODEL)+'.inp','w')
-fp.write(lines)
-fp.close()
+#fp = open(input_name.format(MODEL)+'.inp','w')
+#fp.write(lines)
+#fp.close()
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # OPEN MATERIAL CARD FILE AND UPDATE PROPERTIES
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-fp = open('mat_parameter.inc','r')
-lines = fp.read()
-fp.close()
-lines=lines.replace('<SIGMA0>',str(SIGMA0))
-lines=lines.replace('<E0>',str(E0))
-lines=lines.replace('<OUTER_WALL_TICKNESS>',str(OUTER_WALL_TICKNESS))
-lines=lines.replace('<INSIDE_WALL_SIDE_TICKNESS>',str(INSIDE_WALL_SIDE_TICKNESS))
-lines=lines.replace('<INSIDE_WALL_MIDDLE_TICKNESS>',str(INSIDE_WALL_MIDDLE_TICKNESS))
+#fp = open('mat_parameter.inc','r')
+#lines = fp.read()
+#fp.close()
+#lines=lines.replace('<SIGMA0>',str(SIGMA0))
+#lines=lines.replace('<E0>',str(E0))
+#lines=lines.replace('<OUTER_WALL_TICKNESS>',str(OUTER_WALL_TICKNESS))
+#lines=lines.replace('<INSIDE_WALL_SIDE_TICKNESS>',str(INSIDE_WALL_SIDE_TICKNESS))
+#lines=lines.replace('<INSIDE_WALL_MIDDLE_TICKNESS>',str(INSIDE_WALL_MIDDLE_TICKNESS))
 
-fp = open(mat_card_file.format(MODEL),'w')
-fp.write(lines)
+#fp = open(mat_card_file.format(MODEL),'w')
+#fp.write(lines)
