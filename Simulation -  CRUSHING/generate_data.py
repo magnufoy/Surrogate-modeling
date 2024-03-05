@@ -33,9 +33,9 @@ except:
 #-------------------------------------------------------------------------------
 # Define model name
 #-------------------------------------------------------------------------------   
-model_name  = 'BENDING_{}'
-MAKE_PYTHON = 'MAKE_BENDING_2024.py'
-POST_PYTHON = 'POST_BENDING.py'
+model_name  = 'CRUSHING_{}'
+MAKE_PYTHON = 'MAKE_CRUSHING__2024.py'
+POST_PYTHON = 'POST_CRUSHING_.py'
 #-------------------------------------------------------------------------------
 # Read parameters for simulations
 #-------------------------------------------------------------------------------
@@ -44,7 +44,7 @@ nsamples = len(data_alloys[:,0])
 #-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
 ABAQUS_PATH = '/opt/abaqus/Commands/abq2022'
-nthreads = 2
+nthreads = 8
 cleans = ['{}.abq','{}.com','{}.dat','{}.mdl','{}.msg','{}.pac','{}.prt',
           '{}.res','{}.sel','{}.sta','{}.stt']
 #-------------------------------------------------------------------------------
@@ -63,8 +63,8 @@ for k in range(0,nsamples):
 tp = ThreadPool(nthreads)
 for i,job in enumerate(jobs):
     tp.apply_async(run_process, (job, model_name.format(i+1), cleans))
-tp.close()# Close ThreadPool
-tp.join()# Run ThreadPool
+tp.close() # Close ThreadPool
+tp.join() # Run ThreadPool
 print('Finish running jobs')
 #-------------------------------------------------------------------------------
 # Remove unnecessary files
