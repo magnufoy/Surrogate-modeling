@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 #--------------------------------------------------------------------------------------------------------------------
 # Define number of samples
 #--------------------------------------------------------------------------------------------------------------------
-nsamples = 2
+nsamples = 100
 #--------------------------------------------------------------------------------------------------------------------
 # Define text file name
 #--------------------------------------------------------------------------------------------------------------------
@@ -12,11 +12,11 @@ filename = 'parameters_v1.txt'
 # Distribute thicknesses
 #--------------------------------------------------------------------------------------------------------------------
 outer_wall_thicknesses           = np.random.uniform(2.5, 2.9, nsamples)
-inside_wall_middle_thicknesses_3 = np.random.uniform(1.2, 1.8, nsamples)
-inside_wall_side_thicknesses_3   = np.random.uniform(1.7, 2.3, nsamples)
+inside_wall_middle_thicknesses = np.random.uniform(1.2, 1.8, nsamples)
+inside_wall_side_thicknesses   = np.random.uniform(1.7, 2.3, nsamples)
 for i in range(0, nsamples):
-    if inside_wall_middle_thicknesses_3[i] > inside_wall_side_thicknesses_3[i]:
-        inside_wall_side_thicknesses_3[i] = inside_wall_middle_thicknesses_3[i]
+    if inside_wall_middle_thicknesses[i] > inside_wall_side_thicknesses[i]:
+        inside_wall_side_thicknesses[i] = inside_wall_middle_thicknesses[i]
 #--------------------------------------------------------------------------------------------------------------------
 # Distribute geometries
 #--------------------------------------------------------------------------------------------------------------------
