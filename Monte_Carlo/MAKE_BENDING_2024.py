@@ -169,17 +169,8 @@ model.parts['Support'].AnalyticRigidSurfRevolve(sketch=SUPPORT_PROFILE)
 # CREATE SETS
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # OUTER WALL
-X = math.cos(math.pi/4)*RADIUS
-faces_outer_wall = model.parts['Cross-section'].faces.findAt(((    HALF_WIDTH-RADIUS,  HALF_HEIGHT,      0),), # TOP 1
-                                                             (( -(HALF_WIDTH-RADIUS),  HALF_HEIGHT,      0),), # TOP 2
-                                                             ((    HALF_WIDTH-RADIUS,  HALF_HEIGHT, LENGTH),), # TOP 3
-                                                             (( -(HALF_WIDTH-RADIUS),  HALF_HEIGHT, LENGTH),), # TOP 4
-                                                             ((    HALF_WIDTH-RADIUS, -HALF_HEIGHT,      0),), # BOTTOM 1
-                                                             ((HALF_WIDTH - RADIUS + X, HALF_HEIGHT - (RADIUS - X),      0),), # FIXME CORNER 1                                                             
-                                                             (( -(HALF_WIDTH-RADIUS), -HALF_HEIGHT,      0),), # BOTTOM 2
-                                                             ((           HALF_WIDTH,            0,      0),), # SIDE 1
-                                                             ((          -HALF_WIDTH,            0,      0),),) # SIDE 2
-model.parts['Cross-section'].Set(faces=faces_outer_wall, name='OUTER_WALL')
+
+
 
 # INSIDE WALL SIDE
 faces_inside_wall_side = model.parts['Cross-section'].faces.findAt((( 0,    HEIGHT_INSIDE_WALL_MIDDLE + HEIGHT_INSIDE_WALL_SIDE/2, 0),),
@@ -190,6 +181,20 @@ model.parts['Cross-section'].Set(faces=faces_inside_wall_side, name='INSIDE_WALL
 # INSIDE WALL MIDDLE
 faces_inside_wall_middle = model.parts['Cross-section'].faces.findAt((( 0, 0, 0),),)
 model.parts['Cross-section'].Set(faces=faces_inside_wall_middle, name='INSIDE_WALL_MIDDLE')
+
+# WHOLE
+faces_whole = model.parts['Cross-section'].faces.getByBoundingBox(xMin = -HALF_WIDTH, yMin= -HALF_HEIGHT_CENTER, zMin = 0,
+                                                                  xMax =HALF_WIDTH, yMax =  HALF_HEIGHT_CENTER, zMax = LENGTH)
+model.parts['Cross-section'].Set(faces=faces_whole, name='WHOLE')
+
+#OUTER
+model.parts['Cross-section'].SetByBoolean(name ='OUTER_WALL', operation=DIFFERENCE,
+                                                                   sets=(model.parts['Cross-section'].sets['WHOLE'],
+                                                                         model.parts['Cross-section'].sets['INSIDE_WALL_MIDDLE'],
+                                                                         model.parts['Cross-section'].sets['INSIDE_WALL_SIDE'],))
+
+
+
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # ASSIGN SECTION CARD
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
