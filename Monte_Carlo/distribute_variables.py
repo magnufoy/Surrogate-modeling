@@ -11,14 +11,12 @@ filename = 'parameters_v1.txt'
 #--------------------------------------------------------------------------------------------------------------------
 # Distribute thicknesses
 #--------------------------------------------------------------------------------------------------------------------
-outer_wall_thicknesses = np.random.uniform(2.5, 2.9, nsamples)
-MAX_SIDE_WALL_SIDE_THICKNESS = 2.3
-MIN_SIDE_WALL_SIDE_THICKNESS = 1.7
-inside_wall_middle_thicknesses = np.random.uniform(1.2, 1.8, nsamples)
-max_ratios_between_side_and_middle = np.array([MAX_SIDE_WALL_SIDE_THICKNESS/inside_wall_middle_thicknesses[i] for i in range(0, nsamples)])
-min_ratios_between_side_and_middle = np.array([max(1, MIN_SIDE_WALL_SIDE_THICKNESS/inside_wall_middle_thicknesses[i]) for i in range(0, nsamples)])
-ratio_between_side_and_middle = np.array([np.random.uniform(min_ratios_between_side_and_middle[i], max_ratios_between_side_and_middle[i]) for i in range(0, nsamples)])
-inside_wall_side_thicknesses = ratio_between_side_and_middle*inside_wall_middle_thicknesses
+outer_wall_thicknesses           = np.random.uniform(2.5, 2.9, nsamples)
+inside_wall_middle_thicknesses_3 = np.random.uniform(1.2, 1.8, nsamples)
+inside_wall_side_thicknesses_3   = np.random.uniform(1.7, 2.3, nsamples)
+for i in range(0, nsamples):
+    if inside_wall_middle_thicknesses_3[i] > inside_wall_side_thicknesses_3[i]:
+        inside_wall_side_thicknesses_3[i] = inside_wall_middle_thicknesses_3[i]
 #--------------------------------------------------------------------------------------------------------------------
 # Distribute geometries
 #--------------------------------------------------------------------------------------------------------------------

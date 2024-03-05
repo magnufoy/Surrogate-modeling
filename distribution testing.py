@@ -15,7 +15,7 @@ for i in range(0, nsamples):
         inside_wall_side_thicknesses_1[i] = np.random.uniform(1.7, 2.3)
         inside_wall_middle_thicknesses_1[i] = np.random.uniform(1.2, 1.8)
 
-
+# fordel begge og bytt ut de som ikke fungerer med t2
 
 
 # Option 2
@@ -26,6 +26,13 @@ max_ratios_between_side_and_middle = np.array([MAX_SIDE_WALL_SIDE_THICKNESS/insi
 min_ratios_between_side_and_middle = np.array([max(1, MIN_SIDE_WALL_SIDE_THICKNESS/inside_wall_middle_thicknesses_2[i]) for i in range(0, nsamples)])
 ratio_between_side_and_middle = np.array([np.random.uniform(min_ratios_between_side_and_middle[i], max_ratios_between_side_and_middle[i]) for i in range(0, nsamples)])
 inside_wall_side_thicknesses_2 = ratio_between_side_and_middle*inside_wall_middle_thicknesses_2
+
+# Option 3
+inside_wall_middle_thicknesses_3 = np.random.uniform(1.2, 1.8, nsamples)
+inside_wall_side_thicknesses_3 = np.random.uniform(1.7, 2.3, nsamples)
+for i in range(0, nsamples):
+    if inside_wall_middle_thicknesses_3[i] > inside_wall_side_thicknesses_3[i]:
+        inside_wall_side_thicknesses_3[i] = inside_wall_middle_thicknesses_3[i]
 
 # Plot thickness distribution - histogram
 axis_label = ['Outer wall thickness (mm)', 'Inside wall "side" thickness (mm)', 'Inside wall "middle" thickness (mm)']
@@ -50,4 +57,16 @@ for i in range(0,3):
     axs[i].set_title(axis_label[i])
 plt.tight_layout()
 plt.savefig('Option_2.pdf')
+plt.show()
+
+axis_label = ['Outer wall thickness (mm)', 'Inside wall "side" thickness (mm)', 'Inside wall "middle" thickness (mm)']
+fig, axs = plt.subplots(1,3,figsize=(12,4))
+axs[0].hist(outer_wall_thicknesses,20, density=False)
+axs[1].hist(inside_wall_side_thicknesses_3,20, density=False)
+axs[2].hist(inside_wall_middle_thicknesses_3,20, density=False)
+for i in range(0,3):
+    axs[i].grid()
+    axs[i].set_title(axis_label[i])
+plt.tight_layout()
+plt.savefig('Option_3.pdf')
 plt.show()
