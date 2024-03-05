@@ -275,8 +275,8 @@ contact.contactPropertyAssignments.appendInStep(assignments=((GLOBAL, SELF, 'Int
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE FIELD AND HISTORY OUTPUTS
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-model.fieldOutputRequests['F-Output-1'].setValues(numIntervals=100, variables=('MISES', 'PEEQ', 'U', 'SDV', 'STATUS'))
-model.HistoryOutputRequest(createStepName='Load', name='F-D', numIntervals=100, rebar=EXCLUDE, region=assembly.allInstances['Impactor-1'].sets['IMPACTOR_PP'], sectionPoints=DEFAULT, variables=('U2', 'RF2'))
+model.fieldOutputRequests['F-Output-1'].setValues(numIntervals=2, variables=('MISES', 'PEEQ', 'U', 'SDV', 'STATUS'))
+model.HistoryOutputRequest(createStepName='Load', name='F-D', numIntervals=1000, rebar=EXCLUDE, region=assembly.allInstances['Impactor-1'].sets['IMPACTOR_PP'], sectionPoints=DEFAULT, variables=('U2', 'RF2'))
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE MESH
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
