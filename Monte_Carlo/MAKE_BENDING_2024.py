@@ -61,6 +61,9 @@ HEIGHT_INSIDE_WALL_MIDDLE = HALF_HEIGHT_CENTER - HEIGHT_INSIDE_WALL_SIDE
 RADIUS = 10.0
 
 IMPACTOR_AND_SUPPORT_RADIUS = 30.0
+HALF_IMPACTOR_AND_SUPPORT_LENGTH = 100.0
+
+CUT_OFFSET = LENGTH/12
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # DEFINE MESH SIZE
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -131,9 +134,9 @@ model.parts['Cross-section'].PartitionFaceBySketch(faces=model.parts['Cross-sect
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE SKETCH FOR CUT
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-CUT = model.ConstrainedSketch(gridSpacing=24.37, name='cut', sheetSize=974.91, transform= model.parts['Cross-section'].MakeSketchTransform( sketchPlane=model.parts['Cross-section'].faces[6], sketchPlaneSide=SIDE1,  sketchUpEdge=model.parts['Cross-section'].edges[24], sketchOrientation=RIGHT, origin=(-63.95, 0.0, 240.0)))
+CUT = model.ConstrainedSketch(gridSpacing=24.37, name='cut', sheetSize=974.91, transform= model.parts['Cross-section'].MakeSketchTransform( sketchPlane=model.parts['Cross-section'].faces[6], sketchPlaneSide=SIDE1,  sketchUpEdge=model.parts['Cross-section'].edges[24], sketchOrientation=RIGHT, origin=(-HALF_WIDTH, 0.0, LENGTH/2)))
 model.parts['Cross-section'].projectReferencesOntoSketch(filter= COPLANAR_EDGES, sketch=model.sketches['cut'])
-CUT.CircleByCenterPerimeter(center=( 37.95, -40.0), point1=(19.95, -40.0)) # TODO Parameterize
+CUT.CircleByCenterPerimeter(center=(HALF_HEIGHT, -CUT_OFFSET), point1=(HALF_HEIGHT-RADIUS, -CUT_OFFSET))
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # EXTRUDE CUT
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -142,9 +145,9 @@ model.parts['Cross-section'].CutExtrude(flipExtrudeDirection=ON,  sketch=CUT, sk
 # CREATE SKETCH FOR IMPACTOR
 #--------------------------------------------------------------------------------------------------------
 IMPACTOR_PROFILE = model.ConstrainedSketch(name='IMPACTOR_PROFILE', sheetSize=200.0)
-IMPACTOR_PROFILE.ConstructionLine(point1=(0.0, -100.0), point2=(0.0, 100.0)) # TODO Parameterize
+IMPACTOR_PROFILE.ConstructionLine(point1=(0.0, -HALF_IMPACTOR_AND_SUPPORT_LENGTH), point2=(0.0, HALF_IMPACTOR_AND_SUPPORT_LENGTH))
 IMPACTOR_PROFILE.FixedConstraint(entity=IMPACTOR_PROFILE.geometry[2])
-IMPACTOR_PROFILE.Line(point1=(IMPACTOR_AND_SUPPORT_RADIUS, -100.0), point2=(IMPACTOR_AND_SUPPORT_RADIUS, 100.0)) # TODO Parameterize
+IMPACTOR_PROFILE.Line(point1=(IMPACTOR_AND_SUPPORT_RADIUS, -HALF_IMPACTOR_AND_SUPPORT_LENGTH), point2=(IMPACTOR_AND_SUPPORT_RADIUS, HALF_IMPACTOR_AND_SUPPORT_LENGTH))
 IMPACTOR_PROFILE.VerticalConstraint(addUndoState=False, entity=IMPACTOR_PROFILE.geometry[3])
 #--------------------------------------------------------------------------------------------------------
 # CREATE PART FOR IMPACTOR
@@ -156,9 +159,9 @@ model.rootAssembly.regenerate()
 # CREATE SKETCH FOR SUPPORT
 #--------------------------------------------------------------------------------------------------------
 SUPPORT_PROFILE = model.ConstrainedSketch(name='SUPPORT_PROFILE', sheetSize=200.0)
-SUPPORT_PROFILE.ConstructionLine(point1=(0.0,  -100.0), point2=(0.0, 100.0)) # TODO Parameterize
+SUPPORT_PROFILE.ConstructionLine(point1=(0.0,  -HALF_IMPACTOR_AND_SUPPORT_LENGTH), point2=(0.0, HALF_IMPACTOR_AND_SUPPORT_LENGTH))
 SUPPORT_PROFILE.FixedConstraint(entity=SUPPORT_PROFILE.geometry[2])
-SUPPORT_PROFILE.Line(point1=(IMPACTOR_AND_SUPPORT_RADIUS, -100.0), point2=(IMPACTOR_AND_SUPPORT_RADIUS, 100.0)) # TODO Parameterize
+SUPPORT_PROFILE.Line(point1=(IMPACTOR_AND_SUPPORT_RADIUS, -HALF_IMPACTOR_AND_SUPPORT_LENGTH), point2=(IMPACTOR_AND_SUPPORT_RADIUS, HALF_IMPACTOR_AND_SUPPORT_LENGTH))
 SUPPORT_PROFILE.VerticalConstraint(addUndoState=False, entity=SUPPORT_PROFILE.geometry[3])
 #--------------------------------------------------------------------------------------------------------
 # CREATE PART FOR SUPPORT
