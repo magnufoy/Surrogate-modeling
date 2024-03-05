@@ -63,7 +63,7 @@ CUT_DEPTH                 = 9.915
 
 LENGHT_IMPACTOR           = 200.0
 DEPTH_IMPACTOR            = 1.0
-GAP_IMPACTOR              = -0.5
+GAP_IMPACTOR              = -1
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # DEFINE MESH SIZE
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -211,7 +211,7 @@ model.parts['Cross-section'].SectionAssignment(offset=0.0, offsetField='', offse
 # CREATE REFERENCE POINT - IMPACTOR
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 model.parts['Plate_impactor'].ReferencePoint(point=model.parts['Plate_impactor'].InterestingPoint(model.parts['Plate_impactor'].edges[1], MIDDLE))
-model.parts['Plate_impactor'].Set(name='IMPACTOR_PP', referencePoints=(model.parts['Plate_impactor'].referencePoints[2], ))
+model.parts['Plate_impactor'].Set(name='IMPACTOR_RP', referencePoints=(model.parts['Plate_impactor'].referencePoints[2], ))
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE SURFACES
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -246,11 +246,11 @@ model.steps['Load'].setValues(improvedDtMethod=ON, timePeriod=TIME)
 # CREATE INITIAL BOUNDARY CONDITIONS
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 model.DisplacementBC(amplitude=UNSET, createStepName='Initial', distributionType=UNIFORM, fieldName='', localCsys=None, name='Clamp_cross-section', region=assembly.instances['Cross-section'].sets['CLAMPED'], u1=SET, u2=SET, u3=SET, ur1=SET, ur2=SET, ur3=SET)
-model.DisplacementBC(amplitude=UNSET, createStepName='Initial', distributionType=UNIFORM, fieldName='', localCsys=None, name='Clamp_impactor', region=assembly.instances['Plate_impactor-1'].sets['IMPACTOR_PP'], u1=SET, u2=SET, u3=UNSET, ur1=SET, ur2=SET, ur3=UNSET)
+model.DisplacementBC(amplitude=UNSET, createStepName='Initial', distributionType=UNIFORM, fieldName='', localCsys=None, name='Clamp_impactor', region=assembly.instances['Plate_impactor-1'].sets['IMPACTOR_RP'], u1=SET, u2=SET, u3=UNSET, ur1=SET, ur2=SET, ur3=UNSET)
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE LOADING CONDITIONS
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-model.VelocityBC(amplitude='Load_amp', createStepName='Load', distributionType=UNIFORM, fieldName='', localCsys=None, name='BC-3', region=assembly.instances['Plate_impactor-1'].sets['IMPACTOR_PP'], v1=UNSET, v2=UNSET, v3=VELOCITY, vr1=UNSET, vr2=UNSET, vr3=UNSET)
+model.VelocityBC(amplitude='Load_amp', createStepName='Load', distributionType=UNIFORM, fieldName='', localCsys=None, name='BC-3', region=assembly.instances['Plate_impactor-1'].sets['IMPACTOR_RP'], v1=UNSET, v2=UNSET, v3=VELOCITY, vr1=UNSET, vr2=UNSET, vr3=UNSET)
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE CONTACT PROPERTIES
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -267,7 +267,7 @@ contact.contactPropertyAssignments.appendInStep(assignments=((GLOBAL, SELF, 'Int
 # CREATE FIELD AND HISTORY OUTPUTS
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 model.fieldOutputRequests['F-Output-1'].setValues(numIntervals=2, variables=('MISES', 'PEEQ', 'LE', 'U', 'SDV', 'STATUS'))
-model.HistoryOutputRequest(createStepName='Load', name='F-D', numIntervals=1000, rebar=EXCLUDE, region=assembly.allInstances['Plate_impactor-1'].sets['IMPACTOR_PP'], sectionPoints=DEFAULT, variables=('U3', 'RF3'))
+model.HistoryOutputRequest(createStepName='Load', name='F-D', numIntervals=1000, rebar=EXCLUDE, region=assembly.allInstances['Plate_impactor-1'].sets['IMPACTOR_RP'], sectionPoints=DEFAULT, variables=('U3', 'RF3'))
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE MESH
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
