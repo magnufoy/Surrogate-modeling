@@ -126,7 +126,6 @@ LINE = model.ConstrainedSketch(gridSpacing=21.83, name='line', sheetSize=873.29,
 model.parts['Cross-section'].projectReferencesOntoSketch(filter=COPLANAR_EDGES, sketch=LINE)
 LINE.Line(point1=(-HEIGHT_INSIDE_WALL_MIDDLE, LENGTH/2), point2=(-HEIGHT_INSIDE_WALL_MIDDLE, -LENGTH/2))
 LINE.Line(point1=( HEIGHT_INSIDE_WALL_MIDDLE, LENGTH/2), point2=( HEIGHT_INSIDE_WALL_MIDDLE, -LENGTH/2))
-
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE PART FOR LINE TO DEVIDE INSIDE-WALL-MIDDLE AND INSIDE-WALL-SIDE
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
