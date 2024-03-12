@@ -32,8 +32,8 @@ try:
   
    INSIDE_WALL_MIDDLE_TICKNESS = float(sys.argv[-5])
    INSIDE_WALL_SIDE_TICKNESS   = float(sys.argv[-6])
-   OUTER_WALL_TICKNESS         = float(sys.argv[-7])
 
+   OUTER_WALL_TICKNESS         = float(sys.argv[-7])
    MODEL                       = int(sys.argv[-8])
 
 except:
@@ -77,7 +77,7 @@ FRICTION_COEFFICIENT = 0.05
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 VELOCITY  = 700.0
 TIME      = 0.05
-TIME_RAMP = TIME/10.0
+TIME_RAMP = TIME/20.0
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE MODEL
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -228,19 +228,19 @@ assembly.Instance(dependent=ON, name='Cross-section', part=model.parts['Cross-se
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 assembly.Instance(dependent=ON, name='Support-1', part=model.parts['Support'])
 assembly.rotate(angle=90.0, axisDirection=(0.0, 0.0, 1.0), axisPoint=(0.0, 0.0, 0.0), instanceList=('Support-1', ))
-assembly.translate(instanceList=('Support-1', ), vector=(0.0, 69.5, 52.5))
+assembly.translate(instanceList=('Support-1', ), vector=(0.0, 68.5, 52.5))
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE INSTANCE FOR SUPPORT 2 #TODO Parameterize vectors
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 assembly.Instance(dependent=ON, name='Support-2', part=model.parts['Support'])
 assembly.rotate(angle=90.0, axisDirection=(0.0, 0.0, 1.0), axisPoint=(0.0, 0.0, 0.0), instanceList=('Support-2', ))
-assembly.translate(instanceList=('Support-2', ), vector=(0.0, 69.5, 427.5))
+assembly.translate(instanceList=('Support-2', ), vector=(0.0, 68.5, 427.5))
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE INSTANCE FOR IMPACTOR #TODO Parameterize vectors
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 assembly.Instance(dependent=ON, name='Impactor-1', part=model.parts['Impactor'])
 assembly.rotate(angle=90.0, axisDirection=(0.0, 0.0, 1.0), axisPoint=(0.0, 0.0, 0.0), instanceList=('Impactor-1', ))
-assembly.translate(instanceList=('Impactor-1', ), vector=(0.0, -69.5, 240.0))
+assembly.translate(instanceList=('Impactor-1', ), vector=(0.0, -68.5, 240.0))
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE STEP
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -248,7 +248,7 @@ model.ExplicitDynamicsStep(improvedDtMethod=ON, name='Load', previous='Initial',
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE SMOOTH AMPLITUDE CURVE
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-model.SmoothStepAmplitude(data=((0.0, 0.0), (TIME_RAMP, 1.0)), name='Load_amp', timeSpan=STEP)
+model.SmoothStepAmplitude(data=((0.0, 0.0),(TIME_RAMP, 1.0)), name='Load_amp', timeSpan=STEP)
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE INITIAL BOUNDARY CONDITIONS
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -275,6 +275,7 @@ contact.contactPropertyAssignments.appendInStep(assignments=((GLOBAL, SELF, 'Int
 # CREATE FIELD AND HISTORY OUTPUTS
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 model.fieldOutputRequests['F-Output-1'].setValues(numIntervals=2, variables=('MISES', 'PEEQ', 'U', 'SDV', 'STATUS'))
+#model.FieldOutputRequest(createStepName='Load', exteriorOnly= OFF, name='COOR', numIntervals=1, position=NODES, rebar=EXCLUDE, region= MODEL, sectionPoints=DEFAULT, variables=('COORD', ))
 model.HistoryOutputRequest(createStepName='Load', name='F-D', numIntervals=1000, rebar=EXCLUDE, region=assembly.allInstances['Impactor-1'].sets['IMPACTOR_PP'], sectionPoints=DEFAULT, variables=('U2', 'RF2'))
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE MESH

@@ -228,29 +228,29 @@ assembly.Instance(dependent=ON, name='Cross-section', part=model.parts['Cross-se
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE INSTANCE FOR IMPACTOR 
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-assembly.Instance(dependent=ON, name='Plate_impactor-1', part=model.parts['Plate_impactor'])
-assembly.rotate(angle=90.0, axisDirection=(1.0, 0.0, 0.0), axisPoint=(0.0, 0.0, 0.0), instanceList=('Plate_impactor-1', ))
-assembly.translate(instanceList=('Plate_impactor-1', ), vector=(0.0, 0.0, GAP_IMPACTOR)) 
+assembly.Instance(dependent=ON, name='IMPACTOR-1', part=model.parts['Plate_impactor'])
+assembly.rotate(angle=90.0, axisDirection=(1.0, 0.0, 0.0), axisPoint=(0.0, 0.0, 0.0), instanceList=('IMPACTOR-1', ))
+assembly.translate(instanceList=('IMPACTOR-1', ), vector=(0.0, 0.0, GAP_IMPACTOR)) 
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE STEP
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-model.ExplicitDynamicsStep(improvedDtMethod=ON, name='Load', previous='Initial', timePeriod=TIME)
+model.ExplicitDynamicsStep(improvedDtMethod=ON, name='loading', previous='Initial', timePeriod=TIME)
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE SMOOTH AMPLITUDE CURVE
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 model.SmoothStepAmplitude(data=((0.0, 0.0), (TIME_RAMP, 1.0)), name='Load_amp', timeSpan=STEP)
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #TSIZE TIMESTEP
-model.steps['Load'].setValues(improvedDtMethod=ON, timePeriod=TIME)
+model.steps['loading'].setValues(improvedDtMethod=ON, timePeriod=TIME)
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE INITIAL BOUNDARY CONDITIONS
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 model.DisplacementBC(amplitude=UNSET, createStepName='Initial', distributionType=UNIFORM, fieldName='', localCsys=None, name='Clamp_cross-section', region=assembly.instances['Cross-section'].sets['CLAMPED'], u1=SET, u2=SET, u3=SET, ur1=SET, ur2=SET, ur3=SET)
-model.DisplacementBC(amplitude=UNSET, createStepName='Initial', distributionType=UNIFORM, fieldName='', localCsys=None, name='Clamp_impactor', region=assembly.instances['Plate_impactor-1'].sets['IMPACTOR_RP'], u1=SET, u2=SET, u3=UNSET, ur1=SET, ur2=SET, ur3=UNSET)
+model.DisplacementBC(amplitude=UNSET, createStepName='Initial', distributionType=UNIFORM, fieldName='', localCsys=None, name='Clamp_impactor', region=assembly.instances['IMPACTOR-1'].sets['IMPACTOR_RP'], u1=SET, u2=SET, u3=UNSET, ur1=SET, ur2=SET, ur3=SET)
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-# CREATE LOADING CONDITIONS
+# CREATE loading' CONDITIONS
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-model.VelocityBC(amplitude='Load_amp', createStepName='Load', distributionType=UNIFORM, fieldName='', localCsys=None, name='BC-3', region=assembly.instances['Plate_impactor-1'].sets['IMPACTOR_RP'], v1=UNSET, v2=UNSET, v3=VELOCITY, vr1=UNSET, vr2=UNSET, vr3=UNSET)
+model.VelocityBC(amplitude='Load_amp', createStepName='loading', distributionType=UNIFORM, fieldName='', localCsys=None, name='BC-3', region=assembly.instances['IMPACTOR-1'].sets['IMPACTOR_RP'], v1=UNSET, v2=UNSET, v3=VELOCITY, vr1=UNSET, vr2=UNSET, vr3=UNSET)
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE CONTACT PROPERTIES
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -260,14 +260,14 @@ contact_properties.NormalBehavior(allowSeparation=ON, constraintEnforcementMetho
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE GENERAL CONTACT
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-contact = model.ContactExp(createStepName='Load', name='Interaction')
-contact.includedPairs.setValuesInStep(stepName='Load', useAllstar=ON)
-contact.contactPropertyAssignments.appendInStep(assignments=((GLOBAL, SELF, 'Interaction'), ), stepName='Load')
+contact = model.ContactExp(createStepName='loading', name='Interaction')
+contact.includedPairs.setValuesInStep(stepName='loading', useAllstar=ON)
+contact.contactPropertyAssignments.appendInStep(assignments=((GLOBAL, SELF, 'Interaction'), ), stepName='loading')
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE FIELD AND HISTORY OUTPUTS
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 model.fieldOutputRequests['F-Output-1'].setValues(numIntervals=2, variables=('MISES', 'PEEQ', 'LE', 'U', 'SDV', 'STATUS'))
-model.HistoryOutputRequest(createStepName='Load', name='F-D', numIntervals=1000, rebar=EXCLUDE, region=assembly.allInstances['Plate_impactor-1'].sets['IMPACTOR_RP'], sectionPoints=DEFAULT, variables=('U3', 'RF3'))
+model.HistoryOutputRequest(createStepName='loading', name='F-D', numIntervals=1000, rebar=EXCLUDE, region=assembly.allInstances['IMPACTOR-1'].sets['IMPACTOR_RP'], sectionPoints=DEFAULT, variables=('U3', 'RF3'))
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE MESH
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
