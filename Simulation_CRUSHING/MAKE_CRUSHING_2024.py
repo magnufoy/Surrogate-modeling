@@ -15,6 +15,7 @@ from sketch import *
 from visualization import *
 from connectorBehavior import *
 import sys
+import numpy as np
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # DEFINE INPUT FILE NAMES
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -277,19 +278,43 @@ model.rootAssembly.regenerate()
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE A LIST WITH ELEMENT LABLES
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-outer_elements = model.rootAssembly.instances['Cross-section'].sets['OUTER_WALL'].elements
-outer_element_labels = [element.label for element in outer_elements]
-length_outer_element_labels= len(outer_element_labels)
+OUTER_WALL_elements = model.rootAssembly.instances['Cross-section'].sets['OUTER_WALL'].elements
+OUTER_WALL_element_labels = [element.label for element in OUTER_WALL_elements]
+length_OUTER_WALL_element_labels= len(OUTER_WALL_element_labels)
 
-mean = 0
-std_dev = 1
+INSIDE_WALL_SIDE_elements = model.rootAssembly.instances['Cross-section'].sets['INSIDE_WALL_SIDE'].elements
+INSIDE_WALL_SIDE_element_labels = [element.label for element in INSIDE_WALL_SIDE_elements]
+length_INSIDE_WALL_SIDE_element_labels= len(INSIDE_WALL_SIDE_element_labels)
 
-values = np.random.normal(mean, std_dev, length_outer_element_labels)
+INSIDE_WALL_MIDDLE_elements = model.rootAssembly.instances['Cross-section'].sets['INSIDE_WALL_MIDDLE'].elements
+INSIDE_WALL_MIDDLE_element_labels = [element.label for element in INSIDE_WALL_MIDDLE_elements]
+length_INSIDE_WALL_MIDDLE_element_labels= len(INSIDE_WALL_MIDDLE_element_labels)
 
-for i in predefined_element_labels:
-   j=0
-   model.keywordBlock.insert(j, str(i)+ + '\n') 
-   j+=1
+OUTER_WALL_mean = 2.7
+OUTER_WALL_std_dev = 1
+
+INSIDE_WALL_SIDE_mean = 1.7
+INSIDE_WALL_SIDE_std_dev = 1
+
+INSIDE_WALL_MIDDLE_mean = 1.2
+INSIDE_WALL_MIDDLE_std_dev = 1
+
+OUTER_WALL_values = np.random.normal(OUTER_WALL_mean, OUTER_WALL_std_dev, length_OUTER_WALL_element_labels)
+INSIDE_WALL_SIDE_values = np.random.normal(INSIDE_WALL_SIDE_mean, INSIDE_WALL_SIDE_std_dev, length_INSIDE_WALL_SIDE_element_labels)
+INSIDE_WALL_MIDDLE_values = np.random.normal(INSIDE_WALL_MIDDLE_mean, INSIDE_WALL_MIDDLE_std_dev, length_INSIDE_WALL_MIDDLE_element_labels)
+
+fp = open(input_name.format(MODEL)+'.inp','r')
+lines = fp.read()
+fp.close()
+
+lines = lines.replace("*Shell Section, elset=OUTER_WALL, material=C28_OUTER_WALL\n", "*SHELL SECTION, ELSET=ELEMENT_SET, MATERIAL=C28, SHELL THICKNESS=OUTER_DISTRIBUTION_THICKNESS\n               1.,        5\n*DISTRIBUTION TABLE, NAME=OUTER_DISTRIBUTION_TABLE_THICKNESS\nLENGTH,\n*DISTRIBUTION, LOCATION=ELEMENT, TABLE=OUTER_DISTRIBUTION_TABLE_THICKNESS, NAME=OUTER_DISTRIBUTION_THICKNESS\n        ,               1.\n replace me")
+for i in range(OUTER_WALL_element_labels):
+   lines = lines.replace('replace me', str(OUTER_WALL_element_labels[i]) + ',' + str(OUTER_WALL_values[i]) + '\n' + 'replace me')
+lines = lines.replace('replace me', '')
+
+fp = open(input_name.format(MODEL)+'.inp','w')
+fp.write(lines)
+fp.close()
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE INPUT FILE
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
