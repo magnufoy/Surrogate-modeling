@@ -276,6 +276,11 @@ model.parts['Cross-section'].seedPart(deviationFactor=0.1, minSizeFactor=0.1, si
 model.parts['Cross-section'].generateMesh()
 model.rootAssembly.regenerate()
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# CREATE INPUT FILE
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+job = mdb.Job(model='CRUSHING', name=input_name.format(MODEL))
+job.writeInput(consistencyChecking=OFF)
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE A LIST WITH ELEMENT LABLES
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 OUTER_WALL_elements = model.rootAssembly.instances['Cross-section'].sets['OUTER_WALL'].elements
@@ -308,18 +313,13 @@ lines = fp.read()
 fp.close()
 
 lines = lines.replace("*Shell Section, elset=OUTER_WALL, material=C28_OUTER_WALL\n", "*SHELL SECTION, ELSET=ELEMENT_SET, MATERIAL=C28, SHELL THICKNESS=OUTER_DISTRIBUTION_THICKNESS\n               1.,        5\n*DISTRIBUTION TABLE, NAME=OUTER_DISTRIBUTION_TABLE_THICKNESS\nLENGTH,\n*DISTRIBUTION, LOCATION=ELEMENT, TABLE=OUTER_DISTRIBUTION_TABLE_THICKNESS, NAME=OUTER_DISTRIBUTION_THICKNESS\n        ,               1.\n replace me")
-for i in range(OUTER_WALL_element_labels):
+for i in range(length_OUTER_WALL_element_labels):
    lines = lines.replace('replace me', str(OUTER_WALL_element_labels[i]) + ',' + str(OUTER_WALL_values[i]) + '\n' + 'replace me')
 lines = lines.replace('replace me', '')
 
 fp = open(input_name.format(MODEL)+'.inp','w')
 fp.write(lines)
 fp.close()
-#--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-# CREATE INPUT FILE
-#--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-job = mdb.Job(model='CRUSHING', name=input_name.format(MODEL))
-job.writeInput(consistencyChecking=OFF)
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # OPEN INPUT FILE AND INCLUDE THE MATERIAL CARD
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
