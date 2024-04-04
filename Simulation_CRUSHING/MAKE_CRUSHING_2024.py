@@ -275,6 +275,22 @@ model.parts['Cross-section'].seedPart(deviationFactor=0.1, minSizeFactor=0.1, si
 model.parts['Cross-section'].generateMesh()
 model.rootAssembly.regenerate()
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# CREATE A LIST WITH ELEMENT LABLES
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+outer_elements = model.rootAssembly.instances['Cross-section'].sets['OUTER_WALL'].elements
+outer_element_labels = [element.label for element in outer_elements]
+length_outer_element_labels= len(outer_element_labels)
+
+mean = 0
+std_dev = 1
+
+values = np.random.normal(mean, std_dev, length_outer_element_labels)
+
+for i in predefined_element_labels:
+   j=0
+   model.keywordBlock.insert(j, str(i)+ + '\n') 
+   j+=1
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE INPUT FILE
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 job = mdb.Job(model='CRUSHING', name=input_name.format(MODEL))
