@@ -316,17 +316,17 @@ lines = lines.replace(OUTER_WALL_TICKNESS + ', 5\n', '')
 lines = lines.replace(INSIDE_WALL_MIDDLE_TICKNESS + ', 5\n', '')
 lines = lines.replace(INSIDE_WALL_SIDE_TICKNESS + ', 5\n', '')
 
-lines = lines.replace("*Shell Section, elset=OUTER_WALL, material=C28_OUTER_WALL\n", "*SHELL SECTION, ELSET=ELEMENT_SET, MATERIAL=C28_OUTER_WALL, SHELL THICKNESS=OUTER_DISTRIBUTION_THICKNESS\n               1.,        5\n*DISTRIBUTION, LOCATION=ELEMENT, TABLE=OUTER_DISTRIBUTION_TABLE_THICKNESS, NAME=OUTER_DISTRIBUTION_THICKNESS\n        ,               1.\n replace me")
+lines = lines.replace("*Shell Section, elset=OUTER_WALL, material=C28_OUTER_WALL\n", "*SHELL SECTION, ELSET=OUTER_WALL, MATERIAL=C28_OUTER_WALL, SHELL THICKNESS=OUTER_DISTRIBUTION_THICKNESS\n               1.,        5\n*DISTRIBUTION, LOCATION=ELEMENT, TABLE=OUTER_DISTRIBUTION_TABLE_THICKNESS, NAME=OUTER_DISTRIBUTION_THICKNESS\n        ,               1.\n replace me")
 for i in range(length_OUTER_WALL_element_labels):
    lines = lines.replace('replace me', str(OUTER_WALL_element_labels[i]) + ',' + str(OUTER_WALL_values[i]) + '\n' + 'replace me')
 lines = lines.replace('replace me', '')
 
-lines = lines.replace("*Shell Section, elset=INSIDE_WALL_SIDE, material=C28_INSIDE_WALL_SIDE\n", "*SHELL SECTION, ELSET=ELEMENT_SET, MATERIAL=C28_INSIDE_WALL_SIDE, SHELL THICKNESS=INSIDE_WALL_SIDE_DISTRIBUTION_THICKNESS\n               1.,        5\n*DISTRIBUTION, LOCATION=ELEMENT, TABLE=INSIDE_WALL_SIDE_DISTRIBUTION_TABLE_THICKNESS, NAME=INSIDE_WALL_SIDE_DISTRIBUTION_THICKNESS\n        ,               1.\n replace me")
+lines = lines.replace("*Shell Section, elset=INSIDE_WALL_SIDE, material=C28_INSIDE_WALL_SIDE\n", "*SHELL SECTION, ELSET=INSIDE_WALL_SIDE, MATERIAL=C28_INSIDE_WALL_SIDE, SHELL THICKNESS=INSIDE_WALL_SIDE_DISTRIBUTION_THICKNESS\n               1.,        5\n*DISTRIBUTION, LOCATION=ELEMENT, TABLE=INSIDE_WALL_SIDE_DISTRIBUTION_TABLE_THICKNESS, NAME=INSIDE_WALL_SIDE_DISTRIBUTION_THICKNESS\n        ,               1.\n replace me")
 for i in range(length_INSIDE_WALL_SIDE_element_labels):
    lines = lines.replace('replace me', str(INSIDE_WALL_SIDE_element_labels[i]) + ',' + str(INSIDE_WALL_SIDE_values[i]) + '\n' + 'replace me')
 lines = lines.replace('replace me', '')
 
-lines = lines.replace("*Shell Section, elset=INSIDE_WALL_MIDDLE, material=C28_INSIDE_WALL_MIDDLE\n", "*SHELL SECTION, ELSET=ELEMENT_SET, MATERIAL=_INSIDE_WALL_MIDDLE, SHELL THICKNESS=INSIDE_WALL_MIDDLE_DISTRIBUTION_THICKNESS\n               1.,        5\n*DISTRIBUTION, LOCATION=ELEMENT, TABLE=INSIDE_WALL_MIDDLE_DISTRIBUTION_TABLE_THICKNESS, NAME=INSIDE_WALL_MIDDLE_DISTRIBUTION_THICKNESS\n        ,               1.\n replace me")
+lines = lines.replace("*Shell Section, elset=INSIDE_WALL_MIDDLE, material=C28_INSIDE_WALL_MIDDLE\n", "*SHELL SECTION, ELSET=INSIDE_WALL_MIDDLE, MATERIAL=_INSIDE_WALL_MIDDLE, SHELL THICKNESS=INSIDE_WALL_MIDDLE_DISTRIBUTION_THICKNESS\n               1.,        5\n*DISTRIBUTION, LOCATION=ELEMENT, TABLE=INSIDE_WALL_MIDDLE_DISTRIBUTION_TABLE_THICKNESS, NAME=INSIDE_WALL_MIDDLE_DISTRIBUTION_THICKNESS\n        ,               1.\n replace me")
 for i in range(length_INSIDE_WALL_MIDDLE_element_labels):
    lines = lines.replace('replace me', str(INSIDE_WALL_MIDDLE_element_labels[i]) + ',' + str(INSIDE_WALL_MIDDLE_values[i]) + '\n' + 'replace me')
 lines = lines.replace('replace me', '')
