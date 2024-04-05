@@ -296,13 +296,13 @@ INSIDE_WALL_MIDDLE_element_labels = [element.label for element in INSIDE_WALL_MI
 length_INSIDE_WALL_MIDDLE_element_labels= len(INSIDE_WALL_MIDDLE_element_labels)
 
 OUTER_WALL_mean = 2.7
-OUTER_WALL_std_dev = 1
+OUTER_WALL_std_dev = 0.4/6
 
-INSIDE_WALL_SIDE_mean = 1.7
-INSIDE_WALL_SIDE_std_dev = 1
+INSIDE_WALL_SIDE_mean = 2
+INSIDE_WALL_SIDE_std_dev = 0.6/6
 
-INSIDE_WALL_MIDDLE_mean = 1.2
-INSIDE_WALL_MIDDLE_std_dev = 1
+INSIDE_WALL_MIDDLE_mean = 1.5
+INSIDE_WALL_MIDDLE_std_dev = 0.6/6
 
 OUTER_WALL_values = np.random.normal(OUTER_WALL_mean, OUTER_WALL_std_dev, length_OUTER_WALL_element_labels)
 INSIDE_WALL_SIDE_values = np.random.normal(INSIDE_WALL_SIDE_mean, INSIDE_WALL_SIDE_std_dev, length_INSIDE_WALL_SIDE_element_labels)
@@ -312,9 +312,9 @@ fp = open(input_name.format(MODEL)+'.inp','r')
 lines = fp.read()
 fp.close()
 
-lines = lines.replace(OUTER_WALL_TICKNESS + ', 5\n', '')
-lines = lines.replace(INSIDE_WALL_MIDDLE_TICKNESS + ', 5\n', '')
-lines = lines.replace(INSIDE_WALL_SIDE_TICKNESS + ', 5\n', '')
+lines = lines.replace(str(OUTER_WALL_TICKNESS) + ', 5\n', '')
+lines = lines.replace(str(INSIDE_WALL_MIDDLE_TICKNESS) + ', 5\n', '')
+lines = lines.replace(str(INSIDE_WALL_SIDE_TICKNESS) + ', 5\n', '')
 
 lines = lines.replace("*Shell Section, elset=OUTER_WALL, material=C28_OUTER_WALL\n", "*SHELL SECTION, ELSET=OUTER_WALL, MATERIAL=C28_OUTER_WALL, SHELL THICKNESS=OUTER_DISTRIBUTION_THICKNESS\n               1.,        5\n*DISTRIBUTION, LOCATION=ELEMENT, TABLE=OUTER_DISTRIBUTION_TABLE_THICKNESS, NAME=OUTER_DISTRIBUTION_THICKNESS\n        ,               1.\n replace me")
 for i in range(length_OUTER_WALL_element_labels):
@@ -326,12 +326,12 @@ for i in range(length_INSIDE_WALL_SIDE_element_labels):
    lines = lines.replace('replace me', str(INSIDE_WALL_SIDE_element_labels[i]) + ',' + str(INSIDE_WALL_SIDE_values[i]) + '\n' + 'replace me')
 lines = lines.replace('replace me', '')
 
-lines = lines.replace("*Shell Section, elset=INSIDE_WALL_MIDDLE, material=C28_INSIDE_WALL_MIDDLE\n", "*SHELL SECTION, ELSET=INSIDE_WALL_MIDDLE, MATERIAL=_INSIDE_WALL_MIDDLE, SHELL THICKNESS=INSIDE_WALL_MIDDLE_DISTRIBUTION_THICKNESS\n               1.,        5\n*DISTRIBUTION, LOCATION=ELEMENT, TABLE=INSIDE_WALL_MIDDLE_DISTRIBUTION_TABLE_THICKNESS, NAME=INSIDE_WALL_MIDDLE_DISTRIBUTION_THICKNESS\n        ,               1.\n replace me")
+lines = lines.replace("*Shell Section, elset=INSIDE_WALL_MIDDLE, material=C28_INSIDE_WALL_MIDDLE\n", "*SHELL SECTION, ELSET=INSIDE_WALL_MIDDLE, MATERIAL=C28_INSIDE_WALL_MIDDLE, SHELL THICKNESS=INSIDE_WALL_MIDDLE_DISTRIBUTION_THICKNESS\n               1.,        5\n*DISTRIBUTION, LOCATION=ELEMENT, TABLE=INSIDE_WALL_MIDDLE_DISTRIBUTION_TABLE_THICKNESS, NAME=INSIDE_WALL_MIDDLE_DISTRIBUTION_THICKNESS\n        ,               1.\n replace me")
 for i in range(length_INSIDE_WALL_MIDDLE_element_labels):
    lines = lines.replace('replace me', str(INSIDE_WALL_MIDDLE_element_labels[i]) + ',' + str(INSIDE_WALL_MIDDLE_values[i]) + '\n' + 'replace me')
 lines = lines.replace('replace me', '')
 
-lines = lines.replace('*End Part\n**\n*Part, name=Plate_impactor', 'Hei Benjamin')
+lines = lines.replace('*End Part\n**  \n*Part, name=Plate_impactor', 'Hei Benjamin')
 lines = lines.replace('Hei Benjamin','*End Part\n**\n*DISTRIBUTION TABLE, NAME=OUTER_DISTRIBUTION_TABLE_THICKNESS\nLENGTH,\n**\n*DISTRIBUTION TABLE, NAME=INSIDE_WALL_SIDE_DISTRIBUTION_TABLE_THICKNESS\nLENGTH,\n**\n*DISTRIBUTION TABLE, NAME=INSIDE_WALL_MIDDLE_DISTRIBUTION_TABLE_THICKNESS\nLENGTH,\n**\n*Part, name=Plate_impactor')
 
 
