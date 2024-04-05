@@ -312,9 +312,9 @@ fp = open(input_name.format(MODEL)+'.inp','r')
 lines = fp.read()
 fp.close()
 
-lines = lines.replace(OUTER_WALL_TICKNESS, '')
-lines = lines.replace(INSIDE_WALL_MIDDLE_TICKNESS, '')
-lines = lines.replace(INSIDE_WALL_SIDE_TICKNESS, '')
+lines = lines.replace(OUTER_WALL_TICKNESS + ', 5\n', '')
+lines = lines.replace(INSIDE_WALL_MIDDLE_TICKNESS + ', 5\n', '')
+lines = lines.replace(INSIDE_WALL_SIDE_TICKNESS + ', 5\n', '')
 
 lines = lines.replace("*Shell Section, elset=OUTER_WALL, material=C28_OUTER_WALL\n", "*SHELL SECTION, ELSET=ELEMENT_SET, MATERIAL=C28, SHELL THICKNESS=OUTER_DISTRIBUTION_THICKNESS\n               1.,        5\n*DISTRIBUTION TABLE, NAME=OUTER_DISTRIBUTION_TABLE_THICKNESS\nLENGTH,\n*DISTRIBUTION, LOCATION=ELEMENT, TABLE=OUTER_DISTRIBUTION_TABLE_THICKNESS, NAME=OUTER_DISTRIBUTION_THICKNESS\n        ,               1.\n replace me")
 for i in range(length_OUTER_WALL_element_labels):
