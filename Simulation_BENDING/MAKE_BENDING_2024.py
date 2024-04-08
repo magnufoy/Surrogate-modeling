@@ -342,8 +342,8 @@ for i in range(length_INSIDE_WALL_MIDDLE_element_labels):
    lines = lines.replace('replace me', str(INSIDE_WALL_MIDDLE_element_labels[i]) + ',' + str(INSIDE_WALL_MIDDLE_values[i]) + '\n' + 'replace me')
 lines = lines.replace('replace me', '')
 
-lines = lines.replace('*End Part\n**  \n*Part, name=Plate_impactor', 'Hei Benjamin')
-lines = lines.replace('Hei Benjamin','*End Part\n**\n*DISTRIBUTION TABLE, NAME=OUTER_DISTRIBUTION_TABLE_THICKNESS\nLENGTH,\n**\n*DISTRIBUTION TABLE, NAME=INSIDE_WALL_SIDE_DISTRIBUTION_TABLE_THICKNESS\nLENGTH,\n**\n*DISTRIBUTION TABLE, NAME=INSIDE_WALL_MIDDLE_DISTRIBUTION_TABLE_THICKNESS\nLENGTH,\n**\n*Part, name=Plate_impactor')
+lines = lines.replace('*End Part\n**  \n*Part, name=Impactor', 'Hei Benjamin')
+lines = lines.replace('Hei Benjamin','*End Part\n**\n*DISTRIBUTION TABLE, NAME=OUTER_DISTRIBUTION_TABLE_THICKNESS\nLENGTH,\n**\n*DISTRIBUTION TABLE, NAME=INSIDE_WALL_SIDE_DISTRIBUTION_TABLE_THICKNESS\nLENGTH,\n**\n*DISTRIBUTION TABLE, NAME=INSIDE_WALL_MIDDLE_DISTRIBUTION_TABLE_THICKNESS\nLENGTH,\n**\n*Part, name=Impactor')
 
 
 fp = open(input_name.format(MODEL)+'.inp','w')
