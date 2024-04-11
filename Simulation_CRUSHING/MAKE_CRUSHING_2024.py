@@ -33,10 +33,13 @@ try:
    WIDTH = 127.9
    E0 = 70000
    SIGMA0 =267.1
-   INSIDE_WALL_MIDDLE_TICKNESS = float(sys.argv[-5])
-   INSIDE_WALL_SIDE_TICKNESS   = float(sys.argv[-6])
-   OUTER_WALL_TICKNESS         = float(sys.argv[-7])
-  
+   #INSIDE_WALL_MIDDLE_TICKNESS = float(sys.argv[-5])
+   #INSIDE_WALL_SIDE_TICKNESS   = float(sys.argv[-6])
+   #OUTER_WALL_TICKNESS         = float(sys.argv[-7])
+   
+   INSIDE_WALL_MIDDLE_TICKNESS = 1.5
+   INSIDE_WALL_SIDE_TICKNESS =2.0
+   OUTER_WALL_TICKNESS =2.7
    MODEL                       = int(sys.argv[-8]) 
 
 except:
@@ -286,7 +289,7 @@ job.writeInput(consistencyChecking=OFF)
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE A LIST WITH ELEMENT LABLES
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-OUTER_WALL_elements = model.rootAssembly.instances['Cross-section'].sets['OUTER_WALL'].elements
+'''OUTER_WALL_elements = model.rootAssembly.instances['Cross-section'].sets['OUTER_WALL'].elements
 OUTER_WALL_element_labels = [element.label for element in OUTER_WALL_elements]
 length_OUTER_WALL_element_labels= len(OUTER_WALL_element_labels)
 
@@ -340,7 +343,7 @@ lines = lines.replace('Hei Benjamin','*End Part\n**\n*DISTRIBUTION TABLE, NAME=O
 
 fp = open(input_name.format(MODEL)+'.inp','w')
 fp.write(lines)
-fp.close()
+fp.close()'''
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # OPEN INPUT FILE AND INCLUDE THE MATERIAL CARD
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
