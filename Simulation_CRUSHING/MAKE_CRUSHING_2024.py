@@ -33,9 +33,9 @@ try:
    WIDTH = 127.9
    E0 = 70000
    SIGMA0 =267.1
-   INSIDE_WALL_MIDDLE_TICKNESS = float(sys.argv[-5])
-   INSIDE_WALL_SIDE_TICKNESS   = float(sys.argv[-6])
-   OUTER_WALL_TICKNESS         = float(sys.argv[-7])
+   INSIDE_WALL_MIDDLE_THICKNESS = float(sys.argv[-5])
+   INSIDE_WALL_SIDE_THICKNESS   = float(sys.argv[-6])
+   OUTER_WALL_THICKNESS         = float(sys.argv[-7])
   
    MODEL                       = int(sys.argv[-8]) 
 
@@ -46,17 +46,17 @@ except:
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #WIDTH = 127.9
 #HEIGHT= 75.9
-#INSIDE_WALL_MIDDLE_TICKNESS =1.5
-#INSIDE_WALL_SIDE_TICKNESS   = 2
-#OUTER_WALL_TICKNESS         = 2.7
+#INSIDE_WALL_MIDDLE_THICKNESS =1.5
+#INSIDE_WALL_SIDE_THICKNESS   = 2
+#OUTER_WALL_THICKNESS         = 2.7
 
 HEIGHT_DIFFERENCE         = 0.5
 
 LENGTH                    = 430.0
 
-HALF_HEIGHT               = (HEIGHT - OUTER_WALL_TICKNESS)/2
+HALF_HEIGHT               = (HEIGHT - OUTER_WALL_THICKNESS)/2
 HALF_HEIGHT_CENTER        = HALF_HEIGHT + HEIGHT_DIFFERENCE
-HALF_WIDTH                = (WIDTH - OUTER_WALL_TICKNESS)/2
+HALF_WIDTH                = (WIDTH - OUTER_WALL_THICKNESS)/2
 
 HEIGHT_INSIDE_WALL_SIDE   = 13.45
 HEIGHT_INSIDE_WALL_MIDDLE = HALF_HEIGHT_CENTER - HEIGHT_INSIDE_WALL_SIDE
@@ -96,9 +96,9 @@ except:
 model.Material(name='C28_OUTER_WALL')
 model.Material(name='C28_INSIDE_WALL_SIDE')
 model.Material(name='C28_INSIDE_WALL_MIDDLE')
-model.HomogeneousShellSection(idealization=NO_IDEALIZATION, integrationRule=SIMPSON, material='C28_OUTER_WALL'        , name='OUTER_WALL'        , nodalThicknessField='', numIntPts=5, poissonDefinition=DEFAULT, preIntegrate=OFF, temperature=GRADIENT, thickness=OUTER_WALL_TICKNESS        , thicknessField='', thicknessModulus=None, thicknessType=UNIFORM, useDensity=OFF)
-model.HomogeneousShellSection(idealization=NO_IDEALIZATION, integrationRule=SIMPSON, material='C28_INSIDE_WALL_SIDE'  , name='INSIDE_WALL_SIDE'  , nodalThicknessField='', numIntPts=5, poissonDefinition=DEFAULT, preIntegrate=OFF, temperature=GRADIENT, thickness=INSIDE_WALL_SIDE_TICKNESS  , thicknessField='', thicknessModulus=None, thicknessType=UNIFORM, useDensity=OFF)
-model.HomogeneousShellSection(idealization=NO_IDEALIZATION, integrationRule=SIMPSON, material='C28_INSIDE_WALL_MIDDLE', name='INSIDE_WALL_MIDDLE', nodalThicknessField='', numIntPts=5, poissonDefinition=DEFAULT, preIntegrate=OFF, temperature=GRADIENT, thickness=INSIDE_WALL_MIDDLE_TICKNESS, thicknessField='', thicknessModulus=None, thicknessType=UNIFORM, useDensity=OFF)
+model.HomogeneousShellSection(idealization=NO_IDEALIZATION, integrationRule=SIMPSON, material='C28_OUTER_WALL'        , name='OUTER_WALL'        , nodalThicknessField='', numIntPts=5, poissonDefinition=DEFAULT, preIntegrate=OFF, temperature=GRADIENT, thickness=OUTER_WALL_THICKNESS        , thicknessField='', thicknessModulus=None, thicknessType=UNIFORM, useDensity=OFF)
+model.HomogeneousShellSection(idealization=NO_IDEALIZATION, integrationRule=SIMPSON, material='C28_INSIDE_WALL_SIDE'  , name='INSIDE_WALL_SIDE'  , nodalThicknessField='', numIntPts=5, poissonDefinition=DEFAULT, preIntegrate=OFF, temperature=GRADIENT, thickness=INSIDE_WALL_SIDE_THICKNESS  , thicknessField='', thicknessModulus=None, thicknessType=UNIFORM, useDensity=OFF)
+model.HomogeneousShellSection(idealization=NO_IDEALIZATION, integrationRule=SIMPSON, material='C28_INSIDE_WALL_MIDDLE', name='INSIDE_WALL_MIDDLE', nodalThicknessField='', numIntPts=5, poissonDefinition=DEFAULT, preIntegrate=OFF, temperature=GRADIENT, thickness=INSIDE_WALL_MIDDLE_THICKNESS, thicknessField='', thicknessModulus=None, thicknessType=UNIFORM, useDensity=OFF)
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # CREATE SKETCH FOR CROSS-SECTION
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -315,9 +315,9 @@ fp = open(input_name.format(MODEL)+'.inp','r')
 lines = fp.read()
 fp.close()
 
-lines = lines.replace(str(OUTER_WALL_TICKNESS) + ', 5\n', '')
-lines = lines.replace(str(INSIDE_WALL_MIDDLE_TICKNESS) + ', 5\n', '')
-lines = lines.replace(str(INSIDE_WALL_SIDE_TICKNESS) + ', 5\n', '')
+lines = lines.replace(str(OUTER_WALL_THICKNESS) + ', 5\n', '')
+lines = lines.replace(str(INSIDE_WALL_MIDDLE_THICKNESS) + ', 5\n', '')
+lines = lines.replace(str(INSIDE_WALL_SIDE_THICKNESS) + ', 5\n', '')
 
 lines = lines.replace("*Shell Section, elset=OUTER_WALL, material=C28_OUTER_WALL\n", "*SHELL SECTION, ELSET=OUTER_WALL, MATERIAL=C28_OUTER_WALL, SHELL THICKNESS=OUTER_DISTRIBUTION_THICKNESS\n               1.,        5\n*DISTRIBUTION, LOCATION=ELEMENT, TABLE=OUTER_DISTRIBUTION_TABLE_THICKNESS, NAME=OUTER_DISTRIBUTION_THICKNESS\n        ,               1.\n replace me")
 for i in range(length_OUTER_WALL_element_labels):
@@ -362,9 +362,9 @@ lines = fp.read()
 fp.close()
 lines=lines.replace('<SIGMA0>',str(SIGMA0))
 lines=lines.replace('<E0>',str(E0))
-lines=lines.replace('<OUTER_WALL_TICKNESS>',str(OUTER_WALL_TICKNESS))
-lines=lines.replace('<INSIDE_WALL_SIDE_TICKNESS>',str(INSIDE_WALL_SIDE_TICKNESS))
-lines=lines.replace('<INSIDE_WALL_MIDDLE_TICKNESS>',str(INSIDE_WALL_MIDDLE_TICKNESS))
+lines=lines.replace('<OUTER_WALL_THICKNESS>',str(OUTER_WALL_THICKNESS))
+lines=lines.replace('<INSIDE_WALL_SIDE_THICKNESS>',str(INSIDE_WALL_SIDE_THICKNESS))
+lines=lines.replace('<INSIDE_WALL_MIDDLE_THICKNESS>',str(INSIDE_WALL_MIDDLE_THICKNESS))
 
 fp = open(mat_card_file.format(MODEL),'w')
 fp.write(lines)
