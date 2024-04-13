@@ -8,7 +8,11 @@ def write_results(filename,data,keys):
     format_to_write = '{},'*(nvars-1)+'{}\n'
     fp = open(filename+'_data.csv','w')
     fp.write(header)
-    for i in range(0,ntime):
+    index_of_last_zero = 0
+    for i in range(0,ntime): # Find the index of the last zero of the force
+        if data[i,2] == 0.0:
+            index_of_last_zero = i
+    for i in range(index_of_last_zero + 1, ntime): # Write the data from the last zero of the force
         fp.write(format_to_write.format(*[x for x in data[i,:]]))
     fp.close()
     return
