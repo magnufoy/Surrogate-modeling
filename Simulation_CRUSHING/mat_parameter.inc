@@ -19,7 +19,7 @@
 6,FAIL,"Failure status"
 *User Defined Field, properties=8
 ** dcrit,     WcB,    WcS,   WcL,      c, phi, gamma,  THICK
-     1.0,  390.47,  83.46,  33.0,  0.950, 1.0,   1.0, <OUTER_WALL_TICKNESS>
+     1.0,  390.47,  83.46,  33.0,  0.950, 1.0,   1.0, <OUTER_WALL_THICKNESS>
 *****************************************************************************
 ****                           INSIDE WALL SIDE                          ****
 *****************************************************************************
@@ -41,7 +41,7 @@
 6,FAIL,"Failure status"
 *User Defined Field, properties=8
 ** dcrit,     WcB,    WcS,   WcL,      c, phi, gamma,  THICK
-     1.0,  390.47,  83.46,  33.0,  0.950, 1.0,   1.0, <INSIDE_WALL_SIDE_TICKNESS>
+     1.0,  390.47,  83.46,  33.0,  0.950, 1.0,   1.0, <INSIDE_WALL_SIDE_THICKNESS>
 *****************************************************************************
 ****                          INSIDE WALL MIDDLE                         ****
 *****************************************************************************
@@ -63,4 +63,4 @@
 6,FAIL,"Failure status"
 *User Defined Field, properties=8
 ** dcrit,     WcB,    WcS,   WcL,      c, phi, gamma,  THICK
-     1.0,  390.47,  83.46,  33.0,  0.950, 1.0,   1.0, <INSIDE_WALL_MIDDLE_TICKNESS>
+     1.0,  390.47,  83.46,  33.0,  0.950, 1.0,   1.0, <INSIDE_WALL_MIDDLE_THICKNESS>

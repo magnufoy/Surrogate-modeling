@@ -34,7 +34,7 @@ def post_bending_curves(filename):
     #-------------------------------------------------------------------------------
     # Extract force from reference point
     #-------------------------------------------------------------------------------
-    forceHist = step.historyRegions['Node Plate_impactor-1.1']
+    forceHist = step.historyRegions['Node IMPACTOR-1.1']
     force     = np.array(forceHist.historyOutputs['RF2'].data)[:,1]
     disp      = np.array(forceHist.historyOutputs['U2'].data)[:,1]
     time      = np.array(forceHist.historyOutputs['RF2'].data)[:,0]
