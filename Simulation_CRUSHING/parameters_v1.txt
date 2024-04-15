@@ -1,4 +1,4 @@
-sample,outer_wall_tickness,inside_wall_side_tickness,inside_wall_middle_tickness,height,width,sigma0,youngs
+sample,outer_wall_thickness,inside_wall_side_thickness,inside_wall_middle_thickness,height,width,sigma0,youngs
   1,2.50,2.15,1.63,75.95,127.83,263.44,66771.2
   2,2.83,2.02,1.44,75.76,127.25,246.66,69501.7
   3,2.85,1.78,1.44,76.51,127.53,243.62,65759.5
