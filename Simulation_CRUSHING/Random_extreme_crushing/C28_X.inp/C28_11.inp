@@ -1,0 +1,66 @@
+*****************************************************************************
+****                              OUTER WALL                             ****
+*****************************************************************************
+*material,name=C28_OUTER_WALL
+*density
+2.7e-9
+*Elastic
+65893.9, 0.3
+*Plastic, hardening=USER, properties=8
+** SIGMA0,  THETA1,     Q1,    THETA2,      Q2,   THETA3,       Q3,   BLANK
+ 272.54,  32.602, 1.8230,    1425.7,  48.633, 129300.0,    10.675,     0.0
+*Depvar, delete=6
+6,
+1,PEEQ,"equivalent plastic strain"
+2,DAMAGE,"Damage Cockcroft-Latham"
+3,leote,"Element aspect ratio"
+4,omega,"Element deformation mode"
+5,N,"Element normal"
+6,FAIL,"Failure status"
+*User Defined Field, properties=8
+** dcrit,     WcB,    WcS,   WcL,      c, phi, gamma,  THICK
+     1.0,  390.47,  83.46,  33.0,  0.950, 1.0,   1.0, 2.5
+*****************************************************************************
+****                           INSIDE WALL SIDE                          ****
+*****************************************************************************
+*material,name=C28_INSIDE_WALL_SIDE
+*density
+2.7e-9
+*Elastic
+65893.9, 0.3
+*Plastic, hardening=USER, properties=8
+** SIGMA0,  THETA1,     Q1,    THETA2,      Q2,   THETA3,       Q3,   BLANK
+ 272.54,  32.602, 1.8230,    1425.7,  48.633, 129300.0,    10.675,     0.0
+*Depvar, delete=6
+6,
+1,PEEQ,"equivalent plastic strain"
+2,DAMAGE,"Damage Cockcroft-Latham"
+3,leote,"Element aspect ratio"
+4,omega,"Element deformation mode"
+5,N,"Element normal"
+6,FAIL,"Failure status"
+*User Defined Field, properties=8
+** dcrit,     WcB,    WcS,   WcL,      c, phi, gamma,  THICK
+     1.0,  390.47,  83.46,  33.0,  0.950, 1.0,   1.0, 2.35
+*****************************************************************************
+****                          INSIDE WALL MIDDLE                         ****
+*****************************************************************************
+*material,name=C28_INSIDE_WALL_MIDDLE
+*density
+2.7e-9
+*Elastic
+65893.9, 0.3
+*Plastic, hardening=USER, properties=8
+** SIGMA0,  THETA1,     Q1,    THETA2,      Q2,   THETA3,       Q3,   BLANK
+ 272.54,  32.602, 1.8230,    1425.7,  48.633, 129300.0,    10.675,     0.0
+*Depvar, delete=6
+6,
+1,PEEQ,"equivalent plastic strain"
+2,DAMAGE,"Damage Cockcroft-Latham"
+3,leote,"Element aspect ratio"
+4,omega,"Element deformation mode"
+5,N,"Element normal"
+6,FAIL,"Failure status"
+*User Defined Field, properties=8
+** dcrit,     WcB,    WcS,   WcL,      c, phi, gamma,  THICK
+     1.0,  390.47,  83.46,  33.0,  0.950, 1.0,   1.0, 1.24
